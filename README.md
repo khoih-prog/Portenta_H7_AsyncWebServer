@@ -86,7 +86,7 @@
     * [ 8. **MQTT_ThingStream**](examples/Ethernet/MQTT_ThingStream)
     * [ 9. WebClient](examples/Ethernet/WebClient)
     * [10. WebClientRepeating](examples/Ethernet/WebClientRepeating)
-* [Example Async_AdvancedWebServer](#Wxample-Async_AdvancedWebServer)
+* [Example Async_AdvancedWebServer](#Example-Async_AdvancedWebServer)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
   * [1. MQTT_ThingStream on PORTENTA_H7_M7 using Ethernet](#1-MQTT_ThingStream-on-PORTENTA_H7_M7-using-Ethernet)
   * [2. WebClientRepeating on PORTENTA_H7_M7 using Ethernet](#2-WebClientRepeating-on-PORTENTA_H7_M7-using-Ethernet)
@@ -1440,7 +1440,7 @@ build_flags =
 ---
 ---
 
-### Example [Async_AdvancedWebServer](examples/Async_AdvancedWebServer)
+### Example [Async_AdvancedWebServer](examples/Ethernet/Async_AdvancedWebServer)
 
 ```cpp
 #if !( defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4) )
@@ -1718,12 +1718,6 @@ MQTT Message Send : STM32_Pub => Hello from MQTT_ThingStream on PORTENTA_H7_M7 w
 MQTT Message receive [STM32_Pub] Hello from MQTT_ThingStream on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 ```
 
-You can access the Async Advanced WebServers @ the server IP and corresponding ports (8080, 8081 and 8082)
-
-<p align="center">
-    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer.png">
-</p>
-
 ---
 
 #### 2. WebClientRepeating on PORTENTA_H7_M7 using Ethernet
@@ -1794,7 +1788,7 @@ Accept-Ranges: bytes
 ---
 
 
-#### 3. MQTTClient_Auth on PORTENTA_H7_M7 with Ethernet
+#### 3. MQTTClient_Auth on PORTENTA_H7_M7 using Ethernet
 
 Following is debug terminal output when running example [MQTTClient_Auth](examples/Ethernet/MQTTClient_Auth) on on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
 
@@ -1815,7 +1809,7 @@ Message arrived [MQTT_Pub] Hello from MQTTClient_Auth on PORTENTA_H7_M7 with Eth
 
 ---
 
-#### 4. MQTTClient_Basic on PORTENTA_H7_M7 with Ethernet
+#### 4. MQTTClient_Basic on PORTENTA_H7_M7 using Ethernet
 
 Following is debug terminal output when running example [MQTTClient_Basic](examples/Ethernet/MQTTClient_Basic) on on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
 
