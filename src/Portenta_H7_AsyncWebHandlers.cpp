@@ -1,6 +1,14 @@
 /****************************************************************************************************************************
   Portenta_H7_AsyncWebHandlers.cpp
   
+  For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
+  
+  Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with with Vision-Shield Ethernet
+  
+  Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
+  Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
+  Licensed under GPLv3 license
+ 
   Version: 1.1.0
   
   Version Modified By   Date      Comments
