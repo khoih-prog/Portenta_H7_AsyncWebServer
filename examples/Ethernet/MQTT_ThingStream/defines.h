@@ -21,6 +21,8 @@
   #error For Portenta_H7 only
 #endif
 
+#define _PORTENTA_H7_AWS_LOGLEVEL_     1
+
 #define USE_ETHERNET_PORTENTA_H7        true
 
 #include <Portenta_Ethernet.h>

@@ -1,4 +1,5 @@
-/************************************************************************************************************* - Dead simple AsyncWebServer for STM32 LAN8720 or built-in LAN8742A Ethernet
+/*************************************************************************************************************
+  Portenta_H7_AsyncEventSource.h
   
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
   
@@ -8,11 +9,12 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.0.0
+  Version: 1.1.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K Hoang      06/10/2021 Initial coding for Portenta_H7 (STM32H7) with Vision-Shield Ethernet
+  1.1.0   K Hoang      08/10/2021 Add support to Portenta_H7 (STM32H7) using Murata WiFi
  *****************************************************************************************************************************/
 
 #pragma once

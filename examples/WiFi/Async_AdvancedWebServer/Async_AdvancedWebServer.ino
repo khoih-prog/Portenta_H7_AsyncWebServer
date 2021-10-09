@@ -51,42 +51,17 @@
 
 #define _PORTENTA_H7_AWS_LOGLEVEL_     1
 
-#define USE_ETHERNET_PORTENTA_H7        true
+#define USE_WIFI_PORTENTA_H7        true
 
-#include <Portenta_Ethernet.h>
-#include <Ethernet.h>
-#warning Using Portenta_Ethernet lib for Portenta_H7.
+#include <WiFi.h>
+#warning Using WiFi for Portenta_H7.
 
 #include <Portenta_H7_AsyncWebServer.h>
 
-// Enter a MAC address and IP address for your controller below.
-#define NUMBER_OF_MAC      20
+char ssid[] = "your_ssid";        // your network SSID (name)
+char pass[] = "12345678";         // your network password (use for WPA, or use as key for WEP), length must be 8+
 
-byte mac[][NUMBER_OF_MAC] =
-{
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x01 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x02 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x03 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x04 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x05 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x06 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x07 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x08 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x09 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0A },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0B },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0C },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0D },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0E },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0F },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x10 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x11 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x12 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x13 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x14 },
-};
-// Select the IP address according to your local network
-IPAddress ip(192, 168, 2, 232);
+int status = WL_IDLE_STATUS;
 
 AsyncWebServer    server(80);
 
@@ -119,7 +94,7 @@ body { background-color: #cccccc; font-family: Arial, Helvetica, Sans-Serif; Col
 </head>\
 <body>\
 <h2>AsyncWebServer_Portenta_H7!</h2>\
-<h3>running on %s</h3>\
+<h3>running WiFi on %s</h3>\
 <p>Uptime: %d d %02d:%02d:%02d</p>\
 <img src=\"/test.svg\" />\
 </body>\
@@ -176,6 +151,23 @@ void drawGraph(AsyncWebServerRequest *request)
   request->send(200, "image/svg+xml", out);
 }
 
+void printWifiStatus()
+{
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+
+  // print your board's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("Local IP Address: ");
+  Serial.println(ip);
+
+  // print the received signal strength:
+  long rssi = WiFi.RSSI();
+  Serial.print("signal strength (RSSI):");
+  Serial.print(rssi);
+  Serial.println(" dBm");
+}
 
 void setup()
 {
@@ -194,35 +186,31 @@ void setup()
 
   ///////////////////////////////////
 
-  // start the ethernet connection and the server
-  // Use random mac
-  uint16_t index = millis() % NUMBER_OF_MAC;
-
-  // Use Static IP
-  //Ethernet.begin(mac[index], ip);
-  // Use DHCP dynamic IP and random mac
-  Ethernet.begin(mac[index]);
-
-  if (Ethernet.hardwareStatus() == EthernetNoHardware)
+  // check for the WiFi module:
+  if (WiFi.status() == WL_NO_MODULE)
   {
-    Serial.println("No Ethernet found. Stay here forever");
-
-    while (true)
-    {
-      delay(1); // do nothing, no point running without Ethernet hardware
-    }
+    Serial.println("Communication with WiFi module failed!");
+    // don't continue
+    while (true);
   }
 
-  if (Ethernet.linkStatus() == LinkOFF)
+  Serial.print(F("Connecting to SSID: "));
+  Serial.println(ssid);
+
+  status = WiFi.begin(ssid, pass);
+
+  delay(1000);
+   
+  // attempt to connect to WiFi network
+  while ( status != WL_CONNECTED)
   {
-    Serial.println("Not connected Ethernet cable");
+    delay(500);
+        
+    // Connect to WPA/WPA2 network
+    status = WiFi.status();
   }
 
-  Serial.print(F("Using mac index = "));
-  Serial.println(index);
-
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(Ethernet.localIP());
+  printWifiStatus();
 
   ///////////////////////////////////
 
@@ -245,9 +233,9 @@ void setup()
   server.onNotFound(handleNotFound);
 
   server.begin();
-
+  
   Serial.print(F("HTTP EthernetWebServer is @ IP : "));
-  Serial.println(Ethernet.localIP());
+  Serial.println(WiFi.localIP());
 }
 
 void heartBeatPrint()

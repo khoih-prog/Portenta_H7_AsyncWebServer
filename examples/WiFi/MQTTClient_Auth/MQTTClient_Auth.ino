@@ -1,5 +1,5 @@
 /****************************************************************************************************************************
-  MQTTClient_Basic.ino
+  MQTTClient_Auth.ino
   
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
   
@@ -25,7 +25,6 @@
   - publishes "hello world" to the topic "outTopic"
   - subscribes to the topic "inTopic", printing out any messages
     it receives. NB - it assumes the received payloads are strings not binary
-    
   It will reconnect to the server if the connection is lost using a blocking
   reconnect function. See the 'mqtt_reconnect_nonblocking' example for how to
   achieve the same result without blocking the main loop.
@@ -41,9 +40,11 @@
 // Update these with values suitable for your network.
 const char* mqttServer = "broker.emqx.io";        // Broker address
 
-const char *ID        = "MQTTClient_SSL-Client";  // Name of our device, must be unique
+const char *ID        = "MQTTClient_Auth";  // Name of our device, must be unique
 const char *TOPIC     = "MQTT_Pub";               // Topic to subcribe to
 const char *subTopic  = "MQTT_Sub";               // Topic to subcribe to
+
+//IPAddress mqttServer(172, 16, 0, 2);
 
 void callback(char* topic, byte* payload, unsigned int length) 
 {
@@ -59,10 +60,10 @@ void callback(char* topic, byte* payload, unsigned int length)
   Serial.println();
 }
 
-EthernetClient  ethClient;
-PubSubClient    client(mqttServer, 1883, callback, ethClient);
+WiFiClient  wifiClient;
+PubSubClient    client(mqttServer, 1883, callback, wifiClient);
 
-String data         = "Hello from MQTTClient_Basic on " + String(BOARD_NAME) + " with " + String(SHIELD_TYPE);
+String data         = "Hello from MQTTClient_Auth on " + String(BOARD_NAME) + " with " + String(SHIELD_TYPE);
 const char *pubData = data.c_str();
 
 void reconnect()
@@ -74,7 +75,7 @@ void reconnect()
     Serial.print(mqttServer);
 
     // Attempt to connect
-    if (client.connect(ID, "try", "try"))
+    if (client.connect("arduino", "try", "try"))
     {
       Serial.println("...connected");
       
@@ -101,56 +102,69 @@ void reconnect()
   }
 }
 
+void printWifiStatus()
+{
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+
+  // print your board's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("Local IP Address: ");
+  Serial.println(ip);
+
+  // print the received signal strength:
+  long rssi = WiFi.RSSI();
+  Serial.print("signal strength (RSSI):");
+  Serial.print(rssi);
+  Serial.println(" dBm");
+}
+
 void setup()
 {
   // Open serial communications and wait for port to open:
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.print("\nStart MQTTClient_Basic on "); Serial.print(BOARD_NAME);
+  Serial.print("\nStart MQTTClient_Auth on "); Serial.print(BOARD_NAME);
   Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
   Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
 
   ///////////////////////////////////
   
-  // start the ethernet connection and the server
-  // Use random mac
-  uint16_t index = millis() % NUMBER_OF_MAC;
-
-  // Use Static IP
-  //Ethernet.begin(mac[index], ip);
-  // Use DHCP dynamic IP and random mac
-  Ethernet.begin(mac[index]);
-
-  if (Ethernet.hardwareStatus() == EthernetNoHardware) 
+  // check for the WiFi module:
+  if (WiFi.status() == WL_NO_MODULE)
   {
-    Serial.println("No Ethernet found. Stay here forever");
-    
-    while (true) 
-    {
-      delay(1); // do nothing, no point running without Ethernet hardware
-    }
-  }
-  
-  if (Ethernet.linkStatus() == LinkOFF) 
-  {
-    Serial.println("Not connected Ethernet cable");
+    Serial.println("Communication with WiFi module failed!");
+    // don't continue
+    while (true);
   }
 
-  Serial.print(F("Using mac index = "));
-  Serial.println(index);
+  Serial.print(F("Connecting to SSID: "));
+  Serial.println(ssid);
 
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(Ethernet.localIP());
+  status = WiFi.begin(ssid, pass);
+
+  delay(1000);
+   
+  // attempt to connect to WiFi network
+  while ( status != WL_CONNECTED)
+  {
+    delay(500);
+        
+    // Connect to WPA/WPA2 network
+    status = WiFi.status();
+  }
+
+  printWifiStatus();
 
   ///////////////////////////////////
-
-  client.setServer(mqttServer, 1883);
-  client.setCallback(callback);
-
-  // Allow the hardware to sort itself out
-  delay(1500);
+  
+  // Note - the default maximum packet size is 128 bytes. If the
+  // combined length of clientId, username and password exceed this use the
+  // following to increase the buffer size:
+  // client.setBufferSize(255);
 }
 
 #define MQTT_PUBLISH_INTERVAL_MS       5000L

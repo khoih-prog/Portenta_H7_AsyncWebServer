@@ -1,5 +1,5 @@
 /****************************************************************************************************************************
-  Async_HelloServer.h
+  Async_HelloServer.ino
   
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
   
@@ -21,44 +21,17 @@
   #error For Portenta_H7 only
 #endif
 
-#define _PORTENTA_H7_AWS_LOGLEVEL_     1
+#define USE_WIFI_PORTENTA_H7        true
 
-#define USE_ETHERNET_PORTENTA_H7        true
-
-#include <Portenta_Ethernet.h>
-#include <Ethernet.h>
-#warning Using Portenta_Ethernet lib for Portenta_H7.
+#include <WiFi.h>
+#warning Using WiFi for Portenta_H7.
 
 #include <Portenta_H7_AsyncWebServer.h>
 
-// Enter a MAC address and IP address for your controller below.
-#define NUMBER_OF_MAC      20
+char ssid[] = "your_ssid";        // your network SSID (name)
+char pass[] = "12345678";         // your network password (use for WPA, or use as key for WEP), length must be 8+
 
-byte mac[][NUMBER_OF_MAC] =
-{
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x01 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x02 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x03 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x04 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x05 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x06 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x07 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x08 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x09 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0A },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0B },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0C },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0D },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0E },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0F },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x10 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x11 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x12 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x13 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x14 },
-};
-// Select the IP address according to your local network
-IPAddress ip(192, 168, 2, 232);
+int status = WL_IDLE_STATUS;
 
 AsyncWebServer    server(80);
 
@@ -72,7 +45,7 @@ void handleRoot(AsyncWebServerRequest *request)
 {
   digitalWrite(LED_BUILTIN, LED_ON);
 
-  snprintf(temp, BUFFER_SIZE - 1, "Hello from Async_HelloServer on %s\n", BOARD_NAME);
+  snprintf(temp, BUFFER_SIZE - 1, "Hello from Async_HelloServer2 on %s\n", BOARD_NAME);
   request->send(200, "text/plain", temp);
   
   digitalWrite(LED_BUILTIN, LED_OFF);
@@ -81,7 +54,6 @@ void handleRoot(AsyncWebServerRequest *request)
 void handleNotFound(AsyncWebServerRequest *request)
 {
   digitalWrite(LED_BUILTIN, LED_ON);
-  
   String message = "File Not Found\n\n";
 
   message += "URI: ";
@@ -102,6 +74,24 @@ void handleNotFound(AsyncWebServerRequest *request)
   digitalWrite(LED_BUILTIN, LED_OFF);
 }
 
+void printWifiStatus()
+{
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+
+  // print your board's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("Local IP Address: ");
+  Serial.println(ip);
+
+  // print the received signal strength:
+  long rssi = WiFi.RSSI();
+  Serial.print("signal strength (RSSI):");
+  Serial.print(rssi);
+  Serial.println(" dBm");
+}
+
 void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -112,42 +102,38 @@ void setup()
 
   delay(200);
 
-  Serial.print("\nStart Async_HelloServer on "); Serial.print(BOARD_NAME);
+  Serial.print("\nStart Async_HelloServer2 on "); Serial.print(BOARD_NAME);
   Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
   Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
 
   ///////////////////////////////////
   
-  // start the ethernet connection and the server
-  // Use random mac
-  uint16_t index = millis() % NUMBER_OF_MAC;
-
-  // Use Static IP
-  //Ethernet.begin(mac[index], ip);
-  // Use DHCP dynamic IP and random mac
-  Ethernet.begin(mac[index]);
-
-  if (Ethernet.hardwareStatus() == EthernetNoHardware) 
+  // check for the WiFi module:
+  if (WiFi.status() == WL_NO_MODULE)
   {
-    Serial.println("No Ethernet found. Stay here forever");
-    
-    while (true) 
-    {
-      delay(1); // do nothing, no point running without Ethernet hardware
-    }
-  }
-  
-  if (Ethernet.linkStatus() == LinkOFF) 
-  {
-    Serial.println("Not connected Ethernet cable");
+    Serial.println("Communication with WiFi module failed!");
+    // don't continue
+    while (true);
   }
 
-  Serial.print(F("Using mac index = "));
-  Serial.println(index);
+  Serial.print(F("Connecting to SSID: "));
+  Serial.println(ssid);
 
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(Ethernet.localIP());
+  status = WiFi.begin(ssid, pass);
+
+  delay(1000);
+   
+  // attempt to connect to WiFi network
+  while ( status != WL_CONNECTED)
+  {
+    delay(500);
+        
+    // Connect to WPA/WPA2 network
+    status = WiFi.status();
+  }
+
+  printWifiStatus();
 
   ///////////////////////////////////
 
@@ -161,12 +147,35 @@ void setup()
     request->send(200, "text/plain", "This works as well");
   });
 
+  server.on("/gif", [](AsyncWebServerRequest * request) 
+  {
+    static const uint8_t gif[] = 
+    {
+      0x47, 0x49, 0x46, 0x38, 0x37, 0x61, 0x10, 0x00, 0x10, 0x00, 0x80, 0x01,
+      0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0x2c, 0x00, 0x00, 0x00, 0x00,
+      0x10, 0x00, 0x10, 0x00, 0x00, 0x02, 0x19, 0x8c, 0x8f, 0xa9, 0xcb, 0x9d,
+      0x00, 0x5f, 0x74, 0xb4, 0x56, 0xb0, 0xb0, 0xd2, 0xf2, 0x35, 0x1e, 0x4c,
+      0x0c, 0x24, 0x5a, 0xe6, 0x89, 0xa6, 0x4d, 0x01, 0x00, 0x3b
+    };
+    
+    char gif_colored[sizeof(gif)];
+
+    memcpy(gif_colored, gif, sizeof(gif));
+
+    // Set the background to a random set of colors
+    gif_colored[16] = millis() % 256;
+    gif_colored[17] = millis() % 256;
+    gif_colored[18] = millis() % 256;
+
+    request->send(200, (char *) "image/gif", gif_colored);
+  });
+
   server.onNotFound(handleNotFound);
 
   server.begin();
 
-  Serial.print(F("HTTP EthernetWebServer is @ IP : "));
-  Serial.println(Ethernet.localIP());
+  Serial.print("HTTP Async_HelloServer2 started @ IP : ");
+  Serial.println(WiFi.localIP());
 }
 
 void heartBeatPrint()

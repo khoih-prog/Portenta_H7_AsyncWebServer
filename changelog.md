@@ -11,12 +11,17 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Releases v1.1.0](#Releases-v110)
   * [Initial Releases v1.0.0](#Initial-Releases-v100)
 
 ---
 ---
 
 ## Changelog
+
+### Releases v1.1.0
+
+1. Add support to  **Portenta_H7 boards** such as Portenta_H7 Rev2 ABX00042, etc., using [**ArduinoCore-mbed mbed_portenta** core](https://github.com/arduino/ArduinoCore-mbed) and `Murata WiFi`
 
 ### Initial Releases v1.0.0
 

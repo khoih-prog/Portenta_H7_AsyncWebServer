@@ -85,6 +85,17 @@
     * [ 8. **MQTT_ThingStream**](examples/Ethernet/MQTT_ThingStream)
     * [ 9. WebClient](examples/Ethernet/WebClient)
     * [10. WebClientRepeating](examples/Ethernet/WebClientRepeating)
+  * [2. For Murata WiFi](#2-for-Murata-WiFi)
+    * [ 1. Async_AdvancedWebServer](examples/WiFi/Async_AdvancedWebServer)
+    * [ 2. Async_HelloServer](examples/WiFi/Async_HelloServer)
+    * [ 3. Async_HelloServer2](examples/WiFi/Async_HelloServer2)
+    * [ 4. Async_HttpBasicAuth](examples/WiFi/Async_HttpBasicAuth)
+    * [ 5. Async_PostServer](examples/WiFi/Async_PostServer)
+    * [ 6. **MQTTClient_Auth**](examples/WiFi/MQTTClient_Auth)
+    * [ 7. **MQTTClient_Basic**](examples/WiFi/MQTTClient_Basic)
+    * [ 8. **MQTT_ThingStream**](examples/WiFi/MQTT_ThingStream)
+    * [ 9. WebClient](examples/WiFi/WebClient)
+    * [10. WebClientRepeating](examples/WiFi/WebClientRepeating)
 * [Example Async_AdvancedWebServer](#Example-Async_AdvancedWebServer)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
   * [1. MQTT_ThingStream on PORTENTA_H7_M7 using Ethernet](#1-MQTT_ThingStream-on-PORTENTA_H7_M7-using-Ethernet)
@@ -93,6 +104,7 @@
   * [4. MQTTClient_Basic on PORTENTA_H7_M7 using Ethernet](#4-MQTTClient_Basic-on-PORTENTA_H7_M7-using-Ethernet)
   * [5. Async_HTTPBasicAuth on PORTENTA_H7_M7 using Ethernet](#5-Async_HTTPBasicAuth-on-PORTENTA_H7_M7-using-Ethernet)
   * [6. Async_AdvancedWebServer on PORTENTA_H7_M7 using Ethernet](#6-Async_AdvancedWebServer-on-PORTENTA_H7_M7-using-Ethernet)
+  * [7. Async_AdvancedWebServer on PORTENTA_H7_M7 using WiFi](#7-Async_AdvancedWebServer-on-PORTENTA_H7_M7-using-WiFi)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -137,7 +149,7 @@ to apply the better and faster **asynchronous** feature of the **powerful** [ESP
 
 ### Currently supported Boards
 
-1. **Portenta_H7 boards** such as Portenta_H7 Rev2 ABX00042, etc., using [**ArduinoCore-mbed mbed_portenta** core](https://github.com/arduino/ArduinoCore-mbed) using `Vision-shield Ethernet`
+1. **Portenta_H7 boards** such as Portenta_H7 Rev2 ABX00042, etc., using [**ArduinoCore-mbed mbed_portenta** core](https://github.com/arduino/ArduinoCore-mbed) using `Vision-shield Ethernet` or `Murata WiFi`
 
 <p align="center">
     <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Portenta_Vision.jpg">
@@ -151,7 +163,7 @@ to apply the better and faster **asynchronous** feature of the **powerful** [ESP
 
  1. [`Arduino IDE 1.8.16+` for Arduino](https://www.arduino.cc/en/Main/Software)
  2. [`ArduinoCore-mbed mbed_portenta core 2.5.2+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino **Portenta_H7** boards, such as **Portenta_H7 Rev2 ABX00042, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
- 3. [`Portenta_H7_AsyncTCP library v1.0.0+`](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) for Portenta_H7 using `Vision-shield` Ethernet. [To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Portenta_H7_AsyncTCP.svg?)](https://www.ardu-badge.com/Portenta_H7_AsyncTCP)
+ 3. [`Portenta_H7_AsyncTCP library v1.1.0+`](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) for Portenta_H7 using `Vision-shield Ethernet` or `Murata WiFi`. [To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Portenta_H7_AsyncTCP.svg?)](https://www.ardu-badge.com/Portenta_H7_AsyncTCP)
 
 ---
 
@@ -1435,6 +1447,19 @@ build_flags =
  9. [WebClient](examples/Ethernet/WebClient)
 10. [WebClientRepeating](examples/Ethernet/WebClientRepeating)
 
+#### 2. For Murata WiFi
+
+ 1. [Async_AdvancedWebServer](examples/WiFi/Async_AdvancedWebServer)
+ 2. [Async_HelloServer](examples/WiFi/Async_HelloServer) 
+ 3. [Async_HelloServer2](examples/WiFi/Async_HelloServer2)
+ 4. [Async_HttpBasicAuth](examples/WiFi/Async_HttpBasicAuth)
+ 5. [Async_PostServer](examples/WiFi/Async_PostServer)
+ 6. [**MQTTClient_Auth**](examples/WiFi/MQTTClient_Auth)
+ 7. [**MQTTClient_Basic**](examples/WiFi/MQTTClient_Basic)
+ 8. [**MQTT_ThingStream**](examples/WiFi/MQTT_ThingStream)
+ 9. [WebClient](examples/WiFi/WebClient)
+10. [WebClientRepeating](examples/WiFi/WebClientRepeating)
+
 
 ---
 ---
@@ -1445,6 +1470,8 @@ build_flags =
 #if !( defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4) )
   #error For Portenta_H7 only
 #endif
+
+#define _PORTENTA_H7_AWS_LOGLEVEL_     1
 
 #define USE_ETHERNET_PORTENTA_H7        true
 
@@ -1700,8 +1727,8 @@ Following is debug terminal output when running example [MQTT_ThingStream](examp
 
 ```
 Start MQTT_ThingStream on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.0.0
-Portenta_H7_AsyncWebServer v1.0.0
+Portenta_H7_AsyncTCP v1.1.0
+Portenta_H7_AsyncWebServer v1.1.0
 Using mac index = 17
 Connected! IP address: 192.168.2.87
 ***************************************
@@ -1725,8 +1752,8 @@ Following is debug terminal output when running example [WebClient](examples/Eth
 
 ```
 Start WebClientRepeating on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.0.0
-Portenta_H7_AsyncWebServer v1.0.0
+Portenta_H7_AsyncTCP v1.1.0
+Portenta_H7_AsyncWebServer v1.1.0
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 
@@ -1793,8 +1820,8 @@ Following is debug terminal output when running example [MQTTClient_Auth](exampl
 
 ```
 Start MQTTClient_Auth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.0.0
-Portenta_H7_AsyncWebServer v1.0.0
+Portenta_H7_AsyncTCP v1.1.0
+Portenta_H7_AsyncWebServer v1.1.0
 Using mac index = 9
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1814,8 +1841,8 @@ Following is debug terminal output when running example [MQTTClient_Basic](examp
 
 ```
 Start MQTTClient_Basic on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.0.0
-Portenta_H7_AsyncWebServer v1.0.0
+Portenta_H7_AsyncTCP v1.1.0
+Portenta_H7_AsyncWebServer v1.1.0
 Using mac index = 8
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1833,8 +1860,8 @@ Following is debug terminal output when running example [Async_HTTPBasicAuth](ex
 
 ```
 Start Async_HTTPBasicAuth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.0.0
-Portenta_H7_AsyncWebServer v1.0.0
+Portenta_H7_AsyncTCP v1.1.0
+Portenta_H7_AsyncWebServer v1.1.0
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 Async_HttpBasicAuth started @ IP : 192.168.2.87
@@ -1863,8 +1890,8 @@ Following are debug terminal output and screen shots when running example [Async
 
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.0.0
-Portenta_H7_AsyncWebServer v1.0.0
+Portenta_H7_AsyncTCP v1.1.0
+Portenta_H7_AsyncWebServer v1.1.0
 Using mac index = 4
 Connected! IP address: 192.168.2.87
 HTTP EthernetWebServer is @ IP : 192.168.2.87
@@ -1876,6 +1903,29 @@ You can access the Async Advanced WebServers at the displayed server IP, e.g. `1
     <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer.png">
 </p>
 
+---
+
+#### 7. Async_AdvancedWebServer on PORTENTA_H7_M7 using WiFi
+
+Following is the debug terminal and screen shot when running example [Async_AdvancedWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/examples/WiFi/Async_AdvancedWebServer) on Portenta_H7 WiFi to demonstrate the operation of Portenta_H7_AsyncWebServer, based on this [Portenta_H7_AsyncTCP Library](https://github.com/khoih-prog/Portenta_H7_AsyncTCP).
+
+```
+Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Portenta_H7 WiFi
+Portenta_H7_AsyncTCP v1.1.0
+Portenta_H7_AsyncWebServer v1.1.0
+Connecting to SSID: HueNet1
+SSID: HueNet1
+Local IP Address: 192.168.2.94
+signal strength (RSSI):-31 dBm
+HTTP EthernetWebServer is @ IP : 192.168.2.94
+..........
+```
+
+You can access the Async Advanced WebServers at the displayed server IP, e.g. `192.168.2.94`
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer_WiFi.png">
+</p>
 
 
 ---

@@ -14,12 +14,13 @@
 #ifndef defines_h
 #define defines_h
 
-
 #if !( defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4) )
   #error For Portenta_H7 only
 #endif
 
-#define USE_ETHERNET_PORTENTA_H7        true
+#define _PORTENTA_H7_AWS_LOGLEVEL_     1
+
+#define USE_WIFI_PORTENTA_H7        true
 
 #include <Portenta_Ethernet.h>
 #include <Ethernet.h>

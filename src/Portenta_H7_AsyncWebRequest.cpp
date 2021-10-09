@@ -9,14 +9,17 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.0.0
+  Version: 1.1.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K Hoang      06/10/2021 Initial coding for Portenta_H7 (STM32H7) with Vision-Shield Ethernet
+  1.1.0   K Hoang      08/10/2021 Add support to Portenta_H7 (STM32H7) using Murata WiFi
  *****************************************************************************************************************************/
 
-#define _PORTENTA_H7_AWS_LOGLEVEL_     1
+#if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
+  #define _PORTENTA_H7_AWS_LOGLEVEL_     1
+#endif
 
 #include "Portenta_H7_AsyncWebServer_Debug.h"
 
@@ -238,6 +241,9 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len)
 
     break;
   }
+  
+  // KH, Important for Portenta Murata WiFi, or system will hang
+  delay(0);
 }
 
 void AsyncWebServerRequest::_removeNotInterestingHeaders()
@@ -256,12 +262,13 @@ void AsyncWebServerRequest::_removeNotInterestingHeaders()
 
 void AsyncWebServerRequest::_onPoll()
 {
-  AWS_LOGDEBUG("onPoll");
-
   if (_response != NULL && _client != NULL && _client->canSend() && !_response->_finished())
-  {
+  {   
     _response->_ack(this, 0, 0);
   }
+  
+  // KH, Important for Portenta Murata WiFi, or system will hang
+  delay(0);
 }
 
 void AsyncWebServerRequest::_onAck(size_t len, uint32_t time)
@@ -281,6 +288,9 @@ void AsyncWebServerRequest::_onAck(size_t len, uint32_t time)
       delete r;
     }
   }
+  
+  // KH, Important for Portenta Murata WiFi, or system will hang
+  delay(0);
 }
 
 void AsyncWebServerRequest::_onError(int8_t error)
@@ -295,6 +305,9 @@ void AsyncWebServerRequest::_onTimeout(uint32_t time)
   AWS_LOGDEBUG3("TIMEOUT: time =", time, ", state =", _client->stateToString());
 
   _client->close();
+  
+  // KH, Important for Portenta Murata WiFi, or system will hang
+  delay(0);
 }
 
 void AsyncWebServerRequest::onDisconnect (ArDisconnectHandler fn)
@@ -304,14 +317,15 @@ void AsyncWebServerRequest::onDisconnect (ArDisconnectHandler fn)
 
 void AsyncWebServerRequest::_onDisconnect()
 {
-  AWS_LOGDEBUG("_onDisconnect");
-
   if (_onDisconnectfn)
   {
     _onDisconnectfn();
   }
 
   _server->_handleDisconnect(this);
+   
+  // KH, Important for Portenta Murata WiFi, or system will hang
+  delay(0);
 }
 
 void AsyncWebServerRequest::_addParam(AsyncWebParameter *p)
@@ -983,15 +997,16 @@ void AsyncWebServerRequest::send(AsyncWebServerResponse *response)
   _response = response;
 
   if (_response == NULL)
-  {
+  {   
     _client->close(true);
+       
     _onDisconnect();
 
     return;
   }
 
   if (!_response->_sourceValid())
-  {
+  {    
     delete response;
     _response = NULL;
     send(500);
@@ -1000,7 +1015,7 @@ void AsyncWebServerRequest::send(AsyncWebServerResponse *response)
   {
     _client->setRxTimeout(0);
     _response->_respond(this);
-  }
+  }  
 }
 
 AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(int code, const String& contentType, const String& content)

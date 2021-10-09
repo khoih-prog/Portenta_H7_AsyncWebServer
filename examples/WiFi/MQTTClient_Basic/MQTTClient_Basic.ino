@@ -59,8 +59,8 @@ void callback(char* topic, byte* payload, unsigned int length)
   Serial.println();
 }
 
-EthernetClient  ethClient;
-PubSubClient    client(mqttServer, 1883, callback, ethClient);
+WiFiClient  wifiClient;
+PubSubClient    client(mqttServer, 1883, callback, wifiClient);
 
 String data         = "Hello from MQTTClient_Basic on " + String(BOARD_NAME) + " with " + String(SHIELD_TYPE);
 const char *pubData = data.c_str();
@@ -101,6 +101,24 @@ void reconnect()
   }
 }
 
+void printWifiStatus()
+{
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+
+  // print your board's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("Local IP Address: ");
+  Serial.println(ip);
+
+  // print the received signal strength:
+  long rssi = WiFi.RSSI();
+  Serial.print("signal strength (RSSI):");
+  Serial.print(rssi);
+  Serial.println(" dBm");
+}
+
 void setup()
 {
   // Open serial communications and wait for port to open:
@@ -114,35 +132,31 @@ void setup()
 
   ///////////////////////////////////
   
-  // start the ethernet connection and the server
-  // Use random mac
-  uint16_t index = millis() % NUMBER_OF_MAC;
-
-  // Use Static IP
-  //Ethernet.begin(mac[index], ip);
-  // Use DHCP dynamic IP and random mac
-  Ethernet.begin(mac[index]);
-
-  if (Ethernet.hardwareStatus() == EthernetNoHardware) 
+  // check for the WiFi module:
+  if (WiFi.status() == WL_NO_MODULE)
   {
-    Serial.println("No Ethernet found. Stay here forever");
-    
-    while (true) 
-    {
-      delay(1); // do nothing, no point running without Ethernet hardware
-    }
-  }
-  
-  if (Ethernet.linkStatus() == LinkOFF) 
-  {
-    Serial.println("Not connected Ethernet cable");
+    Serial.println("Communication with WiFi module failed!");
+    // don't continue
+    while (true);
   }
 
-  Serial.print(F("Using mac index = "));
-  Serial.println(index);
+  Serial.print(F("Connecting to SSID: "));
+  Serial.println(ssid);
 
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(Ethernet.localIP());
+  status = WiFi.begin(ssid, pass);
+
+  delay(1000);
+   
+  // attempt to connect to WiFi network
+  while ( status != WL_CONNECTED)
+  {
+    delay(500);
+        
+    // Connect to WPA/WPA2 network
+    status = WiFi.status();
+  }
+
+  printWifiStatus();
 
   ///////////////////////////////////
 
