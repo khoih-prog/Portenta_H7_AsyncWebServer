@@ -1907,7 +1907,7 @@ You can access the Async Advanced WebServers at the displayed server IP, e.g. `1
 
 #### 7. Async_AdvancedWebServer on PORTENTA_H7_M7 using WiFi
 
-Following is the debug terminal and screen shot when running example [Async_AdvancedWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/examples/WiFi/Async_AdvancedWebServer) on Portenta_H7 WiFi to demonstrate the operation of Portenta_H7_AsyncWebServer, based on this [Portenta_H7_AsyncTCP Library](https://github.com/khoih-prog/Portenta_H7_AsyncTCP).
+Following is the debug terminal and screen shot when running example [Async_AdvancedWebServer](examples/WiFi/Async_AdvancedWebServer) on Portenta_H7 WiFi to demonstrate the operation of Portenta_H7_AsyncWebServer, based on this [Portenta_H7_AsyncTCP Library](https://github.com/khoih-prog/Portenta_H7_AsyncTCP).
 
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Portenta_H7 WiFi
