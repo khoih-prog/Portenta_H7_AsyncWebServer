@@ -1,6 +1,6 @@
 {
   "name": "Portenta_H7_AsyncWebServer",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "keywords": "http, async, websocket, webserver, async-webserver, async-tcp, async-udp, async-websocket, async-http, ssl, tls, mbed, mbed-portenta, portenta-h7, portentah7, portenta-h7-m7, portenta-h7-m4, portentah7-m7, portentah7-m4, stm32h7",
   "description": "Asynchronous WebServer Library for STM32H7-based Portenta_H7 using mbed_portenta core. This library, which is relied on Portenta_H7_AsyncTCP, is part of a series of advanced Async libraries, such as AsyncTCP, AsyncUDP, AsyncWebSockets, AsyncHTTPRequest, AsyncHTTPSRequest, etc.",
   "authors": 
@@ -34,11 +34,12 @@
     {
       "owner": "khoih-prog",
       "name": "Portenta_H7_AsyncTCP",
-      "version": "^1.1.0"
+      "version": "^1.3.0"
     }
   ],
+  "license": "LGPL-3.0",
   "frameworks": "*",
   "platforms": "mbed_portenta",
   "examples": "examples/*/*/*.ino",
-  "license": "MIT"
+  "headers": "Portenta_H7_AsyncWebServer.h"
 }

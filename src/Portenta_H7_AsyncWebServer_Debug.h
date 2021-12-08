@@ -9,13 +9,14 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.1.1
+  Version: 1.2.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K Hoang      06/10/2021 Initial coding for Portenta_H7 (STM32H7) with Vision-Shield Ethernet
   1.1.0   K Hoang      08/10/2021 Add support to Portenta_H7 (STM32H7) using Murata WiFi
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
+  1.2.0   K Hoang      07/12/2021 Fix crashing issue
  *****************************************************************************************************************************/
 
 #pragma once
@@ -73,6 +74,6 @@
 #define AWS_LOGDEBUG1(x,y)      if(_PORTENTA_H7_AWS_LOGLEVEL_>3) { AWS_PRINT_MARK; AWS_PRINT(x); AWS_PRINT_SP; AWS_PRINTLN(y); }
 #define AWS_LOGDEBUG2(x,y,z)    if(_PORTENTA_H7_AWS_LOGLEVEL_>3) { AWS_PRINT_MARK; AWS_PRINT(x); AWS_PRINT_SP; AWS_PRINT(y); AWS_PRINT_SP; AWS_PRINTLN(z); }
 #define AWS_LOGDEBUG3(x,y,z,w)  if(_PORTENTA_H7_AWS_LOGLEVEL_>3) { AWS_PRINT_MARK; AWS_PRINT(x); AWS_PRINT_SP; AWS_PRINT(y); AWS_PRINT_SP; AWS_PRINT(z); AWS_PRINT_SP; AWS_PRINTLN(w); }
-#define AWS_LOGDEBUG5(x,y,z,w,xx,yy)  if(_PORTENTA_H7_AWS_LOGLEVEL_>3) { AWS_PRINT_MARK; AWS_PRINT(x); AWS_PRINT_SP; AWS_PRINT(y); AWS_PRINT_SP; AWS_PRINT(z); AWS_PRINT_SP; AWS_PRINTLN(w); AWS_PRINT_SP; AWS_PRINT(xx); AWS_PRINT_SP; AWS_PRINTLN(yy);}
+#define AWS_LOGDEBUG5(x,y,z,w,xx,yy)  if(_PORTENTA_H7_AWS_LOGLEVEL_>3) { AWS_PRINT_MARK; AWS_PRINT(x); AWS_PRINT_SP; AWS_PRINT(y); AWS_PRINT_SP; AWS_PRINT(z); AWS_PRINT_SP; AWS_PRINT(w); AWS_PRINT_SP; AWS_PRINT(xx); AWS_PRINT_SP; AWS_PRINTLN(yy);}
 
 #endif    //PORTENTA_H7_ASYNC_WEBSERVER_DEBUG_H

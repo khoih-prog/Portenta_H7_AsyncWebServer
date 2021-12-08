@@ -11,6 +11,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Releases v1.2.0](#Releases-v120)
   * [Releases v1.1.1](#Releases-v111)
   * [Releases v1.1.0](#Releases-v110)
   * [Initial Releases v1.0.0](#Initial-Releases-v100)
@@ -19,6 +20,10 @@
 ---
 
 ## Changelog
+
+### Releases v1.2.0
+
+1. Fix crashing issue in mbed_portenta v2.6.1+. To be used with [**Portenta_H7_AsyncTCP releases v1.3.0+**](https://github.com/khoih-prog/Portenta_H7_AsyncTCP/releases/tag/v1.3.0)
 
 ### Releases v1.1.1
 

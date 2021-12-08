@@ -162,8 +162,8 @@ to apply the better and faster **asynchronous** feature of the **powerful** [ESP
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.16+` for Arduino](https://www.arduino.cc/en/Main/Software)
- 2. [`ArduinoCore-mbed mbed_portenta core 2.5.2+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino **Portenta_H7** boards, such as **Portenta_H7 Rev2 ABX00042, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest)
- 3. [`Portenta_H7_AsyncTCP library v1.1.0+`](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) for Portenta_H7 using `Vision-shield Ethernet` or `Murata WiFi`. [To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Portenta_H7_AsyncTCP.svg?)](https://www.ardu-badge.com/Portenta_H7_AsyncTCP)
+ 2. [`ArduinoCore-mbed mbed_portenta core 2.6.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino **Portenta_H7** boards, such as **Portenta_H7 Rev2 ABX00042, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest). To be used with [**Portenta_H7_AsyncTCP releases v1.3.0+**](https://github.com/khoih-prog/Portenta_H7_AsyncTCP/releases/tag/v1.3.0)
+ 3. [`Portenta_H7_AsyncTCP library v1.3.0+`](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) for Portenta_H7 using `Vision-shield Ethernet` or `Murata WiFi`. [To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Portenta_H7_AsyncTCP.svg?)](https://www.ardu-badge.com/Portenta_H7_AsyncTCP)
 
 ---
 
@@ -194,12 +194,12 @@ The best and easiest way is to use `Arduino Library Manager`. Search for `Porten
 
 #### 1. For Portenta_H7 boards using Arduino IDE in Linux
 
-  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/2.5.2/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/2.5.2/portenta_post_install.sh). 
+  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/2.6.1/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/2.6.1/portenta_post_install.sh). 
   
   Then run the following command using `sudo`
   
 ```
-$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/2.5.2
+$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/2.6.1
 $ chmod 755 portenta_post_install.sh
 $ sudo ./portenta_post_install.sh
 ```
@@ -212,15 +212,29 @@ This will create the file `/etc/udev/rules.d/49-portenta_h7.rules` as follows:
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="035b", GROUP="plugdev", MODE="0666"
 ```
 
-Supposing the ArduinoCore-mbed core version is 2.5.2. Now only one file must be copied into the directory:
+Supposing the ArduinoCore-mbed core version is 2.6.1. Now only one file must be copied into the directory:
 
-- `~/.arduino15/packages/arduino/hardware/mbed_portenta/2.5.2/portenta_post_install.sh`
+- `~/.arduino15/packages/arduino/hardware/mbed_portenta/2.6.1/portenta_post_install.sh`
 
 Whenever a new version is installed, remember to copy this files into the new version directory. For example, new version is x.yy.zz
 
 This file must be copied into the directory:
 
 - `~/.arduino15/packages/arduino/hardware/mbed_portenta/x.yy.zz/portenta_post_install.sh`
+
+
+#### 2. To fix compile error relating to dns_gethostbyname and LwIP stack
+
+
+#### Notes: Only for cores v2.5.2-. This fix is not necessary for core v2.6.1+
+
+**To be able to compile, run on Portenta_H7 boards**, you have to copy the whole [mbed_portenta Packages_Patches](Packages_Patches/arduino/hardware/mbed_portenta/2.5.2) directory into Arduino mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/2.5.2). 
+
+Supposing the Arduino mbed_portenta version is 2.5.2. These file must be copied into the directory:
+
+- `~/.arduino15/packages/arduino/hardware/mbed_portenta/2.5.2/libraries/SocketWrapper/src/MbedUdp.h`
+- `~/.arduino15/packages/arduino/hardware/mbed_portenta/2.5.2/libraries/SocketWrapper/src/MbedUdp.cpp`
+- `~/.arduino15/packages/arduino/hardware/mbed_portenta/2.5.2/cores/arduino/mbed/connectivity/lwipstack/include/lwipstack/lwipopts.h`
 
 ---
 ---
@@ -239,54 +253,54 @@ This file must be copied into the directory:
 ### The Async Web server
 
 - Listens for connections
-- Wraps the new clients into ```Request```
+- Wraps the new clients into `Request`
 - Keeps track of clients and cleans memory
-- Manages ```Rewrites``` and apply them on the request url
-- Manages ```Handlers``` and attaches them to Requests
+- Manages `Rewrites` and apply them on the request url
+- Manages `Handlers` and attaches them to Requests
 
 ### Request Life Cycle
 
 - TCP connection is received by the server
-- The connection is wrapped inside ```Request``` object
+- The connection is wrapped inside `Request` object
 - When the request head is received (type, url, get params, http version and host),
-  the server goes through all ```Rewrites``` (in the order they were added) to rewrite the url and inject query parameters,
-  next, it goes through all attached ```Handlers```(in the order they were added) trying to find one
-  that ```canHandle``` the given request. If none are found, the default(catch-all) handler is attached.
-- The rest of the request is received, calling the ```handleUpload``` or ```handleBody``` methods of the ```Handler``` if they are needed (POST+File/Body)
-- When the whole request is parsed, the result is given to the ```handleRequest``` method of the ```Handler``` and is ready to be responded to
-- In the ```handleRequest``` method, to the ```Request``` is attached a ```Response``` object (see below) that will serve the response data back to the client
-- When the ```Response``` is sent, the client is closed and freed from the memory
+  the server goes through all `Rewrites` (in the order they were added) to rewrite the url and inject query parameters,
+  next, it goes through all attached `Handlers`(in the order they were added) trying to find one
+  that `canHandle` the given request. If none are found, the default(catch-all) handler is attached.
+- The rest of the request is received, calling the `handleUpload` or `handleBody` methods of the `Handler` if they are needed (POST+File/Body)
+- When the whole request is parsed, the result is given to the `handleRequest` method of the `Handler` and is ready to be responded to
+- In the `handleRequest` method, to the `Request` is attached a `Response` object (see below) that will serve the response data back to the client
+- When the `Response` is sent, the client is closed and freed from the memory
 
 ### Rewrites and how do they work
 
-- The ```Rewrites``` are used to rewrite the request url and/or inject get parameters for a specific request url path.
-- All ```Rewrites``` are evaluated on the request in the order they have been added to the server.
-- The ```Rewrite``` will change the request url only if the request url (excluding get parameters) is fully match
-  the rewrite url, and when the optional ```Filter``` callback return true.
-- Setting a ```Filter``` to the ```Rewrite``` enables to control when to apply the rewrite, decision can be based on
+- The `Rewrites` are used to rewrite the request url and/or inject get parameters for a specific request url path.
+- All `Rewrites` are evaluated on the request in the order they have been added to the server.
+- The `Rewrite` will change the request url only if the request url (excluding get parameters) is fully match
+  the rewrite url, and when the optional `Filter` callback return true.
+- Setting a `Filter` to the `Rewrite` enables to control when to apply the rewrite, decision can be based on
   request url, http version, request host/port/target host, get parameters or the request client's localIP or remoteIP.
-- The ```Rewrite``` can specify a target url with optional get parameters, e.g. ```/to-url?with=params```
+- The `Rewrite` can specify a target url with optional get parameters, e.g. `/to-url?with=params`
 
 ### Handlers and how do they work
 
-- The ```Handlers``` are used for executing specific actions to particular requests
-- One ```Handler``` instance can be attached to any request and lives together with the server
-- Setting a ```Filter``` to the ```Handler``` enables to control when to apply the handler, decision can be based on
+- The `Handlers` are used for executing specific actions to particular requests
+- One `Handler` instance can be attached to any request and lives together with the server
+- Setting a `Filter` to the `Handler` enables to control when to apply the handler, decision can be based on
   request url, http version, request host/port/target host, get parameters or the request client's localIP or remoteIP.
-- The ```canHandle``` method is used for handler specific control on whether the requests can be handled
-  and for declaring any interesting headers that the ```Request``` should parse. Decision can be based on request
+- The `canHandle` method is used for handler specific control on whether the requests can be handled
+  and for declaring any interesting headers that the `Request` should parse. Decision can be based on request
   method, request url, http version, request host/port/target host and get parameters
-- Once a ```Handler``` is attached to given ```Request``` (```canHandle``` returned true)
-  that ```Handler``` takes care to receive any file/data upload and attach a ```Response```
-  once the ```Request``` has been fully parsed
-- ```Handlers``` are evaluated in the order they are attached to the server. The ```canHandle``` is called only
-  if the ```Filter``` that was set to the ```Handler``` return true.
-- The first ```Handler``` that can handle the request is selected, not further ```Filter``` and ```canHandle``` are called.
+- Once a `Handler` is attached to given `Request` (`canHandle` returned true)
+  that `Handler` takes care to receive any file/data upload and attach a `Response`
+  once the `Request` has been fully parsed
+- `Handlers` are evaluated in the order they are attached to the server. The `canHandle` is called only
+  if the `Filter` that was set to the `Handler` return true.
+- The first `Handler` that can handle the request is selected, not further `Filter` and `canHandle` are called.
 
 ### Responses and how do they work
 
-- The ```Response``` objects are used to send the response data back to the client
-- The ```Response``` object lives with the ```Request``` and is freed on end or disconnect
+- The `Response` objects are used to send the response data back to the client
+- The `Response` object lives with the `Request` and is freed on end or disconnect
 - Different techniques are used depending on the response type to send the data in packets
   returning back almost immediately and sending the next packet when this one is received.
   Any time in between is spent to run the user loop and handle other network packets
@@ -298,7 +312,7 @@ This file must be copied into the directory:
 - Portenta_H7_AsyncWebServer contains simple template processing engine.
 - Template processing can be added to most response types.
 - Currently it supports only replacing template placeholders with actual values. No conditional processing, cycles, etc.
-- Placeholders are delimited with ```%``` symbols. Like this: ```%TEMPLATE_PLACEHOLDER%```.
+- Placeholders are delimited with `%` symbols. Like this: `%TEMPLATE_PLACEHOLDER%`.
 - It works by extracting placeholder name from response text and passing it to user provided function which should return actual value to be used instead of placeholder.
 - Since it's user provided function, it is possible for library users to implement conditional processing and cycles themselves.
 - Since it's impossible to know the actual response size after template processing step in advance (and, therefore, to include it in response headers), the response becomes [chunked](#chunked-response).
@@ -1727,8 +1741,8 @@ Following is debug terminal output when running example [MQTT_ThingStream](examp
 
 ```
 Start MQTT_ThingStream on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.1.0
-Portenta_H7_AsyncWebServer v1.1.1
+Portenta_H7_AsyncTCP v1.3.0
+Portenta_H7_AsyncWebServer v1.2.0
 Using mac index = 17
 Connected! IP address: 192.168.2.87
 ***************************************
@@ -1752,8 +1766,8 @@ Following is debug terminal output when running example [WebClient](examples/Eth
 
 ```
 Start WebClientRepeating on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.1.0
-Portenta_H7_AsyncWebServer v1.1.1
+Portenta_H7_AsyncTCP v1.3.0
+Portenta_H7_AsyncWebServer v1.2.0
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 
@@ -1820,8 +1834,8 @@ Following is debug terminal output when running example [MQTTClient_Auth](exampl
 
 ```
 Start MQTTClient_Auth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.1.0
-Portenta_H7_AsyncWebServer v1.1.1
+Portenta_H7_AsyncTCP v1.3.0
+Portenta_H7_AsyncWebServer v1.2.0
 Using mac index = 9
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1841,8 +1855,8 @@ Following is debug terminal output when running example [MQTTClient_Basic](examp
 
 ```
 Start MQTTClient_Basic on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.1.0
-Portenta_H7_AsyncWebServer v1.1.1
+Portenta_H7_AsyncTCP v1.3.0
+Portenta_H7_AsyncWebServer v1.2.0
 Using mac index = 8
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1860,8 +1874,8 @@ Following is debug terminal output when running example [Async_HTTPBasicAuth](ex
 
 ```
 Start Async_HTTPBasicAuth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.1.0
-Portenta_H7_AsyncWebServer v1.1.1
+Portenta_H7_AsyncTCP v1.3.0
+Portenta_H7_AsyncWebServer v1.2.0
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 Async_HttpBasicAuth started @ IP : 192.168.2.87
@@ -1890,8 +1904,8 @@ Following are debug terminal output and screen shots when running example [Async
 
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.1.0
-Portenta_H7_AsyncWebServer v1.1.1
+Portenta_H7_AsyncTCP v1.3.0
+Portenta_H7_AsyncWebServer v1.2.0
 Using mac index = 4
 Connected! IP address: 192.168.2.87
 HTTP EthernetWebServer is @ IP : 192.168.2.87
@@ -1911,8 +1925,8 @@ Following is the debug terminal and screen shot when running example [Async_Adva
 
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Portenta_H7 WiFi
-Portenta_H7_AsyncTCP v1.1.0
-Portenta_H7_AsyncWebServer v1.1.1
+Portenta_H7_AsyncTCP v1.3.0
+Portenta_H7_AsyncWebServer v1.2.0
 Connecting to SSID: HueNet1
 SSID: HueNet1
 Local IP Address: 192.168.2.94
@@ -1975,11 +1989,13 @@ Submit issues to: [Portenta_H7_AsyncWebServer issues](https://github.com/khoih-p
 
 1. Based on and modified from [Hristo Gochkov's ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer). Many thanks to [Hristo Gochkov](https://github.com/me-no-dev) for great [ESPAsyncWebServer Library](https://github.com/me-no-dev/ESPAsyncWebServer)
 2. Thanks to [rusty-bit](https://github.com/rusty-bit) to initiate the Discussion in [**AsyncWebserver for Portenta H7** #6](https://github.com/khoih-prog/AsyncWebServer_STM32/discussions/6) leading to these [Portenta_H7_AsyncTCP](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) and [Portenta_H7_AsyncWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer) libraries
+3. Thanks to [Jeremy Ellis](https://github.com/hpssjellis) to test and report the compile error issue with mbed_portenta core v2.6.1, leading to v1.2.0
 
 <table>
   <tr>
     <td align="center"><a href="https://github.com/me-no-dev"><img src="https://github.com/me-no-dev.png" width="100px;" alt="me-no-dev"/><br /><sub><b>⭐️⭐️ Hristo Gochkov</b></sub></a><br /></td>
-     <td align="center"><a href="https://github.com/rusty-bit"><img src="https://github.com/rusty-bit.png" width="100px;" alt="rusty-bit"/><br /><sub><b>rusty-bit</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/rusty-bit"><img src="https://github.com/rusty-bit.png" width="100px;" alt="rusty-bit"/><br /><sub><b>rusty-bit</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/hpssjellis"><img src="https://github.com/hpssjellis.png" width="100px;" alt="hpssjellis"/><br /><sub><b>Jeremy Ellis</b></sub></a><br /></td> 
   </tr> 
 </table>
 
