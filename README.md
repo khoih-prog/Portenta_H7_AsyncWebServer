@@ -23,6 +23,7 @@
   * [VS Code & PlatformIO](#vs-code--platformio)
 * [Packages' Patches](#packages-patches)
   * [1. For Portenta_H7 boards using Arduino IDE in Linux](#1-for-portenta_h7-boards-using-arduino-ide-in-linux)
+  * [2. To fix compile error relating to dns_gethostbyname and LwIP stack](#2-to-fix-compile-error-relating-to-dns_gethostbyname-and-lwip-stack)
 * [Important things to remember](#important-things-to-remember)
 * [Principles of operation](#principles-of-operation)
   * [The Async Web server](#the-async-web-server)
@@ -1989,7 +1990,7 @@ Submit issues to: [Portenta_H7_AsyncWebServer issues](https://github.com/khoih-p
 
 1. Based on and modified from [Hristo Gochkov's ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer). Many thanks to [Hristo Gochkov](https://github.com/me-no-dev) for great [ESPAsyncWebServer Library](https://github.com/me-no-dev/ESPAsyncWebServer)
 2. Thanks to [rusty-bit](https://github.com/rusty-bit) to initiate the Discussion in [**AsyncWebserver for Portenta H7** #6](https://github.com/khoih-prog/AsyncWebServer_STM32/discussions/6) leading to these [Portenta_H7_AsyncTCP](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) and [Portenta_H7_AsyncWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer) libraries
-3. Thanks to [Jeremy Ellis](https://github.com/hpssjellis) to test and report the compile error issue with mbed_portenta core v2.6.1, leading to v1.2.0
+3. Thanks to [Jeremy Ellis](https://github.com/hpssjellis) to test and report the compile error and crash issue with mbed_portenta core v2.6.1, leading to v1.2.0
 
 <table>
   <tr>
