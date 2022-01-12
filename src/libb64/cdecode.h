@@ -12,7 +12,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.0
+  Version: 1.2.1
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -20,6 +20,7 @@
   1.1.0   K Hoang      08/10/2021 Add support to Portenta_H7 (STM32H7) using Murata WiFi
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
+  1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
  *****************************************************************************************************************************/
 
 #pragma once
@@ -35,18 +36,20 @@
 extern "C" {
 #endif
 
-typedef enum {
+typedef enum 
+{
   step_a, step_b, step_c, step_d
 } base64_decodestep;
 
-typedef struct {
+typedef struct 
+{
   base64_decodestep step;
   char plainchar;
 } base64_decodestate;
 
 void base64_init_decodestate(base64_decodestate* state_in);
 
-int base64_decode_value(char value_in);
+int base64_decode_value(int value_in);
 
 int base64_decode_block(const char* code_in, const int length_in, char* plaintext_out, base64_decodestate* state_in);
 

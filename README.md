@@ -162,7 +162,7 @@ to apply the better and faster **asynchronous** feature of the **powerful** [ESP
 
 ## Prerequisites
 
- 1. [`Arduino IDE 1.8.16+` for Arduino](https://www.arduino.cc/en/Main/Software)
+ 1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
  2. [`ArduinoCore-mbed mbed_portenta core 2.6.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino **Portenta_H7** boards, such as **Portenta_H7 Rev2 ABX00042, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest). To be used with [**Portenta_H7_AsyncTCP releases v1.3.0+**](https://github.com/khoih-prog/Portenta_H7_AsyncTCP/releases/tag/v1.3.0)
  3. [`Portenta_H7_AsyncTCP library v1.3.0+`](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) for Portenta_H7 using `Vision-shield Ethernet` or `Murata WiFi`. [To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Portenta_H7_AsyncTCP.svg?)](https://www.ardu-badge.com/Portenta_H7_AsyncTCP)
 
@@ -1743,7 +1743,7 @@ Following is debug terminal output when running example [MQTT_ThingStream](examp
 ```
 Start MQTT_ThingStream on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.0
+Portenta_H7_AsyncWebServer v1.2.1
 Using mac index = 17
 Connected! IP address: 192.168.2.87
 ***************************************
@@ -1768,7 +1768,7 @@ Following is debug terminal output when running example [WebClient](examples/Eth
 ```
 Start WebClientRepeating on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.0
+Portenta_H7_AsyncWebServer v1.2.1
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 
@@ -1836,7 +1836,7 @@ Following is debug terminal output when running example [MQTTClient_Auth](exampl
 ```
 Start MQTTClient_Auth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.0
+Portenta_H7_AsyncWebServer v1.2.1
 Using mac index = 9
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1857,7 +1857,7 @@ Following is debug terminal output when running example [MQTTClient_Basic](examp
 ```
 Start MQTTClient_Basic on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.0
+Portenta_H7_AsyncWebServer v1.2.1
 Using mac index = 8
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1876,7 +1876,7 @@ Following is debug terminal output when running example [Async_HTTPBasicAuth](ex
 ```
 Start Async_HTTPBasicAuth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.0
+Portenta_H7_AsyncWebServer v1.2.1
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 Async_HttpBasicAuth started @ IP : 192.168.2.87
@@ -1906,7 +1906,7 @@ Following are debug terminal output and screen shots when running example [Async
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.0
+Portenta_H7_AsyncWebServer v1.2.1
 Using mac index = 4
 Connected! IP address: 192.168.2.87
 HTTP EthernetWebServer is @ IP : 192.168.2.87
@@ -1927,7 +1927,7 @@ Following is the debug terminal and screen shot when running example [Async_Adva
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Portenta_H7 WiFi
 Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.0
+Portenta_H7_AsyncWebServer v1.2.1
 Connecting to SSID: HueNet1
 SSID: HueNet1
 Local IP Address: 192.168.2.94

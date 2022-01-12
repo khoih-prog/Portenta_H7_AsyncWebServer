@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.0
+  Version: 1.2.1
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -17,6 +17,7 @@
   1.1.0   K Hoang      08/10/2021 Add support to Portenta_H7 (STM32H7) using Murata WiFi
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
+  1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
  *****************************************************************************************************************************/
  
 #ifndef _PORTENTA_H7_ASYNC_WEBSERVER_H_
@@ -31,7 +32,13 @@
     
 #endif
 
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION      "Portenta_H7_AsyncWebServer v1.2.0"
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION           "Portenta_H7_AsyncWebServer v1.2.1"
+
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_MAJOR     1
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_MINOR     2
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_PATCH     1
+
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_INT       1002001
 
 #ifndef PORTENTA_H7_AWS_UNUSED
   #define PORTENTA_H7_AWS_UNUSED(x)       (void)(x)
