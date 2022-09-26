@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
@@ -32,9 +33,13 @@
 
 //static const String SharedEmptyString = String();
 
+/////////////////////////////////////////////////
+
 #define __is_param_char(c) ((c) && ((c) != '{') && ((c) != '[') && ((c) != '&') && ((c) != '='))
 
 enum { PARSE_REQ_START, PARSE_REQ_HEADERS, PARSE_REQ_BODY, PARSE_REQ_END, PARSE_REQ_FAIL };
+
+/////////////////////////////////////////////////
 
 AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   : _client(c), _server(s), _handler(NULL), _response(NULL), _temp(), _parseState(0)
@@ -59,6 +64,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   c->onError([](void *r, AsyncClient * c, int8_t error)
   {
     PORTENTA_H7_AWS_UNUSED(c);
+    
     AsyncWebServerRequest *req = (AsyncWebServerRequest*)r;
     req->_onError(error);
   }, this);
@@ -66,6 +72,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   c->onAck([](void *r, AsyncClient * c, size_t len, uint32_t time)
   {
     PORTENTA_H7_AWS_UNUSED(c);
+    
     AsyncWebServerRequest *req = (AsyncWebServerRequest*)r;
     req->_onAck(len, time);
   }, this);
@@ -80,6 +87,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   c->onTimeout([](void *r, AsyncClient * c, uint32_t time)
   {
     PORTENTA_H7_AWS_UNUSED(c);
+    
     AsyncWebServerRequest *req = (AsyncWebServerRequest*)r;
     req->_onTimeout(time);
   }, this);
@@ -87,6 +95,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   c->onData([](void *r, AsyncClient * c, void *buf, size_t len)
   {
     PORTENTA_H7_AWS_UNUSED(c);
+    
     AsyncWebServerRequest *req = (AsyncWebServerRequest*)r;
     req->_onData(buf, len);
   }, this);
@@ -94,10 +103,13 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   c->onPoll([](void *r, AsyncClient * c)
   {
     PORTENTA_H7_AWS_UNUSED(c);
+    
     AsyncWebServerRequest *req = ( AsyncWebServerRequest*)r;
     req->_onPoll();
   }, this);
 }
+
+/////////////////////////////////////////////////
 
 AsyncWebServerRequest::~AsyncWebServerRequest()
 {
@@ -118,6 +130,8 @@ AsyncWebServerRequest::~AsyncWebServerRequest()
     free(_tempObject);
   }
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::_onData(void *buf, size_t len)
 {
@@ -143,6 +157,7 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len)
         // No new line, just add the buffer in _temp
         char ch = str[len - 1];
         str[len - 1] = 0;
+        
         _temp.reserve(_temp.length() + len);
         _temp.concat(str);
         _temp.concat(ch);
@@ -151,6 +166,7 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len)
       {
         // Found new line - extract it and parse
         str[i] = 0; // Terminate the string at the end of the line.
+        
         _temp.concat(str);
         _temp.trim();
         _parseLine();
@@ -246,8 +262,11 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len)
   }
   
   // KH, Important for Portenta Murata WiFi, or system will hang
-  delay(0);
+  //delay(0);
+  yield();
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::_removeNotInterestingHeaders()
 {
@@ -263,6 +282,8 @@ void AsyncWebServerRequest::_removeNotInterestingHeaders()
   }
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerRequest::_onPoll()
 {
   if (_response != NULL && _client != NULL && _client->canSend() && !_response->_finished())
@@ -271,8 +292,11 @@ void AsyncWebServerRequest::_onPoll()
   }
   
   // KH, Important for Portenta Murata WiFi, or system will hang
-  delay(0);
+  //delay(0);
+  yield();
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::_onAck(size_t len, uint32_t time)
 {
@@ -293,30 +317,40 @@ void AsyncWebServerRequest::_onAck(size_t len, uint32_t time)
   }
   
   // KH, Important for Portenta Murata WiFi, or system will hang
-  delay(0);
+  //delay(0);
+  yield();
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::_onError(int8_t error)
 {
   PORTENTA_H7_AWS_UNUSED(error);
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerRequest::_onTimeout(uint32_t time)
 {
   PORTENTA_H7_AWS_UNUSED(time);
 
-  AWS_LOGDEBUG3("TIMEOUT: time =", time, ", state =", _client->stateToString());
+  AWS_LOGINFO3("TIMEOUT: time =", time, ", state =", _client->stateToString());
 
   _client->close();
   
   // KH, Important for Portenta Murata WiFi, or system will hang
-  delay(0);
+  //delay(0);
+  yield();
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::onDisconnect (ArDisconnectHandler fn)
 {
   _onDisconnectfn = fn;
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::_onDisconnect()
 {
@@ -328,18 +362,25 @@ void AsyncWebServerRequest::_onDisconnect()
   _server->_handleDisconnect(this);
    
   // KH, Important for Portenta Murata WiFi, or system will hang
-  delay(0);
+  //delay(0);
+  yield();
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::_addParam(AsyncWebParameter *p)
 {
   _params.add(p);
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerRequest::_addPathParam(const char *p)
 {
   _pathParams.add(new String(p));
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::_addGetParams(const String& params)
 {
@@ -363,6 +404,8 @@ void AsyncWebServerRequest::_addGetParams(const String& params)
     start = end + 1;
   }
 }
+
+/////////////////////////////////////////////////
 
 bool AsyncWebServerRequest::_parseReqHead()
 {
@@ -422,6 +465,8 @@ bool AsyncWebServerRequest::_parseReqHead()
   return true;
 }
 
+/////////////////////////////////////////////////
+
 bool strContains(String src, String find, bool mindcase = true)
 {
   int pos = 0, i = 0;
@@ -452,6 +497,8 @@ bool strContains(String src, String find, bool mindcase = true)
 
   return false;
 }
+
+/////////////////////////////////////////////////
 
 bool AsyncWebServerRequest::_parseReqHeader()
 {
@@ -522,6 +569,8 @@ bool AsyncWebServerRequest::_parseReqHeader()
   return true;
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerRequest::_parsePlainPostChar(uint8_t data)
 {
   if (data && (char)data != '&')
@@ -543,6 +592,8 @@ void AsyncWebServerRequest::_parsePlainPostChar(uint8_t data)
   }
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerRequest::_handleUploadByte(uint8_t data, bool last)
 {
   _itemBuffer[_itemBufferIndex++] = data;
@@ -556,6 +607,8 @@ void AsyncWebServerRequest::_handleUploadByte(uint8_t data, bool last)
     _itemBufferIndex = 0;
   }
 }
+
+/////////////////////////////////////////////////
 
 enum
 {
@@ -572,6 +625,7 @@ enum
   PARSE_ERROR
 };
 
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
 {
@@ -602,16 +656,19 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
     if (_parsedLength < 2 && data != '-')
     {
       _multiParseState = PARSE_ERROR;
+      
       return;
     }
     else if (_parsedLength - 2 < _boundary.length() && _boundary.c_str()[_parsedLength - 2] != data)
     {
       _multiParseState = PARSE_ERROR;
+      
       return;
     }
     else if (_parsedLength - 2 == _boundary.length() && data != '\r')
     {
       _multiParseState = PARSE_ERROR;
+      
       return;
     }
     else if (_parsedLength - 3 == _boundary.length())
@@ -619,6 +676,7 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
       if (data != '\n')
       {
         _multiParseState = PARSE_ERROR;
+        
         return;
       }
 
@@ -696,6 +754,7 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
           if (_itemBuffer == NULL)
           {
             _multiParseState = PARSE_ERROR;
+            
             return;
           }
 
@@ -803,6 +862,7 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
     {
       AWS_LOGDEBUG1("ERROR: The parser got to the end of the POST but is expecting more bytes =", (_contentLength - _parsedLength - 4));
       AWS_LOGDEBUG("Drop an issue so we can have more info on the matter!");
+      
       _contentLength = _parsedLength + 4;//lets close the request gracefully
     }
 
@@ -856,6 +916,8 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
     }
   }
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::_parseLine()
 {
@@ -911,11 +973,14 @@ void AsyncWebServerRequest::_parseLine()
   }
 }
 
+/////////////////////////////////////////////////
 
 size_t AsyncWebServerRequest::headers() const
 {
   return _headers.length();
 }
+
+/////////////////////////////////////////////////
 
 bool AsyncWebServerRequest::hasHeader(const String& name) const
 {
@@ -930,6 +995,8 @@ bool AsyncWebServerRequest::hasHeader(const String& name) const
   return false;
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebHeader* AsyncWebServerRequest::getHeader(const String& name) const
 {
   for (const auto& h : _headers)
@@ -943,6 +1010,8 @@ AsyncWebHeader* AsyncWebServerRequest::getHeader(const String& name) const
   return nullptr;
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebHeader* AsyncWebServerRequest::getHeader(size_t num) const
 {
   auto header = _headers.nth(num);
@@ -950,11 +1019,14 @@ AsyncWebHeader* AsyncWebServerRequest::getHeader(size_t num) const
   return (header ? *header : nullptr);
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncWebServerRequest::params() const
 {
   return _params.length();
 }
 
+/////////////////////////////////////////////////
 
 bool AsyncWebServerRequest::hasParam(const String& name, bool post, bool file) const
 {
@@ -969,6 +1041,8 @@ bool AsyncWebServerRequest::hasParam(const String& name, bool post, bool file) c
   return false;
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebParameter* AsyncWebServerRequest::getParam(const String& name, bool post, bool file) const
 {
   for (const auto& p : _params)
@@ -982,6 +1056,8 @@ AsyncWebParameter* AsyncWebServerRequest::getParam(const String& name, bool post
   return nullptr;
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebParameter* AsyncWebServerRequest::getParam(size_t num) const
 {
   auto param = _params.nth(num);
@@ -989,11 +1065,15 @@ AsyncWebParameter* AsyncWebServerRequest::getParam(size_t num) const
   return (param ? *param : nullptr);
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerRequest::addInterestingHeader(const String& name)
 {
   if (!_interestingHeaders.containsIgnoreCase(name))
     _interestingHeaders.add(name);
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::send(AsyncWebServerResponse *response)
 {
@@ -1021,20 +1101,28 @@ void AsyncWebServerRequest::send(AsyncWebServerResponse *response)
   }  
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(int code, const String& contentType, const String& content)
 {
   return new AsyncBasicResponse(code, contentType, content);
 }
+
+/////////////////////////////////////////////////
 
 AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(Stream &stream, const String& contentType, size_t len, AwsTemplateProcessor callback)
 {
   return new AsyncStreamResponse(stream, contentType, len, callback);
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(const String& contentType, size_t len, AwsResponseFiller callback, AwsTemplateProcessor templateCallback)
 {
   return new AsyncCallbackResponse(contentType, len, callback, templateCallback);
 }
+
+/////////////////////////////////////////////////
 
 AsyncWebServerResponse * AsyncWebServerRequest::beginChunkedResponse(const String& contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback)
 {
@@ -1044,30 +1132,42 @@ AsyncWebServerResponse * AsyncWebServerRequest::beginChunkedResponse(const Strin
   return new AsyncCallbackResponse(contentType, 0, callback, templateCallback);
 }
 
+/////////////////////////////////////////////////
+
 AsyncResponseStream * AsyncWebServerRequest::beginResponseStream(const String& contentType, size_t bufferSize)
 {
   return new AsyncResponseStream(contentType, bufferSize);
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::send(int code, const String& contentType, const String& content)
 {
   send(beginResponse(code, contentType, content));
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerRequest::send(Stream &stream, const String& contentType, size_t len, AwsTemplateProcessor callback)
 {
   send(beginResponse(stream, contentType, len, callback));
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::send(const String& contentType, size_t len, AwsResponseFiller callback, AwsTemplateProcessor templateCallback)
 {
   send(beginResponse(contentType, len, callback, templateCallback));
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerRequest::sendChunked(const String& contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback)
 {
   send(beginChunkedResponse(contentType, callback, templateCallback));
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerRequest::redirect(const String& url)
 {
@@ -1075,6 +1175,8 @@ void AsyncWebServerRequest::redirect(const String& url)
   response->addHeader("Location", url);
   send(response);
 }
+
+/////////////////////////////////////////////////
 
 bool AsyncWebServerRequest::authenticate(const char * username, const char * password, const char * realm, bool passwordIsHash)
 {
@@ -1107,6 +1209,8 @@ bool AsyncWebServerRequest::authenticate(const char * username, const char * pas
   return false;
 }
 
+/////////////////////////////////////////////////
+
 bool AsyncWebServerRequest::authenticate(const char * hash)
 {
   if (!_authorization.length() || hash == NULL)
@@ -1136,6 +1240,8 @@ bool AsyncWebServerRequest::authenticate(const char * hash)
   return (_authorization.equals(hash));
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerRequest::requestAuthentication(const char * realm, bool isDigest)
 {
   AsyncWebServerResponse * r = beginResponse(401);
@@ -1161,6 +1267,8 @@ void AsyncWebServerRequest::requestAuthentication(const char * realm, bool isDig
   send(r);
 }
 
+/////////////////////////////////////////////////
+
 bool AsyncWebServerRequest::hasArg(const char* name) const
 {
   for (const auto& arg : _params)
@@ -1173,6 +1281,8 @@ bool AsyncWebServerRequest::hasArg(const char* name) const
 
   return false;
 }
+
+/////////////////////////////////////////////////
 
 const String& AsyncWebServerRequest::arg(const String& name) const
 {
@@ -1187,15 +1297,21 @@ const String& AsyncWebServerRequest::arg(const String& name) const
   return SharedEmptyString;
 }
 
+/////////////////////////////////////////////////
+
 const String& AsyncWebServerRequest::arg(size_t i) const
 {
   return getParam(i)->value();
 }
 
+/////////////////////////////////////////////////
+
 const String& AsyncWebServerRequest::argName(size_t i) const
 {
   return getParam(i)->name();
 }
+
+/////////////////////////////////////////////////
 
 const String& AsyncWebServerRequest::pathArg(size_t i) const
 {
@@ -1204,12 +1320,16 @@ const String& AsyncWebServerRequest::pathArg(size_t i) const
   return (param ? **param : SharedEmptyString);
 }
 
+/////////////////////////////////////////////////
+
 const String& AsyncWebServerRequest::header(const char* name) const
 {
   AsyncWebHeader* h = getHeader(String(name));
 
   return (h ? h->value() : SharedEmptyString);
 }
+
+/////////////////////////////////////////////////
 
 const String& AsyncWebServerRequest::header(size_t i) const
 {
@@ -1218,12 +1338,16 @@ const String& AsyncWebServerRequest::header(size_t i) const
   return (h ?  h->value() : SharedEmptyString);
 }
 
+/////////////////////////////////////////////////
+
 const String& AsyncWebServerRequest::headerName(size_t i) const
 {
   AsyncWebHeader* h = getHeader(i);
 
   return (h ? h->name() : SharedEmptyString);
 }
+
+/////////////////////////////////////////////////
 
 String AsyncWebServerRequest::urlDecode(const String& text) const
 {
@@ -1259,6 +1383,7 @@ String AsyncWebServerRequest::urlDecode(const String& text) const
   return decoded;
 }
 
+/////////////////////////////////////////////////
 
 const char * AsyncWebServerRequest::methodToString() const
 {
@@ -1282,6 +1407,8 @@ const char * AsyncWebServerRequest::methodToString() const
   return "UNKNOWN";
 }
 
+/////////////////////////////////////////////////
+
 const char *AsyncWebServerRequest::requestedConnTypeToString() const
 {
   switch (_reqconntype)
@@ -1301,6 +1428,8 @@ const char *AsyncWebServerRequest::requestedConnTypeToString() const
   }
 }
 
+/////////////////////////////////////////////////
+
 bool AsyncWebServerRequest::isExpectedRequestedConnType(RequestedConnectionType erct1, RequestedConnectionType erct2, RequestedConnectionType erct3)
 {
   bool res = false;
@@ -1316,3 +1445,6 @@ bool AsyncWebServerRequest::isExpectedRequestedConnType(RequestedConnectionType 
 
   return res;
 }
+
+/////////////////////////////////////////////////
+

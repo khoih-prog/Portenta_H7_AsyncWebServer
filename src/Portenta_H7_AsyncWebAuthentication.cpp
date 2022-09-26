@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
@@ -34,6 +35,8 @@
 #include "Crypto/bearssl_hash.h"
 #include "Crypto/Hash.h"
 
+/////////////////////////////////////////////////
+
 // Basic Auth hash = base64("username:password")
 
 bool checkBasicAuthentication(const char * hash, const char * username, const char * password) 
@@ -41,6 +44,7 @@ bool checkBasicAuthentication(const char * hash, const char * username, const ch
   if (username == NULL || password == NULL || hash == NULL)
   {
     AWS_LOGDEBUG("checkBasicAuthentication: Fail: NULL username/password/hash");
+    
     return false;
   }
 
@@ -70,6 +74,7 @@ bool checkBasicAuthentication(const char * hash, const char * username, const ch
     AWS_LOGDEBUG("checkBasicAuthentication: NULL encoded");
   
     delete[] toencode;
+    
     return false;
   }
   
@@ -81,6 +86,7 @@ bool checkBasicAuthentication(const char * hash, const char * username, const ch
     
     delete[] toencode;
     delete[] encoded;
+    
     return true;
   }
   
@@ -88,8 +94,11 @@ bool checkBasicAuthentication(const char * hash, const char * username, const ch
   
   delete[] toencode;
   delete[] encoded;
+  
   return false;
 }
+
+/////////////////////////////////////////////////
 
 static bool getMD5(uint8_t * data, uint16_t len, char * output) 
 { 
@@ -127,9 +136,10 @@ static bool getMD5(uint8_t * data, uint16_t len, char * output)
   return true;
 }
 
+/////////////////////////////////////////////////
+
 static String genRandomMD5() 
 {
-  // For STM32
   uint32_t r = rand();
 
   char * out = (char*) malloc(33);
@@ -145,6 +155,8 @@ static String genRandomMD5()
   return res;
 }
 
+/////////////////////////////////////////////////
+
 static String stringMD5(const String& in) 
 {
   char * out = (char*) malloc(33);
@@ -159,6 +171,8 @@ static String stringMD5(const String& in)
   
   return res;
 }
+
+/////////////////////////////////////////////////
 
 String generateDigestHash(const char * username, const char * password, const char * realm) 
 {
@@ -189,6 +203,8 @@ String generateDigestHash(const char * username, const char * password, const ch
   return res;
 }
 
+/////////////////////////////////////////////////
+
 String requestDigestAuthentication(const char * realm) 
 {
   String header = "realm=\"";
@@ -209,8 +225,10 @@ String requestDigestAuthentication(const char * realm)
   return header;
 }
 
+/////////////////////////////////////////////////
+
 bool checkDigestAuthentication(const char * header, const char * method, const char * username, const char * password, 
-                                const char * realm, bool passwordIsHash, const char * nonce, const char * opaque, const char * uri) 
+                               const char * realm, bool passwordIsHash, const char * nonce, const char * opaque, const char * uri) 
 {
   if (username == NULL || password == NULL || header == NULL || method == NULL) 
   {
@@ -351,3 +369,6 @@ bool checkDigestAuthentication(const char * header, const char * method, const c
   
   return false;
 }
+
+/////////////////////////////////////////////////
+

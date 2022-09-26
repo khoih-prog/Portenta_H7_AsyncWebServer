@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
@@ -28,6 +29,8 @@
 
 #include "Arduino.h"
 #include "Portenta_H7_AsyncEventSource.h"
+
+/////////////////////////////////////////////////
 
 static String generateEventMessage(const char *message, const char *event, uint32_t id, uint32_t reconnect)
 {
@@ -143,6 +146,8 @@ static String generateEventMessage(const char *message, const char *event, uint3
   return ev;
 }
 
+/////////////////////////////////////////////////
+
 // Message
 
 AsyncEventSourceMessage::AsyncEventSourceMessage(const char * data, size_t len)
@@ -161,11 +166,15 @@ AsyncEventSourceMessage::AsyncEventSourceMessage(const char * data, size_t len)
   }
 }
 
+/////////////////////////////////////////////////
+
 AsyncEventSourceMessage::~AsyncEventSourceMessage()
 {
   if (_data != NULL)
     free(_data);
 }
+
+/////////////////////////////////////////////////
 
 size_t AsyncEventSourceMessage::ack(size_t len, uint32_t time)
 {
@@ -187,6 +196,8 @@ size_t AsyncEventSourceMessage::ack(size_t len, uint32_t time)
   return 0;
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncEventSourceMessage::send(AsyncClient *client)
 {
   const size_t len = _len - _sent;
@@ -205,6 +216,8 @@ size_t AsyncEventSourceMessage::send(AsyncClient *client)
 
   return sent;
 }
+
+/////////////////////////////////////////////////
 
 // Client
 
@@ -253,11 +266,15 @@ AsyncEventSourceClient::AsyncEventSourceClient(AsyncWebServerRequest *request, A
   delete request;
 }
 
+/////////////////////////////////////////////////
+
 AsyncEventSourceClient::~AsyncEventSourceClient()
 {
   _messageQueue.free();
   close();
 }
+
+/////////////////////////////////////////////////
 
 void AsyncEventSourceClient::_queueMessage(AsyncEventSourceMessage *dataMessage)
 {
@@ -285,6 +302,8 @@ void AsyncEventSourceClient::_queueMessage(AsyncEventSourceMessage *dataMessage)
     _runQueue();
 }
 
+/////////////////////////////////////////////////
+
 void AsyncEventSourceClient::_onAck(size_t len, uint32_t time)
 {
   AWS_LOGDEBUG("AsyncEventSourceClient::_onAck");
@@ -300,6 +319,8 @@ void AsyncEventSourceClient::_onAck(size_t len, uint32_t time)
   _runQueue();
 }
 
+/////////////////////////////////////////////////
+
 void AsyncEventSourceClient::_onPoll()
 {
   AWS_LOGDEBUG("AsyncEventSourceClient::_onPoll");
@@ -310,6 +331,7 @@ void AsyncEventSourceClient::_onPoll()
   }
 }
 
+/////////////////////////////////////////////////
 
 void AsyncEventSourceClient::_onTimeout(uint32_t time __attribute__((unused)))
 {
@@ -317,6 +339,8 @@ void AsyncEventSourceClient::_onTimeout(uint32_t time __attribute__((unused)))
 
   _client->close(true);
 }
+
+/////////////////////////////////////////////////
 
 void AsyncEventSourceClient::_onDisconnect()
 {
@@ -326,6 +350,8 @@ void AsyncEventSourceClient::_onDisconnect()
   _server->_handleDisconnect(this);
 }
 
+/////////////////////////////////////////////////
+
 void AsyncEventSourceClient::close()
 {
   AWS_LOGDEBUG("AsyncEventSourceClient::close");
@@ -334,12 +360,16 @@ void AsyncEventSourceClient::close()
     _client->close();
 }
 
+/////////////////////////////////////////////////
+
 void AsyncEventSourceClient::write(const char * message, size_t len)
 {
   AWS_LOGDEBUG3("AsyncEventSourceClient::write: message =", message, ", len =", len);
 
   _queueMessage(new AsyncEventSourceMessage(message, len));
 }
+
+/////////////////////////////////////////////////
 
 void AsyncEventSourceClient::send(const char *message, const char *event, uint32_t id, uint32_t reconnect)
 {
@@ -348,6 +378,8 @@ void AsyncEventSourceClient::send(const char *message, const char *event, uint32
   String ev = generateEventMessage(message, event, id, reconnect);
   _queueMessage(new AsyncEventSourceMessage(ev.c_str(), ev.length()));
 }
+
+/////////////////////////////////////////////////
 
 void AsyncEventSourceClient::_runQueue()
 {
@@ -363,6 +395,7 @@ void AsyncEventSourceClient::_runQueue()
   }
 }
 
+/////////////////////////////////////////////////
 
 // Handler
 
@@ -375,10 +408,14 @@ AsyncEventSource::AsyncEventSource(const String& url)
 , _connectcb(NULL)
 {}
 
+/////////////////////////////////////////////////
+
 AsyncEventSource::~AsyncEventSource()
 {
   close();
 }
+
+/////////////////////////////////////////////////
 
 void AsyncEventSource::onConnect(ArEventHandlerFunction cb)
 {
@@ -386,6 +423,8 @@ void AsyncEventSource::onConnect(ArEventHandlerFunction cb)
 
   _connectcb = cb;
 }
+
+/////////////////////////////////////////////////
 
 void AsyncEventSource::_addClient(AsyncEventSourceClient * client)
 {
@@ -410,11 +449,15 @@ void AsyncEventSource::_addClient(AsyncEventSourceClient * client)
     _connectcb(client);
 }
 
+/////////////////////////////////////////////////
+
 void AsyncEventSource::_handleDisconnect(AsyncEventSourceClient * client)
 {
   AWS_LOGDEBUG("AsyncEventSource::_handleDisconnect");
   _clients.remove(client);
 }
+
+/////////////////////////////////////////////////
 
 void AsyncEventSource::close()
 {
@@ -426,6 +469,8 @@ void AsyncEventSource::close()
       c->close();
   }
 }
+
+/////////////////////////////////////////////////
 
 // pmb fix
 size_t AsyncEventSource::avgPacketsWaiting() const
@@ -449,6 +494,8 @@ size_t AsyncEventSource::avgPacketsWaiting() const
   return ((aql) + (nConnectedClients / 2)) / (nConnectedClients); // round up
 }
 
+/////////////////////////////////////////////////
+
 void AsyncEventSource::send(const char *message, const char *event, uint32_t id, uint32_t reconnect)
 {
   String ev = generateEventMessage(message, event, id, reconnect);
@@ -462,6 +509,8 @@ void AsyncEventSource::send(const char *message, const char *event, uint32_t id,
   }
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncEventSource::count() const
 {
   return _clients.count_if([](AsyncEventSourceClient * c)
@@ -469,6 +518,8 @@ size_t AsyncEventSource::count() const
     return c->connected();
   });
 }
+
+/////////////////////////////////////////////////
 
 bool AsyncEventSource::canHandle(AsyncWebServerRequest *request)
 {
@@ -482,6 +533,8 @@ bool AsyncEventSource::canHandle(AsyncWebServerRequest *request)
   return true;
 }
 
+/////////////////////////////////////////////////
+
 void AsyncEventSource::handleRequest(AsyncWebServerRequest *request)
 {
   if ((_username != "" && _password != "") && !request->authenticate(_username.c_str(), _password.c_str()))
@@ -489,6 +542,8 @@ void AsyncEventSource::handleRequest(AsyncWebServerRequest *request)
 
   request->send(new AsyncEventSourceResponse(this));
 }
+
+/////////////////////////////////////////////////
 
 // Response
 
@@ -502,12 +557,16 @@ AsyncEventSourceResponse::AsyncEventSourceResponse(AsyncEventSource *server)
   addHeader("Connection", "keep-alive");
 }
 
+/////////////////////////////////////////////////
+
 void AsyncEventSourceResponse::_respond(AsyncWebServerRequest *request)
 {
   String out = _assembleHead(request->version());
   request->client()->write(out.c_str(), _headLength);
   _state = RESPONSE_WAIT_ACK;
 }
+
+/////////////////////////////////////////////////
 
 size_t AsyncEventSourceResponse::_ack(AsyncWebServerRequest *request, size_t len, uint32_t time __attribute__((unused)))
 {
@@ -518,4 +577,6 @@ size_t AsyncEventSourceResponse::_ack(AsyncWebServerRequest *request, size_t len
 
   return 0;
 }
+
+/////////////////////////////////////////////////
 

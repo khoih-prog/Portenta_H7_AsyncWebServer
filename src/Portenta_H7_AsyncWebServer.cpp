@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
@@ -28,6 +29,8 @@
 
 #include "Portenta_H7_AsyncWebServer.h"
 #include "Portenta_H7_AsyncWebHandlerImpl.h"
+
+/////////////////////////////////////////////////
 
 AsyncWebServer::AsyncWebServer(uint16_t port)
   : _server(port), _rewrites(LinkedList<AsyncWebRewrite * >([](AsyncWebRewrite * r)
@@ -49,7 +52,11 @@ AsyncWebServer::AsyncWebServer(uint16_t port)
     if (c == NULL)
       return;
 
-    c->setRxTimeout(3);
+    // KH set no RxTimeout for slower Firefox / network
+    //c->setRxTimeout(3);
+    c->setRxTimeout(0);
+    //////
+    
     AsyncWebServerRequest *r = new AsyncWebServerRequest((AsyncWebServer*)s, c);
 
     if (r == NULL)
@@ -61,6 +68,8 @@ AsyncWebServer::AsyncWebServer(uint16_t port)
   }, this);
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebServer::~AsyncWebServer()
 {
   reset();
@@ -70,6 +79,8 @@ AsyncWebServer::~AsyncWebServer()
     delete _catchAllHandler;
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebRewrite& AsyncWebServer::addRewrite(AsyncWebRewrite* rewrite)
 {
   _rewrites.add(rewrite);
@@ -77,15 +88,21 @@ AsyncWebRewrite& AsyncWebServer::addRewrite(AsyncWebRewrite* rewrite)
   return *rewrite;
 }
 
+/////////////////////////////////////////////////
+
 bool AsyncWebServer::removeRewrite(AsyncWebRewrite *rewrite)
 {
   return _rewrites.remove(rewrite);
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebRewrite& AsyncWebServer::rewrite(const char* from, const char* to)
 {
   return addRewrite(new AsyncWebRewrite(from, to));
 }
+
+/////////////////////////////////////////////////
 
 AsyncWebHandler& AsyncWebServer::addHandler(AsyncWebHandler* handler)
 {
@@ -93,10 +110,14 @@ AsyncWebHandler& AsyncWebServer::addHandler(AsyncWebHandler* handler)
   return *handler;
 }
 
+/////////////////////////////////////////////////
+
 bool AsyncWebServer::removeHandler(AsyncWebHandler *handler)
 {
   return _handlers.remove(handler);
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServer::begin()
 {
@@ -104,27 +125,39 @@ void AsyncWebServer::begin()
   _server.begin();
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServer::end()
 {
   _server.end();
 }
 
+/////////////////////////////////////////////////
+
 #if ASYNC_TCP_SSL_ENABLED
+
 void AsyncWebServer::onSslFileRequest(AcSSlFileHandler cb, void* arg)
 {
   _server.onSslFileRequest(cb, arg);
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServer::beginSecure(const char *cert, const char *key, const char *password)
 {
   _server.beginSecure(cert, key, password);
 }
+
 #endif
+
+/////////////////////////////////////////////////
 
 void AsyncWebServer::_handleDisconnect(AsyncWebServerRequest *request)
 { 
   delete request;
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServer::_rewriteRequest(AsyncWebServerRequest *request)
 {
@@ -138,6 +171,8 @@ void AsyncWebServer::_rewriteRequest(AsyncWebServerRequest *request)
   }
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServer::_attachHandler(AsyncWebServerRequest *request)
 {
   for (const auto& h : _handlers)
@@ -145,17 +180,17 @@ void AsyncWebServer::_attachHandler(AsyncWebServerRequest *request)
     if (h->filter(request) && h->canHandle(request))
     {
       request->setHandler(h);
+      
       return;
     }
   }
 
   request->addInterestingHeader("ANY");
   
-  // KH, fix crashing issue from v1.2.0, for Arduino-mbed core v2.6.1
-  //request->setHandler(_catchAllHandler);
   request->setHandler(NULL);
 }
 
+/////////////////////////////////////////////////
 
 AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest,
     ArUploadHandlerFunction onUpload, ArBodyHandlerFunction onBody)
@@ -172,6 +207,8 @@ AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodCom
   return *handler;
 }
 
+/////////////////////////////////////////////////
+
 AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload)
 {
   AsyncCallbackWebHandler* handler = new AsyncCallbackWebHandler();
@@ -184,6 +221,8 @@ AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodCom
   return *handler;
 }
 
+/////////////////////////////////////////////////
+
 AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest)
 {
   AsyncCallbackWebHandler* handler = new AsyncCallbackWebHandler();
@@ -195,6 +234,8 @@ AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodCom
   return *handler;
 }
 
+/////////////////////////////////////////////////
+
 AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, ArRequestHandlerFunction onRequest)
 {
   AsyncCallbackWebHandler* handler = new AsyncCallbackWebHandler();
@@ -205,15 +246,21 @@ AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, ArRequestHandlerFun
   return *handler;
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServer::onNotFound(ArRequestHandlerFunction fn)
 {
   _catchAllHandler->onRequest(fn);
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServer::onRequestBody(ArBodyHandlerFunction fn)
 {
   _catchAllHandler->onBody(fn);
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServer::reset()
 {
@@ -227,5 +274,7 @@ void AsyncWebServer::reset()
     _catchAllHandler->onBody(NULL);
   }
 }
+
+/////////////////////////////////////////////////
 
 

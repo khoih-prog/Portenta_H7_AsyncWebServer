@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
@@ -30,7 +31,8 @@
 #include "Portenta_H7_AsyncWebResponseImpl.h"
 #include "cbuf.h"
 
-// Since ESP8266 does not link memchr by default, here's its implementation.
+/////////////////////////////////////////////////
+
 void* memchr(void* ptr, int ch, size_t count)
 {
   unsigned char* p = static_cast<unsigned char*>(ptr);
@@ -43,6 +45,8 @@ void* memchr(void* ptr, int ch, size_t count)
 
   return nullptr;
 }
+
+/////////////////////////////////////////////////
 
 /*
    Abstract Response
@@ -95,6 +99,8 @@ const char* AsyncWebServerResponse::_responseCodeToString(int code)
   }
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebServerResponse::AsyncWebServerResponse()
   : _code(0)
   , _headers(LinkedList<AsyncWebHeader * >([](AsyncWebHeader * h)
@@ -110,10 +116,14 @@ AsyncWebServerResponse::AsyncWebServerResponse()
   }
 }
 
+/////////////////////////////////////////////////
+
 AsyncWebServerResponse::~AsyncWebServerResponse()
 {
   _headers.free();
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerResponse::setCode(int code)
 {
@@ -121,11 +131,15 @@ void AsyncWebServerResponse::setCode(int code)
     _code = code;
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerResponse::setContentLength(size_t len)
 {
   if (_state == RESPONSE_SETUP)
     _contentLength = len;
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerResponse::setContentType(const String& type)
 {
@@ -133,10 +147,14 @@ void AsyncWebServerResponse::setContentType(const String& type)
     _contentType = type;
 }
 
+/////////////////////////////////////////////////
+
 void AsyncWebServerResponse::addHeader(const String& name, const String& value)
 {
   _headers.add(new AsyncWebHeader(name, value));
 }
+
+/////////////////////////////////////////////////
 
 String AsyncWebServerResponse::_assembleHead(uint8_t version)
 {
@@ -181,25 +199,35 @@ String AsyncWebServerResponse::_assembleHead(uint8_t version)
   return out;
 }
 
+/////////////////////////////////////////////////
+
 bool AsyncWebServerResponse::_started() const
 {
   return _state > RESPONSE_SETUP;
 }
+
+/////////////////////////////////////////////////
 
 bool AsyncWebServerResponse::_finished() const
 {
   return _state > RESPONSE_WAIT_ACK;
 }
 
+/////////////////////////////////////////////////
+
 bool AsyncWebServerResponse::_failed() const
 {
   return _state == RESPONSE_FAILED;
 }
 
+/////////////////////////////////////////////////
+
 bool AsyncWebServerResponse::_sourceValid() const
 {
   return false;
 }
+
+/////////////////////////////////////////////////
 
 void AsyncWebServerResponse::_respond(AsyncWebServerRequest *request)
 {
@@ -208,13 +236,18 @@ void AsyncWebServerResponse::_respond(AsyncWebServerRequest *request)
   request->client()->close();
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncWebServerResponse::_ack(AsyncWebServerRequest *request, size_t len, uint32_t time)
 {
   PORTENTA_H7_AWS_UNUSED(request);
   PORTENTA_H7_AWS_UNUSED(len);
   PORTENTA_H7_AWS_UNUSED(time);
+  
   return 0;
 }
+
+/////////////////////////////////////////////////
 
 /*
    String/Code Response
@@ -235,6 +268,8 @@ AsyncBasicResponse::AsyncBasicResponse(int code, const String& contentType, cons
 
   addHeader("Connection", "close");
 }
+
+/////////////////////////////////////////////////
 
 void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
 {
@@ -281,9 +316,12 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
   }
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint32_t time)
 {
   PORTENTA_H7_AWS_UNUSED(time);
+  
   _ackedLength += len;
 
   if (_state == RESPONSE_CONTENT)
@@ -320,6 +358,7 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
   return 0;
 }
 
+/////////////////////////////////////////////////
 
 /*
    Abstract Response
@@ -336,6 +375,8 @@ AsyncAbstractResponse::AsyncAbstractResponse(AwsTemplateProcessor callback): _ca
   }
 }
 
+/////////////////////////////////////////////////
+
 void AsyncAbstractResponse::_respond(AsyncWebServerRequest *request)
 {
   addHeader("Connection", "close");
@@ -343,6 +384,8 @@ void AsyncAbstractResponse::_respond(AsyncWebServerRequest *request)
   _state = RESPONSE_HEADERS;
   _ack(request, 0, 0);
 }
+
+/////////////////////////////////////////////////
 
 size_t AsyncAbstractResponse::_ack(AsyncWebServerRequest *request, size_t len, uint32_t time)
 {
@@ -494,6 +537,8 @@ size_t AsyncAbstractResponse::_ack(AsyncWebServerRequest *request, size_t len, u
   return 0;
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncAbstractResponse::_readDataFromCacheOrContent(uint8_t* data, const size_t len)
 {
   // If we have something in cache, copy it to buffer
@@ -511,6 +556,8 @@ size_t AsyncAbstractResponse::_readDataFromCacheOrContent(uint8_t* data, const s
 
   return readFromCache + readFromContent;
 }
+
+/////////////////////////////////////////////////
 
 size_t AsyncAbstractResponse::_fillBufferAndProcessTemplates(uint8_t* data, size_t len)
 {
@@ -643,6 +690,8 @@ size_t AsyncAbstractResponse::_fillBufferAndProcessTemplates(uint8_t* data, size
   return len;
 }
 
+/////////////////////////////////////////////////
+
 /*
    Stream Response
  * */
@@ -655,6 +704,8 @@ AsyncStreamResponse::AsyncStreamResponse(Stream &stream, const String& contentTy
   _contentType = contentType;
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncStreamResponse::_fillBuffer(uint8_t *data, size_t len)
 {
   size_t available = _content->available();
@@ -666,6 +717,8 @@ size_t AsyncStreamResponse::_fillBuffer(uint8_t *data, size_t len)
 
   return outLen;
 }
+
+/////////////////////////////////////////////////
 
 /*
    Callback Response
@@ -685,6 +738,8 @@ AsyncCallbackResponse::AsyncCallbackResponse(const String& contentType, size_t l
   _filledLength = 0;
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncCallbackResponse::_fillBuffer(uint8_t *data, size_t len)
 {
   size_t ret = _content(data, len, _filledLength);
@@ -696,6 +751,8 @@ size_t AsyncCallbackResponse::_fillBuffer(uint8_t *data, size_t len)
 
   return ret;
 }
+
+/////////////////////////////////////////////////
 
 /*
    Chunked Response
@@ -712,6 +769,8 @@ AsyncChunkedResponse::AsyncChunkedResponse(const String& contentType, AwsRespons
   _filledLength = 0;
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncChunkedResponse::_fillBuffer(uint8_t *data, size_t len)
 {
   size_t ret = _content(data, len, _filledLength);
@@ -723,6 +782,8 @@ size_t AsyncChunkedResponse::_fillBuffer(uint8_t *data, size_t len)
 
   return ret;
 }
+
+/////////////////////////////////////////////////
 
 /*
    Response Stream (You can print/write/printf to it, up to the contentLen bytes)
@@ -736,15 +797,21 @@ AsyncResponseStream::AsyncResponseStream(const String& contentType, size_t buffe
   _content = new cbuf(bufferSize);
 }
 
+/////////////////////////////////////////////////
+
 AsyncResponseStream::~AsyncResponseStream()
 {
   delete _content;
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncResponseStream::_fillBuffer(uint8_t *buf, size_t maxLen)
 {
   return _content->read((char*)buf, maxLen);
 }
+
+/////////////////////////////////////////////////
 
 size_t AsyncResponseStream::write(const uint8_t *data, size_t len)
 {
@@ -763,7 +830,12 @@ size_t AsyncResponseStream::write(const uint8_t *data, size_t len)
   return written;
 }
 
+/////////////////////////////////////////////////
+
 size_t AsyncResponseStream::write(uint8_t data)
 {
   return write(&data, 1);
 }
+
+/////////////////////////////////////////////////
+

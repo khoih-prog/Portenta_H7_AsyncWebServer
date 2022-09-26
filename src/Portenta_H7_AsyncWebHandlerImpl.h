@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #pragma once
@@ -33,6 +34,8 @@
 
 #include "stddef.h"
 #include <time.h>
+
+/////////////////////////////////////////////////
 
 class AsyncStaticWebHandler: public AsyncWebHandler
 {
@@ -61,12 +64,17 @@ class AsyncStaticWebHandler: public AsyncWebHandler
     AsyncStaticWebHandler& setLastModified(time_t last_modified);
     AsyncStaticWebHandler& setLastModified(); //sets to current time. Make sure sntp is runing and time is updated
 
+    /////////////////////////////////////////////////
+
     AsyncStaticWebHandler& setTemplateProcessor(AwsTemplateProcessor newCallback)
     {
       _callback = newCallback;
+      
       return *this;
     }
 };
+
+/////////////////////////////////////////////////
 
 class AsyncCallbackWebHandler: public AsyncWebHandler
 {
@@ -82,30 +90,43 @@ class AsyncCallbackWebHandler: public AsyncWebHandler
   public:
     AsyncCallbackWebHandler() : _uri(), _method(HTTP_ANY), _onRequest(NULL), _onUpload(NULL), _onBody(NULL), _isRegex(false) {}
 
+    /////////////////////////////////////////////////
+
     void setUri(const String& uri)
     {
       _uri = uri;
       _isRegex = uri.startsWith("^") && uri.endsWith("$");
     }
 
+    /////////////////////////////////////////////////
+
     void setMethod(WebRequestMethodComposite method)
     {
       _method = method;
     }
+
+    /////////////////////////////////////////////////
+    
     void onRequest(ArRequestHandlerFunction fn)
     {
       _onRequest = fn;
     }
+
+    /////////////////////////////////////////////////
 
     void onUpload(ArUploadHandlerFunction fn)
     {
       _onUpload = fn;
     }
 
+    /////////////////////////////////////////////////
+
     void onBody(ArBodyHandlerFunction fn)
     {
       _onBody = fn;
     }
+
+    /////////////////////////////////////////////////
 
     virtual bool canHandle(AsyncWebServerRequest *request) override final
     {
@@ -153,6 +174,8 @@ class AsyncCallbackWebHandler: public AsyncWebHandler
       return true;
     }
 
+    /////////////////////////////////////////////////
+
     virtual void handleRequest(AsyncWebServerRequest *request) override final
     {
       if (_onRequest)
@@ -161,16 +184,22 @@ class AsyncCallbackWebHandler: public AsyncWebHandler
         request->send(500);
     }
 
+    /////////////////////////////////////////////////
+
     virtual void handleBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) override final
     {
       if (_onBody)
         _onBody(request, data, len, index, total);
     }
 
+    /////////////////////////////////////////////////
+
     virtual bool isRequestHandlerTrivial() override final
     {
       return _onRequest ? false : true;
     }
 };
+
+/////////////////////////////////////////////////
 
 #endif /* PORTENTA_H7_ASYNCWEBSERVERHANDLERIMPL_H_ */

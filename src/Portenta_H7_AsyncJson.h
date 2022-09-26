@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 /*
   Async Response to use with ArduinoJson and AsyncWebServer
@@ -62,13 +63,17 @@
 #include <Portenta_H7_AsyncWebServer.h>
 #include <Print.h>
 
+/////////////////////////////////////////////////
+
 #if ARDUINOJSON_VERSION_MAJOR == 5
-#define ARDUINOJSON_5_COMPATIBILITY
+  #define ARDUINOJSON_5_COMPATIBILITY
 #else
-#define DYNAMIC_JSON_DOCUMENT_SIZE  1024
+  #define DYNAMIC_JSON_DOCUMENT_SIZE  1024
 #endif
 
 constexpr const char* JSON_MIMETYPE = "application/json";
+
+/////////////////////////////////////////////////
 
 /*
    Json Response
@@ -112,6 +117,8 @@ class ChunkPrint : public Print
       return this->Print::write(buffer, size);
     }
 };
+
+/////////////////////////////////////////////////
 
 class AsyncJsonResponse: public AsyncAbstractResponse
 {
@@ -199,6 +206,8 @@ class AsyncJsonResponse: public AsyncAbstractResponse
     }
 };
 
+/////////////////////////////////////////////////
+
 class PrettyAsyncJsonResponse: public AsyncJsonResponse 
 {
   public:
@@ -238,6 +247,8 @@ class PrettyAsyncJsonResponse: public AsyncJsonResponse
     }
 };
 
+/////////////////////////////////////////////////
+
 typedef std::function<void(AsyncWebServerRequest *request, JsonVariant &json)> ArJsonRequestHandlerFunction;
 
 class AsyncCallbackJsonWebHandler: public AsyncWebHandler 
@@ -265,20 +276,28 @@ class AsyncCallbackJsonWebHandler: public AsyncWebHandler
       : _uri(uri), _method(HTTP_POST | HTTP_PUT | HTTP_PATCH), _onRequest(onRequest), maxJsonBufferSize(maxJsonBufferSize), _maxContentLength(16384) {}
 #endif
 
+    /////////////////////////////////////////////////
+
     void setMethod(WebRequestMethodComposite method) 
     {
       _method = method;
     }
+
+    /////////////////////////////////////////////////
     
     void setMaxContentLength(int maxContentLength) 
     {
       _maxContentLength = maxContentLength;
     }
+
+    /////////////////////////////////////////////////
     
     void onRequest(ArJsonRequestHandlerFunction fn) 
     {
       _onRequest = fn;
     }
+
+    /////////////////////////////////////////////////
 
     virtual bool canHandle(AsyncWebServerRequest *request) override final 
     {
@@ -298,6 +317,8 @@ class AsyncCallbackJsonWebHandler: public AsyncWebHandler
       
       return true;
     }
+
+    /////////////////////////////////////////////////
 
     virtual void handleRequest(AsyncWebServerRequest *request) override final 
     {
@@ -334,10 +355,14 @@ class AsyncCallbackJsonWebHandler: public AsyncWebHandler
         request->send(500);
       }
     }
+
+    /////////////////////////////////////////////////
     
     virtual void handleUpload(AsyncWebServerRequest *request, const String& filename, size_t index, uint8_t *data, size_t len, bool final) override final 
     {
     }
+
+    /////////////////////////////////////////////////
     
     virtual void handleBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) override final 
     {
@@ -356,11 +381,18 @@ class AsyncCallbackJsonWebHandler: public AsyncWebHandler
         }
       }
     }
+
+    /////////////////////////////////////////////////
     
     virtual bool isRequestHandlerTrivial() override final 
     {
       return _onRequest ? false : true;
     }
+
+    /////////////////////////////////////////////////
+    
 };
+
+/////////////////////////////////////////////////
 
 #endif    // PORTENTA_H7_ASYNC_JSON_H_

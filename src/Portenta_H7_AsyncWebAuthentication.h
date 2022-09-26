@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #pragma once
@@ -28,9 +29,12 @@
 #include "Arduino.h"
 #include "Portenta_H7_AsyncWebServer_Debug.h"
 
+/////////////////////////////////////////////////
+
 bool checkBasicAuthentication(const char * header, const char * username, const char * password);
 String requestDigestAuthentication(const char * realm);
-bool checkDigestAuthentication(const char * header, const char * method, const char * username, const char * password, const char * realm, bool passwordIsHash, const char * nonce, const char * opaque, const char * uri);
+bool checkDigestAuthentication(const char * header, const char * method, const char * username, const char * password, const char * realm, 
+                               bool passwordIsHash, const char * nonce, const char * opaque, const char * uri);
 
 //for storing hashed versions on the device that can be authenticated against
 String generateDigestHash(const char * username, const char * password, const char * realm);

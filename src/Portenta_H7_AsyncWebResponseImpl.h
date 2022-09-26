@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,12 +18,15 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #pragma once
 
 #ifndef PORTENTA_H7_ASYNCWEBSERVERRESPONSEIMPL_H_
 #define PORTENTA_H7_ASYNCWEBSERVERRESPONSEIMPL_H_
+
+/////////////////////////////////////////////////
 
 #ifdef Arduino_h
   // arduino is not compatible with std::vector
@@ -33,6 +36,8 @@
 
 #include <vector>
 // It is possible to restore these defines, but one can use _min and _max instead. Or std::min, std::max.
+
+/////////////////////////////////////////////////
 
 class AsyncBasicResponse: public AsyncWebServerResponse 
 {
@@ -50,6 +55,8 @@ class AsyncBasicResponse: public AsyncWebServerResponse
       return true;
     }
 };
+
+/////////////////////////////////////////////////
 
 class AsyncAbstractResponse: public AsyncWebServerResponse 
 {
@@ -82,11 +89,15 @@ class AsyncAbstractResponse: public AsyncWebServerResponse
     }
 };
 
+/////////////////////////////////////////////////
+
 #ifndef TEMPLATE_PLACEHOLDER
   #define TEMPLATE_PLACEHOLDER '%'
 #endif
 
 #define TEMPLATE_PARAM_NAME_LENGTH 32
+
+/////////////////////////////////////////////////
 
 class AsyncStreamResponse: public AsyncAbstractResponse 
 {
@@ -103,6 +114,8 @@ class AsyncStreamResponse: public AsyncAbstractResponse
     
     virtual size_t _fillBuffer(uint8_t *buf, size_t maxLen) override;
 };
+
+/////////////////////////////////////////////////
 
 class AsyncCallbackResponse: public AsyncAbstractResponse 
 {
@@ -121,6 +134,8 @@ class AsyncCallbackResponse: public AsyncAbstractResponse
     virtual size_t _fillBuffer(uint8_t *buf, size_t maxLen) override;
 };
 
+/////////////////////////////////////////////////
+
 class AsyncChunkedResponse: public AsyncAbstractResponse 
 {
   private:
@@ -138,7 +153,11 @@ class AsyncChunkedResponse: public AsyncAbstractResponse
     virtual size_t _fillBuffer(uint8_t *buf, size_t maxLen) override;
 };
 
+/////////////////////////////////////////////////
+
 class cbuf;
+
+/////////////////////////////////////////////////
 
 class AsyncResponseStream: public AsyncAbstractResponse, public Print 
 {
@@ -159,5 +178,7 @@ class AsyncResponseStream: public AsyncAbstractResponse, public Print
     size_t write(uint8_t data);
     using Print::write;
 };
+
+/////////////////////////////////////////////////
 
 #endif /* PORTENTA_H7_ASYNCWEBSERVERRESPONSEIMPL_H_ */

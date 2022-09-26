@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
@@ -28,6 +29,8 @@
 
 #include "Portenta_H7_AsyncWebServer.h"
 #include "Portenta_H7_AsyncWebHandlerImpl.h"
+
+/////////////////////////////////////////////////
 
 AsyncStaticWebHandler::AsyncStaticWebHandler(const char* uri, /*FS& fs,*/ const char* path, const char* cache_control)
   : _uri(uri), _path(path), _cache_control(cache_control), _last_modified(""), _callback(nullptr)
@@ -56,11 +59,16 @@ AsyncStaticWebHandler::AsyncStaticWebHandler(const char* uri, /*FS& fs,*/ const 
   _gzipStats = 0xF8;
 }
 
+/////////////////////////////////////////////////
+
 AsyncStaticWebHandler& AsyncStaticWebHandler::setIsDir(bool isDir)
 {
   _isDir = isDir;
+  
   return *this;
 }
+
+/////////////////////////////////////////////////
 
 AsyncStaticWebHandler& AsyncStaticWebHandler::setCacheControl(const char* cache_control)
 {
@@ -69,12 +77,16 @@ AsyncStaticWebHandler& AsyncStaticWebHandler::setCacheControl(const char* cache_
   return *this;
 }
 
+/////////////////////////////////////////////////
+
 AsyncStaticWebHandler& AsyncStaticWebHandler::setLastModified(const char* last_modified)
 {
   _last_modified = String(last_modified);
 
   return *this;
 }
+
+/////////////////////////////////////////////////
 
 AsyncStaticWebHandler& AsyncStaticWebHandler::setLastModified(struct tm* last_modified)
 {
@@ -85,11 +97,14 @@ AsyncStaticWebHandler& AsyncStaticWebHandler::setLastModified(struct tm* last_mo
   return setLastModified((const char *)result);
 }
 
-// For STM32
+/////////////////////////////////////////////////
+
 AsyncStaticWebHandler& AsyncStaticWebHandler::setLastModified(time_t last_modified)
 {
   return setLastModified((struct tm *)gmtime(&last_modified));
 }
+
+/////////////////////////////////////////////////
 
 AsyncStaticWebHandler& AsyncStaticWebHandler::setLastModified()
 {
@@ -100,6 +115,8 @@ AsyncStaticWebHandler& AsyncStaticWebHandler::setLastModified()
 
   return setLastModified(last_modified);
 }
+
+/////////////////////////////////////////////////
 
 bool AsyncStaticWebHandler::canHandle(AsyncWebServerRequest *request)
 {
@@ -114,8 +131,11 @@ bool AsyncStaticWebHandler::canHandle(AsyncWebServerRequest *request)
   return false;
 }
 
-// For STM32
+/////////////////////////////////////////////////
+
 #define FILE_IS_REAL(f) (f == true)
+
+/////////////////////////////////////////////////
 
 uint8_t AsyncStaticWebHandler::_countBits(const uint8_t value) const
 {
@@ -127,3 +147,6 @@ uint8_t AsyncStaticWebHandler::_countBits(const uint8_t value) const
 
   return n;
 }
+
+/////////////////////////////////////////////////
+

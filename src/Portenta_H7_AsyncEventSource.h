@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #pragma once
@@ -40,10 +41,14 @@
 #define DEFAULT_MAX_SSE_CLIENTS 8
 //#define DEFAULT_MAX_SSE_CLIENTS 4
 
+/////////////////////////////////////////////////
+
 class AsyncEventSource;
 class AsyncEventSourceResponse;
 class AsyncEventSourceClient;
 typedef std::function<void(AsyncEventSourceClient *client)> ArEventHandlerFunction;
+
+/////////////////////////////////////////////////
 
 class AsyncEventSourceMessage
 {
@@ -70,6 +75,8 @@ class AsyncEventSourceMessage
       return _sent == _len;
     }
 };
+
+/////////////////////////////////////////////////
 
 class AsyncEventSourceClient
 {
@@ -117,6 +124,8 @@ class AsyncEventSourceClient
     void _onDisconnect();
 };
 
+/////////////////////////////////////////////////
+
 class AsyncEventSource: public AsyncWebHandler
 {
   private:
@@ -146,6 +155,8 @@ class AsyncEventSource: public AsyncWebHandler
     virtual void handleRequest(AsyncWebServerRequest *request) override final;
 };
 
+/////////////////////////////////////////////////
+
 class AsyncEventSourceResponse: public AsyncWebServerResponse
 {
   private:
@@ -162,5 +173,7 @@ class AsyncEventSourceResponse: public AsyncWebServerResponse
       return true;
     }
 };
+
+/////////////////////////////////////////////////
 
 #endif /* PORTENTA_H7_ASYNCEVENTSOURCE_H_ */

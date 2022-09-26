@@ -5,7 +5,8 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/Portenta_H7_AsyncWebServer.svg)](http://github.com/khoih-prog/Portenta_H7_AsyncWebServer/issues)
 
-<a href="https://www.buymeacoffee.com/khoihprog6" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 181px !important;" ></a>
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
+<a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
 
 
 ---
@@ -166,8 +167,8 @@ to apply the better and faster **asynchronous** feature of the **powerful** [ESP
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
- 2. [`ArduinoCore-mbed mbed_portenta core 2.7.2+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino **Portenta_H7** boards, such as **Portenta_H7 Rev2 ABX00042, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest). To be used with [**Portenta_H7_AsyncTCP releases v1.3.0+**](https://github.com/khoih-prog/Portenta_H7_AsyncTCP/releases/tag/v1.3.0)
- 3. [`Portenta_H7_AsyncTCP library v1.3.0+`](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) for Portenta_H7 using `Vision-shield Ethernet` or `Murata WiFi`. [To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Portenta_H7_AsyncTCP.svg?)](https://www.ardu-badge.com/Portenta_H7_AsyncTCP)
+ 2. [`ArduinoCore-mbed mbed_portenta core 3.3.0+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino **Portenta_H7** boards, such as **Portenta_H7 Rev2 ABX00042, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest).
+ 3. [`Portenta_H7_AsyncTCP library v1.4.0+`](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) for Portenta_H7 using `Vision-shield Ethernet` or `Murata WiFi`. [![GitHub release](https://img.shields.io/github/release/khoih-prog/Portenta_H7_AsyncTCP.svg)](https://github.com/khoih-prog/Portenta_H7_AsyncTCP/releases/latest)
 
 ---
 
@@ -180,15 +181,15 @@ The best and easiest way is to use `Arduino Library Manager`. Search for `Porten
 ### Manual Install
 
 1. Navigate to [Portenta_H7_AsyncWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer) page.
-2. Download the latest release `Portenta_H7_AsyncWebServer-master.zip`.
-3. Extract the zip file to `Portenta_H7_AsyncWebServer-master` directory 
-4. Copy the whole `Portenta_H7_AsyncWebServer-master` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
+2. Download the latest release `Portenta_H7_AsyncWebServer-main.zip`.
+3. Extract the zip file to `Portenta_H7_AsyncWebServer-main` directory 
+4. Copy the whole `Portenta_H7_AsyncWebServer-main` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
 
 ### VS Code & PlatformIO:
 
 1. Install [VS Code](https://code.visualstudio.com/)
 2. Install [PlatformIO](https://platformio.org/platformio-ide)
-3. Install [**Portenta_H7_AsyncWebServer** library](https://platformio.org/lib/show/12920/Portenta_H7_AsyncWebServer) by using [Library Manager](https://platformio.org/lib/show/12920/Portenta_H7_AsyncWebServer/installation). Search for **Portenta_H7_AsyncWebServer** in [Platform.io Author's Libraries](https://platformio.org/lib/search?query=author:%22Khoi%20Hoang%22)
+3. Install [**Portenta_H7_AsyncWebServer** library](https://registry.platformio.org/libraries/khoih-prog/Portenta_H7_AsyncWebServer) by using [Library Manager](https://registry.platformio.org/libraries/khoih-prog/Portenta_H7_AsyncWebServer/installation). Search for **Portenta_H7_AsyncWebServer** in [Platform.io Author's Libraries](https://platformio.org/lib/search?query=author:%22Khoi%20Hoang%22)
 4. Use included [platformio.ini](platformio/platformio.ini) file from examples to ensure that all dependent libraries will installed automatically. Please visit documentation for the other options and examples at [Project Configuration File](https://docs.platformio.org/page/projectconf.html)
 
 ---
@@ -198,12 +199,12 @@ The best and easiest way is to use `Arduino Library Manager`. Search for `Porten
 
 #### 1. For Portenta_H7 boards using Arduino IDE in Linux
 
-  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/2.6.1/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/2.6.1/portenta_post_install.sh). 
+  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/3.3.0/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/3.3.0/portenta_post_install.sh). 
   
   Then run the following command using `sudo`
   
 ```
-$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/2.6.1
+$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/3.3.0
 $ chmod 755 portenta_post_install.sh
 $ sudo ./portenta_post_install.sh
 ```
@@ -216,9 +217,9 @@ This will create the file `/etc/udev/rules.d/49-portenta_h7.rules` as follows:
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="035b", GROUP="plugdev", MODE="0666"
 ```
 
-Supposing the ArduinoCore-mbed core version is 2.6.1. Now only one file must be copied into the directory:
+Supposing the ArduinoCore-mbed core version is 3.3.0. Now only one file must be copied into the directory:
 
-- `~/.arduino15/packages/arduino/hardware/mbed_portenta/2.6.1/portenta_post_install.sh`
+- `~/.arduino15/packages/arduino/hardware/mbed_portenta/3.3.0/portenta_post_install.sh`
 
 Whenever a new version is installed, remember to copy this files into the new version directory. For example, new version is x.yy.zz
 
@@ -230,7 +231,7 @@ This file must be copied into the directory:
 #### 2. To fix compile error relating to dns_gethostbyname and LwIP stack
 
 
-#### Notes: Only for cores v2.5.2-. This fix is not necessary for core v2.6.1+
+#### Notes: Only for cores v2.5.2-. This fix is not necessary for core v3.3.0+
 
 **To be able to compile, run on Portenta_H7 boards**, you have to copy the whole [mbed_portenta Packages_Patches](Packages_Patches/arduino/hardware/mbed_portenta/2.5.2) directory into Arduino mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/2.5.2). 
 
@@ -1484,248 +1485,7 @@ build_flags =
 
 ### Example [Async_AdvancedWebServer](examples/Ethernet/Async_AdvancedWebServer)
 
-```cpp
-#if !( defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4) )
-  #error For Portenta_H7 only
-#endif
-
-#define _PORTENTA_H7_AWS_LOGLEVEL_     1
-
-#define USE_ETHERNET_PORTENTA_H7        true
-
-#include <Portenta_Ethernet.h>
-#include <Ethernet.h>
-#warning Using Portenta_Ethernet lib for Portenta_H7.
-
-#include <Portenta_H7_AsyncWebServer.h>
-
-// Enter a MAC address and IP address for your controller below.
-#define NUMBER_OF_MAC      20
-
-byte mac[][NUMBER_OF_MAC] =
-{
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x01 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x02 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x03 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x04 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x05 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x06 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x07 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x08 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x09 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0A },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0B },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0C },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0D },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0E },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0F },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x10 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x11 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x12 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x13 },
-  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x14 },
-};
-// Select the IP address according to your local network
-IPAddress ip(192, 168, 2, 232);
-
-AsyncWebServer    server(80);
-
-int reqCount = 0;                // number of requests received
-
-#define LED_OFF             HIGH
-#define LED_ON              LOW
-
-
-#define BUFFER_SIZE         512
-char temp[BUFFER_SIZE];
-
-void handleRoot(AsyncWebServerRequest *request)
-{
-  digitalWrite(LED_BUILTIN, LED_ON);
-
-  int sec = millis() / 1000;
-  int min = sec / 60;
-  int hr = min / 60;
-  int day = hr / 24;
-
-  snprintf(temp, BUFFER_SIZE - 1,
-           "<html>\
-<head>\
-<meta http-equiv='refresh' content='5'/>\
-<title>AsyncWebServer-%s</title>\
-<style>\
-body { background-color: #cccccc; font-family: Arial, Helvetica, Sans-Serif; Color: #000088; }\
-</style>\
-</head>\
-<body>\
-<h2>AsyncWebServer_Portenta_H7!</h2>\
-<h3>running on %s</h3>\
-<p>Uptime: %d d %02d:%02d:%02d</p>\
-<img src=\"/test.svg\" />\
-</body>\
-</html>", BOARD_NAME, BOARD_NAME, day, hr % 24, min % 60, sec % 60);
-
-  request->send(200, "text/html", temp);
-
-  digitalWrite(LED_BUILTIN, LED_OFF);
-}
-
-void handleNotFound(AsyncWebServerRequest *request)
-{
-  digitalWrite(LED_BUILTIN, LED_ON);
-  String message = "File Not Found\n\n";
-
-  message += "URI: ";
-  message += request->url();
-  message += "\nMethod: ";
-  message += (request->method() == HTTP_GET) ? "GET" : "POST";
-  message += "\nArguments: ";
-  message += request->args();
-  message += "\n";
-
-  for (uint8_t i = 0; i < request->args(); i++)
-  {
-    message += " " + request->argName(i) + ": " + request->arg(i) + "\n";
-  }
-
-  request->send(404, "text/plain", message);
-  digitalWrite(LED_BUILTIN, LED_OFF);
-}
-
-void drawGraph(AsyncWebServerRequest *request)
-{
-  String out;
-
-  out.reserve(3000);
-  char temp[70];
-
-  out += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"310\" height=\"150\">\n";
-  out += "<rect width=\"310\" height=\"150\" fill=\"rgb(250, 230, 210)\" stroke-width=\"2\" stroke=\"rgb(0, 0, 0)\" />\n";
-  out += "<g stroke=\"blue\">\n";
-  int y = rand() % 130;
-
-  for (int x = 10; x < 300; x += 10)
-  {
-    int y2 = rand() % 130;
-    sprintf(temp, "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke-width=\"2\" />\n", x, 140 - y, x + 10, 140 - y2);
-    out += temp;
-    y = y2;
-  }
-  out += "</g>\n</svg>\n";
-
-  request->send(200, "image/svg+xml", out);
-}
-
-
-void setup()
-{
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LED_OFF);
-
-  Serial.begin(115200);
-  while (!Serial);
-
-  delay(200);
-
-  Serial.print("\nStart Async_AdvancedWebServer on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
-  Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
-  Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
-
-  ///////////////////////////////////
-
-  // start the ethernet connection and the server
-  // Use random mac
-  uint16_t index = millis() % NUMBER_OF_MAC;
-
-  // Use Static IP
-  //Ethernet.begin(mac[index], ip);
-  // Use DHCP dynamic IP and random mac
-  Ethernet.begin(mac[index]);
-
-  if (Ethernet.hardwareStatus() == EthernetNoHardware)
-  {
-    Serial.println("No Ethernet found. Stay here forever");
-
-    while (true)
-    {
-      delay(1); // do nothing, no point running without Ethernet hardware
-    }
-  }
-
-  if (Ethernet.linkStatus() == LinkOFF)
-  {
-    Serial.println("Not connected Ethernet cable");
-  }
-
-  Serial.print(F("Using mac index = "));
-  Serial.println(index);
-
-  Serial.print(F("Connected! IP address: "));
-  Serial.println(Ethernet.localIP());
-
-  ///////////////////////////////////
-
-
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
-  {
-    handleRoot(request);
-  });
-
-  server.on("/test.svg", HTTP_GET, [](AsyncWebServerRequest * request)
-  {
-    drawGraph(request);
-  });
-
-  server.on("/inline", [](AsyncWebServerRequest * request)
-  {
-    request->send(200, "text/plain", "This works as well");
-  });
-
-  server.onNotFound(handleNotFound);
-
-  server.begin();
-
-  Serial.print(F("HTTP EthernetWebServer is @ IP : "));
-  Serial.println(Ethernet.localIP());
-}
-
-void heartBeatPrint()
-{
-  static int num = 1;
-
-  Serial.print(F("."));
-
-  if (num == 80)
-  {
-    Serial.println();
-    num = 1;
-  }
-  else if (num++ % 10 == 0)
-  {
-    Serial.print(F(" "));
-  }
-}
-
-void check_status()
-{
-  static unsigned long checkstatus_timeout = 0;
-
-#define STATUS_CHECK_INTERVAL     10000L
-
-  // Send status report every STATUS_REPORT_INTERVAL (60) seconds: we don't need to send updates frequently if there is no status change.
-  if ((millis() > checkstatus_timeout) || (checkstatus_timeout == 0))
-  {
-    heartBeatPrint();
-    checkstatus_timeout = millis() + STATUS_CHECK_INTERVAL;
-  }
-}
-
-void loop()
-{
-  check_status();
-}
-```
+https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/f934df6aecbf814047affe39d3d0e3f23fc1fccf/examples/WiFi/Async_AdvancedWebServer/Async_AdvancedWebServer.ino#L41-L268
 
 You can access the Async Advanced WebServer @ the server IP
 
@@ -1745,8 +1505,8 @@ Following is debug terminal output when running example [MQTT_ThingStream](examp
 
 ```
 Start MQTT_ThingStream on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.1
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.3.0
 Using mac index = 17
 Connected! IP address: 192.168.2.87
 ***************************************
@@ -1770,8 +1530,8 @@ Following is debug terminal output when running example [WebClient](examples/Eth
 
 ```
 Start WebClientRepeating on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.1
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.3.0
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 
@@ -1838,8 +1598,8 @@ Following is debug terminal output when running example [MQTTClient_Auth](exampl
 
 ```
 Start MQTTClient_Auth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.1
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.3.0
 Using mac index = 9
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1859,8 +1619,8 @@ Following is debug terminal output when running example [MQTTClient_Basic](examp
 
 ```
 Start MQTTClient_Basic on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.1
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.3.0
 Using mac index = 8
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1878,8 +1638,8 @@ Following is debug terminal output when running example [Async_HTTPBasicAuth](ex
 
 ```
 Start Async_HTTPBasicAuth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.1
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.3.0
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 Async_HttpBasicAuth started @ IP : 192.168.2.87
@@ -1908,8 +1668,8 @@ Following are debug terminal output and screen shots when running example [Async
 
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
-Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.1
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.3.0
 Using mac index = 4
 Connected! IP address: 192.168.2.87
 HTTP EthernetWebServer is @ IP : 192.168.2.87
@@ -1921,6 +1681,12 @@ You can access the Async Advanced WebServers at the displayed server IP, e.g. `1
     <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer.png">
 </p>
 
+#### Using Firefox Browser
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer_Firefox.png">
+</p>
+
 ---
 
 #### 7. Async_AdvancedWebServer on PORTENTA_H7_M7 using WiFi
@@ -1929,8 +1695,8 @@ Following is the debug terminal and screen shot when running example [Async_Adva
 
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Portenta_H7 WiFi
-Portenta_H7_AsyncTCP v1.3.0
-Portenta_H7_AsyncWebServer v1.2.1
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.3.0
 Connecting to SSID: HueNet1
 SSID: HueNet1
 Local IP Address: 192.168.2.94
@@ -1985,6 +1751,7 @@ Submit issues to: [Portenta_H7_AsyncWebServer issues](https://github.com/khoih-p
 
  1. Add support to Portenta_H7 using `Vision-shield Ethernet`
  2. Add Table of Contents
+ 3. Fix issue with slow browsers or network. Check [Target stops responding after variable time when using Firefox on Windows 10 #3](https://github.com/khoih-prog/AsyncWebServer_RP2040W/issues/3)
 
 ---
 ---

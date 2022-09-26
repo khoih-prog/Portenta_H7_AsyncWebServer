@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.2.1
+  Version: 1.3.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -18,6 +18,7 @@
   1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
+  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
  *****************************************************************************************************************************/
 
 #pragma once
@@ -26,6 +27,8 @@
 #define PORTENTA_H7_ASYNCWEBSYNCHRONIZATION_H_
 
 #include <Portenta_H7_AsyncWebServer.h>
+
+/////////////////////////////////////////////////
 
 // This is the STM32 version of the Sync Lock which is currently unimplemented
 class AsyncWebLock
@@ -43,6 +46,8 @@ class AsyncWebLock
 
     void unlock() const {}
 };
+
+/////////////////////////////////////////////////
 
 class AsyncWebLockGuard
 {
@@ -70,5 +75,7 @@ class AsyncWebLockGuard
       }
     }
 };
+
+/////////////////////////////////////////////////
 
 #endif // PORTENTA_H7_ASYNCWEBSYNCHRONIZATION_H_
