@@ -14,7 +14,7 @@
   #error For Portenta_H7 only
 #endif
 
-#define _PORTENTA_H7_AWS_LOGLEVEL_     1
+#define _PORTENTA_H7_AWS_LOGLEVEL_      4
 
 #define USE_ETHERNET_PORTENTA_H7        true
 
@@ -118,8 +118,10 @@ void setup()
 
   // Use Static IP
   //Ethernet.begin(mac[index], ip);
+  //Ethernet.begin(ip);
   // Use DHCP dynamic IP and random mac
-  Ethernet.begin(mac[index]);
+  //Ethernet.begin(mac[index]);
+  Ethernet.begin();
 
   if (Ethernet.hardwareStatus() == EthernetNoHardware) 
   {
@@ -195,5 +197,5 @@ void check_status()
 
 void loop()
 {
-  check_status();
+  //check_status();
 }

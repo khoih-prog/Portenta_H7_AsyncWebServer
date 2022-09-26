@@ -42,7 +42,8 @@
   #error For Portenta_H7 only
 #endif
 
-#define _PORTENTA_H7_AWS_LOGLEVEL_     1
+#define _PORTENTA_H7_ATCP_LOGLEVEL_     1
+#define _PORTENTA_H7_AWS_LOGLEVEL_      1
 
 #define USE_ETHERNET_PORTENTA_H7        true
 
@@ -149,7 +150,7 @@ void drawGraph(AsyncWebServerRequest *request)
 {
   String out;
 
-  out.reserve(3000);
+  out.reserve(4000);
   char temp[70];
 
   out += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"310\" height=\"150\">\n";
@@ -218,8 +219,7 @@ void setup()
   Serial.println(Ethernet.localIP());
 
   ///////////////////////////////////
-
-
+ 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
   {
     handleRoot(request);
