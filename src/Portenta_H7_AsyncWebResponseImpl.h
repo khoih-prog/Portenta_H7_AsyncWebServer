@@ -43,9 +43,11 @@ class AsyncBasicResponse: public AsyncWebServerResponse
 {
   private:
     String _content;
+	char *_contentCstr;			// RSMOD
     
   public:
     AsyncBasicResponse(int code, const String& contentType = String(), const String& content = String());
+	AsyncBasicResponse(int code, const String& contentType, const char *content);			// RSMOD
     void _respond(AsyncWebServerRequest *request);
     
     size_t _ack(AsyncWebServerRequest *request, size_t len, uint32_t time);

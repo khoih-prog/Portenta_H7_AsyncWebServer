@@ -1101,6 +1101,13 @@ void AsyncWebServerRequest::send(AsyncWebServerResponse *response)
   }  
 }
 
+//RSMOD///////////////////////////////////////////////
+
+AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(int code, const String& contentType, const char * content)
+{
+  return new AsyncBasicResponse(code, contentType, content);
+}
+
 /////////////////////////////////////////////////
 
 AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(int code, const String& contentType, const String& content)
@@ -1138,6 +1145,17 @@ AsyncResponseStream * AsyncWebServerRequest::beginResponseStream(const String& c
 {
   return new AsyncResponseStream(contentType, bufferSize);
 }
+
+//RSMOD///////////////////////////////////////////////
+
+void AsyncWebServerRequest::send(int code, const String& contentType, const char *content, bool nonDetructiveSend)
+{
+  if (nonDetructiveSend == true) {
+	send(beginResponse(code, contentType, String(content)));	// for backwards compatibility
+  } else {
+	send(beginResponse(code, contentType, content));
+  }
+ }
 
 /////////////////////////////////////////////////
 

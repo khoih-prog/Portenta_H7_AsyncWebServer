@@ -340,12 +340,14 @@ class AsyncWebServerRequest
 
     void send(AsyncWebServerResponse *response);
     void send(int code, const String& contentType = String(), const String& content = String());
+	void send(int code, const String& contentType, const char *content, bool nonDetructiveSend = true);		// RSMOD
 
     void send(Stream &stream, const String& contentType, size_t len, AwsTemplateProcessor callback = nullptr);
     void send(const String& contentType, size_t len, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
     void sendChunked(const String& contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
 
     AsyncWebServerResponse *beginResponse(int code, const String& contentType = String(), const String& content = String());
+	AsyncWebServerResponse *beginResponse(int code, const String& contentType, const char * content);	// RSMOD
 
     AsyncWebServerResponse *beginResponse(Stream &stream, const String& contentType, size_t len, AwsTemplateProcessor callback = nullptr);
     AsyncWebServerResponse *beginResponse(const String& contentType, size_t len, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
