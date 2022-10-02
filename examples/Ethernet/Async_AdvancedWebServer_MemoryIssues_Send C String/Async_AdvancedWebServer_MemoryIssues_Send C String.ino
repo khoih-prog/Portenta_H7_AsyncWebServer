@@ -1,5 +1,5 @@
 /****************************************************************************************************************************
-  Async_AdvancedWebServer.ino - Dead simple AsyncWebServer for STM32 LAN8720 or built-in LAN8742A Ethernet
+  Async_AdvancedWebServer_MemoryIssues_Send_CString.ino - Dead simple AsyncWebServer for STM32 LAN8720 or built-in LAN8742A Ethernet
 
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
 
@@ -202,11 +202,11 @@ void setup()
   digitalWrite(LED_BUILTIN, LED_OFF);
 
   Serial.begin(115200);
-  while (!Serial);
+  while (!Serial && millis() < 5000);
 
   delay(200);
 
-  Serial.print("\nStart Async_AdvancedWebServer on "); Serial.print(BOARD_NAME);
+  Serial.print("\nStart Async_AdvancedWebServer_MemoryIssues_Send_CString on "); Serial.print(BOARD_NAME);
   Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
   Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
