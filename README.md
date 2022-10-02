@@ -23,7 +23,7 @@ request->send(200, textPlainStr, cStr, false); // this will have to be a cString
 
 in my application max heap size went from 375k to 66k (which is the lowest possible wit the variables and otehr data I am using)
 
-Seems to work, let mw know what you think
+Seems to work, let me know what you think
 
 
 
