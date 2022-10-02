@@ -171,8 +171,8 @@ void drawGraph(AsyncWebServerRequest *request) {
 
   cStr[0] = '\0';
 
-  strcat(cStr, "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"310\" height=\"150\">\n");
-  strcat(cStr, "<rect width=\"310\" height=\"150\" fill=\"rgb(250, 230, 210)\" stroke-width=\"2\" stroke=\"rgb(0, 0, 0)\" />\n");
+  strcat(cStr, "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"1810\" height=\"150\">\n");
+  strcat(cStr, "<rect width=\"1810\" height=\"150\" fill=\"rgb(250, 230, 210)\" stroke-width=\"2\" stroke=\"rgb(0, 0, 0)\" />\n");
   strcat(cStr, "<g stroke=\"blue\">\n");
   int y = rand() % 130;
 
