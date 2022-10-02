@@ -92,7 +92,7 @@ int reqCount = 0;                // number of requests received
 #define LED_ON              LOW
 
 
-#define BUFFER_SIZE         768
+#define BUFFER_SIZE         768 // a little larger in case required for header shift (destructive send)
 char temp[BUFFER_SIZE];
 
 void handleRoot(AsyncWebServerRequest *request)
