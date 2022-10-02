@@ -12,6 +12,21 @@
 ---
 ---
 
+
+*****
+Added a destructive C string interface to send
+
+if called with 
+request->send(200, textPlainStr, ArduinoStr);  // no difference
+request->send(200, textPlainStr, cStr);        // no differfence
+request->send(200, textPlainStr, cStr, false); // this will have to be a cString with enough space to fit the header, it will be memmoved as required, header added, and sent, without creating any large arduino Strings that consume heap
+
+in my application max heap size went from 375k to 66k (which is the lowest possible wit the variables and otehr data I am using)
+
+Seems to work, let mw know what you think
+
+
+
 ## Table of contents
 
 * [Table of contents](#table-of-contents)
