@@ -107,6 +107,7 @@ void handleRoot(AsyncWebServerRequest *request)
   snprintf(temp, BUFFER_SIZE - 1,
            "<html>\
 <head>\
+<meta http-equiv='refresh' content='5'/>\
 <title>AsyncWebServer-%s</title>\
 <style>\
 body { background-color: #cccccc; font-family: Arial, Helvetica, Sans-Serif; Color: #000088; }\
@@ -166,7 +167,8 @@ void PrintHeapData(String hIn){
 char *cStr;
 
 
-void drawGraph(AsyncWebServerRequest *request) {
+void drawGraph(AsyncWebServerRequest *request) 
+{
   char temp[80];
 
   cStr[0] = '\0';
@@ -183,6 +185,7 @@ void drawGraph(AsyncWebServerRequest *request) {
     strcat(cStr, temp);
     y = y2;
   }
+  
   strcat(cStr, "</g>\n</svg>\n");
 
   PrintHeapData("Pre Send");
@@ -210,8 +213,6 @@ void setup()
   Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
   Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
-
-
 
   SDRAM.begin();
 
