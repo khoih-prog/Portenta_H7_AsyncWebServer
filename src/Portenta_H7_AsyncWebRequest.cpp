@@ -64,7 +64,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   c->onError([](void *r, AsyncClient * c, int8_t error)
   {
     PORTENTA_H7_AWS_UNUSED(c);
-    
+
     AsyncWebServerRequest *req = (AsyncWebServerRequest*)r;
     req->_onError(error);
   }, this);
@@ -72,7 +72,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   c->onAck([](void *r, AsyncClient * c, size_t len, uint32_t time)
   {
     PORTENTA_H7_AWS_UNUSED(c);
-    
+
     AsyncWebServerRequest *req = (AsyncWebServerRequest*)r;
     req->_onAck(len, time);
   }, this);
@@ -87,7 +87,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   c->onTimeout([](void *r, AsyncClient * c, uint32_t time)
   {
     PORTENTA_H7_AWS_UNUSED(c);
-    
+
     AsyncWebServerRequest *req = (AsyncWebServerRequest*)r;
     req->_onTimeout(time);
   }, this);
@@ -95,7 +95,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   c->onData([](void *r, AsyncClient * c, void *buf, size_t len)
   {
     PORTENTA_H7_AWS_UNUSED(c);
-    
+
     AsyncWebServerRequest *req = (AsyncWebServerRequest*)r;
     req->_onData(buf, len);
   }, this);
@@ -103,7 +103,7 @@ AsyncWebServerRequest::AsyncWebServerRequest(AsyncWebServer* s, AsyncClient* c)
   c->onPoll([](void *r, AsyncClient * c)
   {
     PORTENTA_H7_AWS_UNUSED(c);
-    
+
     AsyncWebServerRequest *req = ( AsyncWebServerRequest*)r;
     req->_onPoll();
   }, this);
@@ -157,7 +157,7 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len)
         // No new line, just add the buffer in _temp
         char ch = str[len - 1];
         str[len - 1] = 0;
-        
+
         _temp.reserve(_temp.length() + len);
         _temp.concat(str);
         _temp.concat(ch);
@@ -166,7 +166,7 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len)
       {
         // Found new line - extract it and parse
         str[i] = 0; // Terminate the string at the end of the line.
-        
+
         _temp.concat(str);
         _temp.trim();
         _parseLine();
@@ -260,7 +260,7 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len)
 
     break;
   }
-  
+
   // KH, Important for Portenta Murata WiFi, or system will hang
   //delay(0);
   yield();
@@ -287,10 +287,10 @@ void AsyncWebServerRequest::_removeNotInterestingHeaders()
 void AsyncWebServerRequest::_onPoll()
 {
   if (_response != NULL && _client != NULL && _client->canSend() && !_response->_finished())
-  {   
+  {
     _response->_ack(this, 0, 0);
   }
-  
+
   // KH, Important for Portenta Murata WiFi, or system will hang
   //delay(0);
   yield();
@@ -315,7 +315,7 @@ void AsyncWebServerRequest::_onAck(size_t len, uint32_t time)
       delete r;
     }
   }
-  
+
   // KH, Important for Portenta Murata WiFi, or system will hang
   //delay(0);
   yield();
@@ -337,7 +337,7 @@ void AsyncWebServerRequest::_onTimeout(uint32_t time)
   AWS_LOGINFO3("TIMEOUT: time =", time, ", state =", _client->stateToString());
 
   _client->close();
-  
+
   // KH, Important for Portenta Murata WiFi, or system will hang
   //delay(0);
   yield();
@@ -360,7 +360,7 @@ void AsyncWebServerRequest::_onDisconnect()
   }
 
   _server->_handleDisconnect(this);
-   
+
   // KH, Important for Portenta Murata WiFi, or system will hang
   //delay(0);
   yield();
@@ -656,19 +656,19 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
     if (_parsedLength < 2 && data != '-')
     {
       _multiParseState = PARSE_ERROR;
-      
+
       return;
     }
     else if (_parsedLength - 2 < _boundary.length() && _boundary.c_str()[_parsedLength - 2] != data)
     {
       _multiParseState = PARSE_ERROR;
-      
+
       return;
     }
     else if (_parsedLength - 2 == _boundary.length() && data != '\r')
     {
       _multiParseState = PARSE_ERROR;
-      
+
       return;
     }
     else if (_parsedLength - 3 == _boundary.length())
@@ -676,7 +676,7 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
       if (data != '\n')
       {
         _multiParseState = PARSE_ERROR;
-        
+
         return;
       }
 
@@ -754,7 +754,7 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
           if (_itemBuffer == NULL)
           {
             _multiParseState = PARSE_ERROR;
-            
+
             return;
           }
 
@@ -829,7 +829,7 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
     else if (_boundaryPosition == _boundary.length() - 1)
     {
       _multiParseState = DASH3_OR_RETURN2;
-      
+
       if (!_itemIsFile)
       {
         _addParam(new AsyncWebParameter(_itemName, _itemValue, true));
@@ -862,7 +862,7 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
     {
       AWS_LOGDEBUG1("ERROR: The parser got to the end of the POST but is expecting more bytes =", (_contentLength - _parsedLength - 4));
       AWS_LOGDEBUG("Drop an issue so we can have more info on the matter!");
-      
+
       _contentLength = _parsedLength + 4;//lets close the request gracefully
     }
 
@@ -1080,16 +1080,16 @@ void AsyncWebServerRequest::send(AsyncWebServerResponse *response)
   _response = response;
 
   if (_response == NULL)
-  {   
+  {
     _client->close(true);
-       
+
     _onDisconnect();
 
     return;
   }
 
   if (!_response->_sourceValid())
-  {    
+  {
     delete response;
     _response = NULL;
     send(500);
@@ -1098,7 +1098,7 @@ void AsyncWebServerRequest::send(AsyncWebServerResponse *response)
   {
     _client->setRxTimeout(0);
     _response->_respond(this);
-  }  
+  }
 }
 
 //RSMOD///////////////////////////////////////////////
@@ -1150,12 +1150,15 @@ AsyncResponseStream * AsyncWebServerRequest::beginResponseStream(const String& c
 
 void AsyncWebServerRequest::send(int code, const String& contentType, const char *content, bool nonDetructiveSend)
 {
-  if (nonDetructiveSend == true) {
-	send(beginResponse(code, contentType, String(content)));	// for backwards compatibility
-  } else {
-	send(beginResponse(code, contentType, content));
+  if (nonDetructiveSend)
+  {
+    send(beginResponse(code, contentType, String(content)));  // for backwards compatibility
   }
- }
+  else
+  {
+    send(beginResponse(code, contentType, content));
+  }
+}
 
 /////////////////////////////////////////////////
 
@@ -1465,4 +1468,3 @@ bool AsyncWebServerRequest::isExpectedRequestedConnType(RequestedConnectionType 
 }
 
 /////////////////////////////////////////////////
-

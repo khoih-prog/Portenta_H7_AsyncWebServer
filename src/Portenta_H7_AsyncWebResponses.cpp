@@ -53,7 +53,7 @@ void* memchr(void* ptr, int ch, size_t count)
  * */
 const char* AsyncWebServerResponse::_responseCodeToString(int code)
 {
-  switch (code) 
+  switch (code)
   {
     case 100: return "Continue";
     case 101: return "Switching Protocols";
@@ -232,7 +232,7 @@ bool AsyncWebServerResponse::_sourceValid() const
 void AsyncWebServerResponse::_respond(AsyncWebServerRequest *request)
 {
   _state = RESPONSE_END;
-   
+
   request->client()->close();
 }
 
@@ -243,7 +243,7 @@ size_t AsyncWebServerResponse::_ack(AsyncWebServerRequest *request, size_t len, 
   PORTENTA_H7_AWS_UNUSED(request);
   PORTENTA_H7_AWS_UNUSED(len);
   PORTENTA_H7_AWS_UNUSED(time);
-  
+
   return 0;
 }
 
@@ -257,14 +257,15 @@ AsyncBasicResponse::AsyncBasicResponse(int code, const String& contentType, cons
 {
   _code = code;
   _content = String("");
-  _contentCstr = (char *)content;
+  _contentCstr = (char *)content;    // RSMOD
   _contentType = contentType;
+
   int iLen;
 
   if ((iLen = strlen(_contentCstr)))
   {
     _contentLength = iLen;
-    
+
     if (!_contentType.length())
       _contentType = "text/plain";
   }
@@ -281,13 +282,13 @@ AsyncBasicResponse::AsyncBasicResponse(int code, const String& contentType, cons
 {
   _code = code;
   _content = content;
-  _contentCstr = NULL;				// RSMOD
+  _contentCstr = nullptr;        // RSMOD
   _contentType = contentType;
 
   if (_content.length())
   {
     _contentLength = _content.length();
-    
+
     if (!_contentType.length())
       _contentType = "text/plain";
   }
@@ -303,113 +304,116 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
   String out = _assembleHead(request->version());
   size_t outLen = out.length();
   size_t space = request->client()->space();
-  
-  // Serial.println("");
-  // Serial.println("");
-  // Serial.println("");
-  // Serial.println("");;
-  // Serial.println("Pre _respond\n");
-  // Serial.print("_contentLength =");
-  // Serial.println(_contentLength);
-  // Serial.print("out=");
-  // Serial.println(out);
-  // Serial.print("outLen=");
-  // Serial.println(outLen);
-  //// Serial.println("_contentCstr=");
-  //// Serial.println(_contentCstr);
+
+  AWS_LOGDEBUG3("AsyncAbstractResponse::_respond : Pre_respond, _contentLength =", _contentLength, ", out =", out );
+  AWS_LOGDEBUG3("outLen =", outLen, ", _contentCstr =", _contentCstr);
 
   if (!_contentLength && space >= outLen)
   {
-	// Serial.println("");
-	// Serial.println("In A ******");
-	// Serial.println("");
+    AWS_LOGDEBUG("Step 1");
+
     _writtenLength += request->client()->write(out.c_str(), outLen);
     _state = RESPONSE_WAIT_ACK;
   }
   else if (_contentLength && space >= outLen + _contentLength)
   {
-	// Serial.println("");
-	// Serial.println("In B ******");
-	// Serial.println("");
-	if (_contentCstr) {
-		memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
-		memcpy(_contentCstr, out.c_str(), outLen);
-		outLen += _contentLength;
-		// Serial.print(_contentCstr);
-		_writtenLength += request->client()->write(_contentCstr, outLen);
-	} else {
-		out += _content;
-		outLen += _contentLength;
-		_writtenLength += request->client()->write(out.c_str(), outLen);
-	}
+    AWS_LOGDEBUG("Step 2");
+
+    if (_contentCstr)
+    {
+      memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
+      memcpy(_contentCstr, out.c_str(), outLen);
+      outLen += _contentLength;
+
+      AWS_LOGDEBUG1("_contentCstr =", _contentCstr);
+
+      _writtenLength += request->client()->write(_contentCstr, outLen);
+    }
+    else
+    {
+      out += _content;
+      outLen += _contentLength;
+      _writtenLength += request->client()->write(out.c_str(), outLen);
+    }
+
     _state = RESPONSE_WAIT_ACK;
   }
   else if (space && space < outLen)
   {
-	String partial = out.substring(0, space);
-	// Serial.println("");
-	// Serial.println("In C ******");
-	// Serial.println("");
-	if (_contentCstr) {
-		int deltaLen = out.length() - partial.length();
-		memmove(&_contentCstr[deltaLen], _contentCstr,  deltaLen);
-		memcpy(_contentCstr, out.substring(space).c_str(), deltaLen);
-	} else {
-		_content = out.substring(space) + _content;
-	}
-	_contentLength += outLen - space;
-	// Serial.print(partial);
-	_writtenLength += request->client()->write(partial.c_str(), partial.length());
+    String partial = out.substring(0, space);
+
+    AWS_LOGDEBUG("Step 3");
+
+    if (_contentCstr)
+    {
+      int deltaLen = out.length() - partial.length();
+
+      memmove(&_contentCstr[deltaLen], _contentCstr,  deltaLen);
+      memcpy(_contentCstr, out.substring(space).c_str(), deltaLen);
+    }
+    else
+    {
+      _content = out.substring(space) + _content;
+    }
+
+    _contentLength += outLen - space;
+
+    AWS_LOGDEBUG1("partial =", partial);
+
+    _writtenLength += request->client()->write(partial.c_str(), partial.length());
     _state = RESPONSE_CONTENT;
   }
   else if (space > outLen && space < (outLen + _contentLength))
   {
-	size_t shift = space - outLen;
-	// Serial.println("");
-	// Serial.println("In D ******");
-	// Serial.println("");
-	
-	outLen += shift;
-	_sentLength += shift;
-	if (_contentCstr) {
-		char *s = (char *)malloc(shift +1);
-		strncpy(s, _contentCstr, shift);
-		s[shift] = '\0';
-		out += String(s);
-		_contentCstr += shift;
-		free(s);
-	} else {
-		out += _content.substring(0, shift);
-		_content = _content.substring(shift);
-	}
-	// Serial.print(out);
-	_writtenLength += request->client()->write(out.c_str(), outLen);
+    size_t shift = space - outLen;
+
+    AWS_LOGDEBUG("Step 4");
+
+    outLen += shift;
+    _sentLength += shift;
+
+    if (_contentCstr)
+    {
+      char *s = (char *)malloc(shift + 1);
+
+      strncpy(s, _contentCstr, shift);
+      s[shift] = '\0';
+      out += String(s);
+      _contentCstr += shift;
+
+      free(s);
+    }
+    else
+    {
+      out += _content.substring(0, shift);
+      _content = _content.substring(shift);
+    }
+
+    AWS_LOGDEBUG1("out =", out);
+
+    _writtenLength += request->client()->write(out.c_str(), outLen);
     _state = RESPONSE_CONTENT;
   }
   else
   {
-	// Serial.println("");
-	// Serial.println("In E ******");
-	// Serial.println("");
-	 if (_contentCstr) {
-		 memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
-		 memcpy(_contentCstr, out.c_str(), outLen);
-	 } else {
-		_content = out + _content;
-	 }
-	 _contentLength += outLen;
+    AWS_LOGDEBUG("Step 5");
+
+    if (_contentCstr)
+    {
+      memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
+      memcpy(_contentCstr, out.c_str(), outLen);
+    }
+    else
+    {
+      _content = out + _content;
+    }
+
+    _contentLength += outLen;
     _state = RESPONSE_CONTENT;
   }
-  
-  // Serial.print("\n\n\n\n\n\n\nPost _respond\n");
-  // Serial.print("_contentLength =");
-  // Serial.println(_contentLength);
-  // Serial.print("out=");
-  // Serial.println(out);
-  // Serial.print("outLen=");
-  // Serial.println(outLen);
-  //// Serial.println("_contentCstr=");
-  //// Serial.println(_contentCstr);
+
+  AWS_LOGDEBUG3("AsyncAbstractResponse::_respond : Post_respond, _contentLength =", _contentLength, ", out =", out );
+  AWS_LOGDEBUG3("outLen =", outLen, ", _contentCstr =", _contentCstr);
 }
 
 /////////////////////////////////////////////////
@@ -417,59 +421,63 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
 size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint32_t time)
 {
   PORTENTA_H7_AWS_UNUSED(time);
-  
-  // Serial.print("\n\n\n\n\n\n\nPre _ack\n");
-  // Serial.print("_contentLength =");
-  // Serial.print(_contentLength);
-  
+
+  AWS_LOGDEBUG1("AsyncAbstractResponse::_ack : Pre_ack, _contentLength =", _contentLength);
+
   _ackedLength += len;
 
   if (_state == RESPONSE_CONTENT)
   {
-	String out;
+    String out;
     size_t available = _contentLength - _sentLength;
     size_t space = request->client()->space();
-	
-	// Serial.print("   available=");
-	// Serial.print(available);
-	// Serial.print("   space =");
-	// Serial.print(space);
-	
+
+    AWS_LOGDEBUG3("AsyncAbstractResponse::_ack : available =", available, ", space =", space );
 
     //we can fit in this packet
     if (space > available)
     {
-        // Serial.println("In space>available");
-		if (_contentCstr) {
-            // Serial.println("output=");
-            // Serial.println(_contentCstr);
-			_writtenLength += request->client()->write(_contentCstr, available);
-			//_contentCstr[0] = '\0';
-		} else {
-			_writtenLength += request->client()->write(_content.c_str(), available);
-			_content = String();
-		}
+      // Serial.println("In space>available");
+      AWS_LOGDEBUG1("AsyncAbstractResponse::_ack : Pre_ack, _contentLength =", _contentLength);
+
+      if (_contentCstr)
+      {
+        AWS_LOGDEBUG1("In space>available : output =", _contentCstr);
+
+        _writtenLength += request->client()->write(_contentCstr, available);
+        //_contentCstr[0] = '\0';
+      }
+      else
+      {
+        _writtenLength += request->client()->write(_content.c_str(), available);
+        _content = String();
+      }
       _state = RESPONSE_WAIT_ACK;
 
       return available;
     }
 
     //send some data, the rest on ack
-	if (_contentCstr) {
-		char *s = (char *)malloc(space +1);
-		strncpy(s, _contentCstr, space);
-		s[space] = '\0';
-		out = String(s);
-		_contentCstr += space;
-		free(s);
-	} else {
-		out = _content.substring(0, space);
-		_content = _content.substring(space);
-	}
-	_sentLength += space;
-    // Serial.println("output=");
-    // Serial.println(out);
-	_writtenLength += request->client()->write(out.c_str(), space);
+    if (_contentCstr)
+    {
+      char *s = (char *)malloc(space + 1);
+      strncpy(s, _contentCstr, space);
+      s[space] = '\0';
+      out = String(s);
+      _contentCstr += space;
+      free(s);
+    }
+    else
+    {
+      out = _content.substring(0, space);
+      _content = _content.substring(space);
+    }
+
+    _sentLength += space;
+
+    AWS_LOGDEBUG1("In space>available : output =", out);
+
+    _writtenLength += request->client()->write(out.c_str(), space);
 
     return space;
   }
@@ -480,11 +488,8 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
       _state = RESPONSE_END;
     }
   }
-  
-  // Serial.print("\n\n\n\n\n\n\npost _ack");
-  // Serial.print("_contentLength =");
-  // Serial.print(_contentLength);
-  // Serial.print(_contentCstr);
+
+  AWS_LOGDEBUG3("AsyncAbstractResponse::_ack : Post_ack, _contentLength =", _contentLength, ", _contentCstr =", _contentCstr);
 
   return 0;
 }
