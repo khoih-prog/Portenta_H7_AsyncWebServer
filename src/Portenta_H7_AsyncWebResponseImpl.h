@@ -39,18 +39,20 @@
 
 /////////////////////////////////////////////////
 
-class AsyncBasicResponse: public AsyncWebServerResponse 
+class AsyncBasicResponse: public AsyncWebServerResponse
 {
   private:
     String _content;
-    
+    char *_contentCstr;      // RSMOD
+
   public:
     AsyncBasicResponse(int code, const String& contentType = String(), const String& content = String());
+    AsyncBasicResponse(int code, const String& contentType, const char *content = nullptr);     // RSMOD
     void _respond(AsyncWebServerRequest *request);
-    
+
     size_t _ack(AsyncWebServerRequest *request, size_t len, uint32_t time);
-    
-    bool _sourceValid() const 
+
+    bool _sourceValid() const
     {
       return true;
     }
@@ -58,7 +60,7 @@ class AsyncBasicResponse: public AsyncWebServerResponse
 
 /////////////////////////////////////////////////
 
-class AsyncAbstractResponse: public AsyncWebServerResponse 
+class AsyncAbstractResponse: public AsyncWebServerResponse
 {
   private:
     String _head;
@@ -69,21 +71,21 @@ class AsyncAbstractResponse: public AsyncWebServerResponse
     std::vector<uint8_t> _cache;
     size_t _readDataFromCacheOrContent(uint8_t* data, const size_t len);
     size_t _fillBufferAndProcessTemplates(uint8_t* buf, size_t maxLen);
-    
+
   protected:
     AwsTemplateProcessor _callback;
-    
+
   public:
     AsyncAbstractResponse(AwsTemplateProcessor callback = nullptr);
     void _respond(AsyncWebServerRequest *request);
     size_t _ack(AsyncWebServerRequest *request, size_t len, uint32_t time);
-    
-    bool _sourceValid() const 
+
+    bool _sourceValid() const
     {
       return false;
     }
-    
-    virtual size_t _fillBuffer(uint8_t *buf __attribute__((unused)), size_t maxLen __attribute__((unused))) 
+
+    virtual size_t _fillBuffer(uint8_t *buf __attribute__((unused)), size_t maxLen __attribute__((unused)))
     {
       return 0;
     }
@@ -92,64 +94,64 @@ class AsyncAbstractResponse: public AsyncWebServerResponse
 /////////////////////////////////////////////////
 
 #ifndef TEMPLATE_PLACEHOLDER
-  #define TEMPLATE_PLACEHOLDER '%'
+#define TEMPLATE_PLACEHOLDER '%'
 #endif
 
 #define TEMPLATE_PARAM_NAME_LENGTH 32
 
 /////////////////////////////////////////////////
 
-class AsyncStreamResponse: public AsyncAbstractResponse 
+class AsyncStreamResponse: public AsyncAbstractResponse
 {
   private:
     Stream *_content;
-    
+
   public:
     AsyncStreamResponse(Stream &stream, const String& contentType, size_t len, AwsTemplateProcessor callback = nullptr);
-    
-    bool _sourceValid() const 
+
+    bool _sourceValid() const
     {
       return !!(_content);
     }
-    
+
     virtual size_t _fillBuffer(uint8_t *buf, size_t maxLen) override;
 };
 
 /////////////////////////////////////////////////
 
-class AsyncCallbackResponse: public AsyncAbstractResponse 
+class AsyncCallbackResponse: public AsyncAbstractResponse
 {
   private:
     AwsResponseFiller _content;
     size_t _filledLength;
-    
+
   public:
     AsyncCallbackResponse(const String& contentType, size_t len, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
-    
-    bool _sourceValid() const 
+
+    bool _sourceValid() const
     {
       return !!(_content);
     }
-    
+
     virtual size_t _fillBuffer(uint8_t *buf, size_t maxLen) override;
 };
 
 /////////////////////////////////////////////////
 
-class AsyncChunkedResponse: public AsyncAbstractResponse 
+class AsyncChunkedResponse: public AsyncAbstractResponse
 {
   private:
     AwsResponseFiller _content;
     size_t _filledLength;
-    
+
   public:
     AsyncChunkedResponse(const String& contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
-    
-    bool _sourceValid() const 
+
+    bool _sourceValid() const
     {
       return !!(_content);
     }
-    
+
     virtual size_t _fillBuffer(uint8_t *buf, size_t maxLen) override;
 };
 
@@ -159,20 +161,20 @@ class cbuf;
 
 /////////////////////////////////////////////////
 
-class AsyncResponseStream: public AsyncAbstractResponse, public Print 
+class AsyncResponseStream: public AsyncAbstractResponse, public Print
 {
   private:
     cbuf *_content;
-    
+
   public:
     AsyncResponseStream(const String& contentType, size_t bufferSize);
     ~AsyncResponseStream();
-    
-    bool _sourceValid() const 
+
+    bool _sourceValid() const
     {
       return (_state < RESPONSE_END);
     }
-    
+
     virtual size_t _fillBuffer(uint8_t *buf, size_t maxLen) override;
     size_t write(const uint8_t *data, size_t len);
     size_t write(uint8_t data);
