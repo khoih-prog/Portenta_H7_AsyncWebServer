@@ -53,7 +53,7 @@ void* memchr(void* ptr, int ch, size_t count)
  * */
 const char* AsyncWebServerResponse::_responseCodeToString(int code)
 {
-  switch (code) 
+  switch (code)
   {
     case 100: return "Continue";
     case 101: return "Switching Protocols";
@@ -232,7 +232,7 @@ bool AsyncWebServerResponse::_sourceValid() const
 void AsyncWebServerResponse::_respond(AsyncWebServerRequest *request)
 {
   _state = RESPONSE_END;
-   
+
   request->client()->close();
 }
 
@@ -243,8 +243,34 @@ size_t AsyncWebServerResponse::_ack(AsyncWebServerRequest *request, size_t len, 
   PORTENTA_H7_AWS_UNUSED(request);
   PORTENTA_H7_AWS_UNUSED(len);
   PORTENTA_H7_AWS_UNUSED(time);
-  
+
   return 0;
+}
+
+
+//RSMOD///////////////////////////////////////////////
+
+/*
+   String/Code Response
+ * */
+AsyncBasicResponse::AsyncBasicResponse(int code, const String& contentType, const char *content)
+{
+  _code = code;
+  _content = String("");
+  _contentCstr = (char *)content;    // RSMOD
+  _contentType = contentType;
+
+  int iLen;
+
+  if ((iLen = strlen(_contentCstr)))
+  {
+    _contentLength = iLen;
+
+    if (!_contentType.length())
+      _contentType = "text/plain";
+  }
+
+  addHeader("Connection", "close");
 }
 
 /////////////////////////////////////////////////
@@ -256,12 +282,13 @@ AsyncBasicResponse::AsyncBasicResponse(int code, const String& contentType, cons
 {
   _code = code;
   _content = content;
+  _contentCstr = nullptr;        // RSMOD
   _contentType = contentType;
 
   if (_content.length())
   {
     _contentLength = _content.length();
-    
+
     if (!_contentType.length())
       _contentType = "text/plain";
   }
@@ -278,42 +305,115 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
   size_t outLen = out.length();
   size_t space = request->client()->space();
 
+  AWS_LOGDEBUG3("AsyncAbstractResponse::_respond : Pre_respond, _contentLength =", _contentLength, ", out =", out );
+  AWS_LOGDEBUG3("outLen =", outLen, ", _contentCstr =", _contentCstr);
+
   if (!_contentLength && space >= outLen)
   {
+    AWS_LOGDEBUG("Step 1");
+
     _writtenLength += request->client()->write(out.c_str(), outLen);
     _state = RESPONSE_WAIT_ACK;
   }
   else if (_contentLength && space >= outLen + _contentLength)
   {
-    out += _content;
-    outLen += _contentLength;
-    _writtenLength += request->client()->write(out.c_str(), outLen);
+    AWS_LOGDEBUG("Step 2");
+
+    if (_contentCstr)
+    {
+      memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
+      memcpy(_contentCstr, out.c_str(), outLen);
+      outLen += _contentLength;
+
+      AWS_LOGDEBUG1("_contentCstr =", _contentCstr);
+
+      _writtenLength += request->client()->write(_contentCstr, outLen);
+    }
+    else
+    {
+      out += _content;
+      outLen += _contentLength;
+      _writtenLength += request->client()->write(out.c_str(), outLen);
+    }
+
     _state = RESPONSE_WAIT_ACK;
   }
   else if (space && space < outLen)
   {
     String partial = out.substring(0, space);
-    _content = out.substring(space) + _content;
+
+    AWS_LOGDEBUG("Step 3");
+
+    if (_contentCstr)
+    {
+      int deltaLen = out.length() - partial.length();
+
+      memmove(&_contentCstr[deltaLen], _contentCstr,  deltaLen);
+      memcpy(_contentCstr, out.substring(space).c_str(), deltaLen);
+    }
+    else
+    {
+      _content = out.substring(space) + _content;
+    }
+
     _contentLength += outLen - space;
+
+    AWS_LOGDEBUG1("partial =", partial);
+
     _writtenLength += request->client()->write(partial.c_str(), partial.length());
     _state = RESPONSE_CONTENT;
   }
   else if (space > outLen && space < (outLen + _contentLength))
   {
     size_t shift = space - outLen;
+
+    AWS_LOGDEBUG("Step 4");
+
     outLen += shift;
     _sentLength += shift;
-    out += _content.substring(0, shift);
-    _content = _content.substring(shift);
+
+    if (_contentCstr)
+    {
+      char *s = (char *)malloc(shift + 1);
+
+      strncpy(s, _contentCstr, shift);
+      s[shift] = '\0';
+      out += String(s);
+      _contentCstr += shift;
+
+      free(s);
+    }
+    else
+    {
+      out += _content.substring(0, shift);
+      _content = _content.substring(shift);
+    }
+
+    AWS_LOGDEBUG1("out =", out);
+
     _writtenLength += request->client()->write(out.c_str(), outLen);
     _state = RESPONSE_CONTENT;
   }
   else
   {
-    _content = out + _content;
+    AWS_LOGDEBUG("Step 5");
+
+    if (_contentCstr)
+    {
+      memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
+      memcpy(_contentCstr, out.c_str(), outLen);
+    }
+    else
+    {
+      _content = out + _content;
+    }
+
     _contentLength += outLen;
     _state = RESPONSE_CONTENT;
   }
+
+  AWS_LOGDEBUG3("AsyncAbstractResponse::_respond : Post_respond, _contentLength =", _contentLength, ", out =", out );
+  AWS_LOGDEBUG3("outLen =", outLen, ", _contentCstr =", _contentCstr);
 }
 
 /////////////////////////////////////////////////
@@ -321,28 +421,62 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
 size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint32_t time)
 {
   PORTENTA_H7_AWS_UNUSED(time);
-  
+
+  AWS_LOGDEBUG1("AsyncAbstractResponse::_ack : Pre_ack, _contentLength =", _contentLength);
+
   _ackedLength += len;
 
   if (_state == RESPONSE_CONTENT)
   {
+    String out;
     size_t available = _contentLength - _sentLength;
     size_t space = request->client()->space();
+
+    AWS_LOGDEBUG3("AsyncAbstractResponse::_ack : available =", available, ", space =", space );
 
     //we can fit in this packet
     if (space > available)
     {
-      _writtenLength += request->client()->write(_content.c_str(), available);
-      _content = String();
+      // Serial.println("In space>available");
+      AWS_LOGDEBUG1("AsyncAbstractResponse::_ack : Pre_ack, _contentLength =", _contentLength);
+
+      if (_contentCstr)
+      {
+        AWS_LOGDEBUG1("In space>available : output =", _contentCstr);
+
+        _writtenLength += request->client()->write(_contentCstr, available);
+        //_contentCstr[0] = '\0';
+      }
+      else
+      {
+        _writtenLength += request->client()->write(_content.c_str(), available);
+        _content = String();
+      }
       _state = RESPONSE_WAIT_ACK;
 
       return available;
     }
 
     //send some data, the rest on ack
-    String out = _content.substring(0, space);
-    _content = _content.substring(space);
+    if (_contentCstr)
+    {
+      char *s = (char *)malloc(space + 1);
+      strncpy(s, _contentCstr, space);
+      s[space] = '\0';
+      out = String(s);
+      _contentCstr += space;
+      free(s);
+    }
+    else
+    {
+      out = _content.substring(0, space);
+      _content = _content.substring(space);
+    }
+
     _sentLength += space;
+
+    AWS_LOGDEBUG1("In space>available : output =", out);
+
     _writtenLength += request->client()->write(out.c_str(), space);
 
     return space;
@@ -354,6 +488,8 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
       _state = RESPONSE_END;
     }
   }
+
+  AWS_LOGDEBUG3("AsyncAbstractResponse::_ack : Post_ack, _contentLength =", _contentLength, ", _contentCstr =", _contentCstr);
 
   return 0;
 }
