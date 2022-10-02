@@ -1,5 +1,5 @@
 /****************************************************************************************************************************
-  Async_AdvancedWebServer.ino - Dead simple AsyncWebServer for STM32 LAN8720 or built-in LAN8742A Ethernet
+  Async_AdvancedWebServer_MemoryIssues_Send_CString.ino - Dead simple AsyncWebServer for STM32 LAN8720 or built-in LAN8742A Ethernet
 
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
 
@@ -105,6 +105,7 @@ void handleRoot(AsyncWebServerRequest *request)
   snprintf(temp, BUFFER_SIZE - 1,
            "<html>\
 <head>\
+<meta http-equiv='refresh' content='5'/>\
 <title>AsyncWebServer-%s</title>\
 <style>\
 body { background-color: #cccccc; font-family: Arial, Helvetica, Sans-Serif; Color: #000088; }\
