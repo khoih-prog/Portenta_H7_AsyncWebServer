@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.3.0
+  Version: 1.4.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -19,6 +19,7 @@
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
   1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
+  1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
  *****************************************************************************************************************************/
  
 #ifndef _PORTENTA_H7_ASYNC_WEBSERVER_H_
@@ -33,13 +34,13 @@
 
 #endif
 
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION           "Portenta_H7_AsyncWebServer v1.3.0"
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION           "Portenta_H7_AsyncWebServer v1.4.0"
 
 #define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_MAJOR     1
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_MINOR     3
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_MINOR     4
 #define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_PATCH     0
 
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_INT       1003000
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_INT       1004000
 
 #ifndef PORTENTA_H7_AWS_UNUSED
   #define PORTENTA_H7_AWS_UNUSED(x)       (void)(x)
