@@ -1,6 +1,6 @@
 /****************************************************************************************************************************
-  Async_AdvancedWebServer.ino - Dead simple AsyncWebServer for STM32 LAN8720 or built-in LAN8742A Ethernet
-
+  Async_AdvancedWebServer_MemoryIssues_Send_CString.ino - Dead simple AsyncWebServer for Portenta_H7
+  
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
 
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with with Vision-Shield Ethernet
@@ -42,19 +42,57 @@
   #error For Portenta_H7 only
 #endif
 
-#define _PORTENTA_H7_AWS_LOGLEVEL_     1
+#define _PORTENTA_H7_ATCP_LOGLEVEL_     1
+#define _PORTENTA_H7_AWS_LOGLEVEL_      1
 
-#define USE_WIFI_PORTENTA_H7        true
+#define USE_ETHERNET_PORTENTA_H7        true
 
-#include <WiFi.h>
-#warning Using WiFi for Portenta_H7.
+#include <Portenta_Ethernet.h>
+#include <Ethernet.h>
+#warning Using Portenta_Ethernet lib for Portenta_H7.
 
 #include <Portenta_H7_AsyncWebServer.h>
 
-char ssid[] = "your_ssid";        // your network SSID (name)
-char pass[] = "12345678";         // your network password (use for WPA, or use as key for WEP), length must be 8+
+char *cStr;
 
-int status = WL_IDLE_STATUS;
+// In bytes
+#define CSTRING_SIZE                    40000
+
+// Select either cString is stored in SDRAM or not
+#define USING_CSTRING_IN_SDRAM          true
+
+#if USING_CSTRING_IN_SDRAM
+  #include "SDRAM.h"
+#endif
+
+// Enter a MAC address and IP address for your controller below.
+#define NUMBER_OF_MAC      20
+
+byte mac[][NUMBER_OF_MAC] =
+{
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x01 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x02 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x03 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x04 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x05 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x06 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x07 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x08 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x09 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0A },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0B },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0C },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0D },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0E },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x0F },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x10 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x11 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x12 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x13 },
+  { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x14 },
+};
+// Select the IP address according to your local network
+IPAddress ip(192, 168, 2, 232);
 
 AsyncWebServer    server(80);
 
@@ -63,8 +101,7 @@ int reqCount = 0;                // number of requests received
 #define LED_OFF             HIGH
 #define LED_ON              LOW
 
-
-#define BUFFER_SIZE         512
+#define BUFFER_SIZE         768 // a little larger in case required for header shift (destructive send)
 char temp[BUFFER_SIZE];
 
 void handleRoot(AsyncWebServerRequest *request)
@@ -87,13 +124,13 @@ body { background-color: #cccccc; font-family: Arial, Helvetica, Sans-Serif; Col
 </head>\
 <body>\
 <h2>AsyncWebServer_Portenta_H7!</h2>\
-<h3>running WiFi on %s</h3>\
+<h3>running on %s</h3>\
 <p>Uptime: %d d %02d:%02d:%02d</p>\
 <img src=\"/test.svg\" />\
 </body>\
 </html>", BOARD_NAME, BOARD_NAME, day, hr % 24, min % 60, sec % 60);
 
-  request->send(200, "text/html", temp);
+  request->send(200, "text/html", temp, false);
 
   digitalWrite(LED_BUILTIN, LED_OFF);
 }
@@ -120,46 +157,68 @@ void handleNotFound(AsyncWebServerRequest *request)
   digitalWrite(LED_BUILTIN, LED_OFF);
 }
 
-void drawGraph(AsyncWebServerRequest *request)
+void PrintHeapData(String hIn)
 {
-  String out;
+  static mbed_stats_heap_t heap_stats;
+  static uint32_t maxHeapSize = 0;
 
-  out.reserve(4000);
-  char temp[70];
+  mbed_stats_heap_get(&heap_stats);
 
-  out += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"310\" height=\"150\">\n";
-  out += "<rect width=\"310\" height=\"150\" fill=\"rgb(250, 230, 210)\" stroke-width=\"2\" stroke=\"rgb(0, 0, 0)\" />\n";
-  out += "<g stroke=\"blue\">\n";
+  // Print and update only when different
+  if (maxHeapSize != heap_stats.max_size)
+  {
+    maxHeapSize = heap_stats.max_size;
+  
+    Serial.print("\nHEAP DATA - ");
+    Serial.print(hIn);
+    
+    Serial.print("  Cur heap: ");
+    Serial.print(heap_stats.current_size);
+    Serial.print("  Res Size: ");
+    Serial.print(heap_stats.reserved_size);
+    Serial.print("  Max heap: ");
+    Serial.println(heap_stats.max_size);
+  }
+}
+
+void PrintStringSize(const char* cStr)
+{ 
+  Serial.print("\nOut String Length=");
+  Serial.println(strlen(cStr));
+}
+
+void drawGraph(AsyncWebServerRequest *request) 
+{
+  char temp[80];
+
+  cStr[0] = '\0';
+
+  strcat(cStr, "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"1810\" height=\"150\">\n");
+  strcat(cStr, "<rect width=\"1810\" height=\"150\" fill=\"rgb(250, 230, 210)\" stroke-width=\"2\" stroke=\"rgb(0, 0, 0)\" />\n");
+  strcat(cStr, "<g stroke=\"blue\">\n");
   int y = rand() % 130;
 
-  for (int x = 10; x < 300; x += 10)
+  for (int x = 10; x < 5000; x += 10)
   {
     int y2 = rand() % 130;
     sprintf(temp, "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke-width=\"2\" />\n", x, 140 - y, x + 10, 140 - y2);
-    out += temp;
+    strcat(cStr, temp);
     y = y2;
   }
-  out += "</g>\n</svg>\n";
+  
+  strcat(cStr, "</g>\n</svg>\n");
 
-  request->send(200, "image/svg+xml", out);
-}
+  PrintHeapData("Pre Send");
 
-void printWifiStatus()
-{
-  // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+  // Print only when cStr length too large and corrupting memory
+  if ( (strlen(cStr) >= CSTRING_SIZE))
+  {
+    PrintStringSize(cStr);
+  }
 
-  // print your board's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print("Local IP Address: ");
-  Serial.println(ip);
+  request->send(200, "image/svg+xml", cStr, false);
 
-  // print the received signal strength:
-  long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.print(rssi);
-  Serial.println(" dBm");
+  PrintHeapData("Post Send");
 }
 
 void setup()
@@ -172,42 +231,66 @@ void setup()
 
   delay(200);
 
-  Serial.print("\nStart Async_AdvancedWebServer on "); Serial.print(BOARD_NAME);
+#if USING_CSTRING_IN_SDRAM
+  Serial.print("\nStart Async_AdvancedWebServer_MemoryIssues_Send_CString using SDRAM on ");
+#else
+  Serial.print("\nStart Async_AdvancedWebServer_MemoryIssues_Send_CString on ");
+#endif
+  
+  Serial.print(BOARD_NAME);
   Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
   Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
 
-  ///////////////////////////////////
+#if USING_CSTRING_IN_SDRAM
+  SDRAM.begin();
 
-  // check for the WiFi module:
-  if (WiFi.status() == WL_NO_MODULE)
+  cStr = (char *) SDRAM.malloc(CSTRING_SIZE);     // make a little larger than required
+#else
+  cStr = (char *) malloc(CSTRING_SIZE);           // make a little larger than required
+#endif
+
+  if (cStr == NULL) 
   {
-    Serial.println("Communication with WiFi module failed!");
-    // don't continue
-    while (true);
+    Serial.println("Unable top Allocate RAM");
+    
+    for(;;);
   }
-
-  Serial.print(F("Connecting to SSID: "));
-  Serial.println(ssid);
-
-  status = WiFi.begin(ssid, pass);
-
-  delay(1000);
-   
-  // attempt to connect to WiFi network
-  while ( status != WL_CONNECTED)
-  {
-    delay(500);
-        
-    // Connect to WPA/WPA2 network
-    status = WiFi.status();
-  }
-
-  printWifiStatus();
 
   ///////////////////////////////////
 
+  // start the ethernet connection and the server
+  // Use random mac
+  uint16_t index = millis() % NUMBER_OF_MAC;
 
+  // Use Static IP
+  //Ethernet.begin(mac[index], ip);
+  // Use DHCP dynamic IP and random mac
+  Ethernet.begin(mac[index]);
+
+  if (Ethernet.hardwareStatus() == EthernetNoHardware)
+  {
+    Serial.println("No Ethernet found. Stay here forever");
+
+    while (true)
+    {
+      delay(1); // do nothing, no point running without Ethernet hardware
+    }
+  }
+
+  if (Ethernet.linkStatus() == LinkOFF)
+  {
+    Serial.println("Not connected Ethernet cable");
+  }
+
+  Serial.print(F("Using mac index = "));
+  Serial.println(index);
+
+  Serial.print(F("Connected! IP address: "));
+  Serial.println(Ethernet.localIP());
+
+  ///////////////////////////////////
+ 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
   {
     handleRoot(request);
@@ -226,9 +309,12 @@ void setup()
   server.onNotFound(handleNotFound);
 
   server.begin();
-  
+
   Serial.print(F("HTTP EthernetWebServer is @ IP : "));
-  Serial.println(WiFi.localIP());
+  Serial.println(Ethernet.localIP());
+
+  PrintHeapData("Pre Create Arduino String");
+
 }
 
 void heartBeatPrint()
@@ -239,7 +325,8 @@ void heartBeatPrint()
 
   if (num == 80)
   {
-    Serial.println();
+    //Serial.println();
+    PrintStringSize(cStr);
     num = 1;
   }
   else if (num++ % 10 == 0)
