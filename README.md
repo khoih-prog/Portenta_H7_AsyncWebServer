@@ -114,7 +114,7 @@
   * [5. Async_HTTPBasicAuth on PORTENTA_H7_M7 using Ethernet](#5-Async_HTTPBasicAuth-on-PORTENTA_H7_M7-using-Ethernet)
   * [6. Async_AdvancedWebServer on PORTENTA_H7_M7 using Ethernet](#6-Async_AdvancedWebServer-on-PORTENTA_H7_M7-using-Ethernet)
   * [7. Async_AdvancedWebServer on PORTENTA_H7_M7 using WiFi](#7-Async_AdvancedWebServer-on-PORTENTA_H7_M7-using-WiFi)
-  * [8. Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 using Ethernet](#7-Async_AdvancedWebServer_MemoryIssues_Send_CString-on-PORTENTA_H7_M7-using-Ethernet)
+  * [8. Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 using Ethernet](#8-Async_AdvancedWebServer_MemoryIssues_Send_CString-on-PORTENTA_H7_M7-using-Ethernet)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
