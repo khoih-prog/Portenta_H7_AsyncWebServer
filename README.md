@@ -15,7 +15,7 @@
 ## Table of contents
 
 * [Table of contents](#table-of-contents)
-* [Important Note from v1.4.0](#Important-Note-from-140)
+* [Important Note from v1.4.0](#Important-Note-from-v140)
 * [Why do we need this Portenta_H7_AsyncWebServer library](#why-do-we-need-this-Portenta_H7_AsyncWebServer-library)
   * [Features](#features)
   * [Why Async is better](#why-async-is-better)
@@ -114,6 +114,7 @@
   * [5. Async_HTTPBasicAuth on PORTENTA_H7_M7 using Ethernet](#5-Async_HTTPBasicAuth-on-PORTENTA_H7_M7-using-Ethernet)
   * [6. Async_AdvancedWebServer on PORTENTA_H7_M7 using Ethernet](#6-Async_AdvancedWebServer-on-PORTENTA_H7_M7-using-Ethernet)
   * [7. Async_AdvancedWebServer on PORTENTA_H7_M7 using WiFi](#7-Async_AdvancedWebServer-on-PORTENTA_H7_M7-using-WiFi)
+  * [8. Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 using Ethernet](#7-Async_AdvancedWebServer_MemoryIssues_Send_CString-on-PORTENTA_H7_M7-using-Ethernet)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -131,7 +132,7 @@
 
 The new `v1.4.0` has added a new and powerful feature to permit using `CString` in optional `SDRAM` to save heap to send `very large data`.
 
-Check `marvelleous` PR of **@salasidis** [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8) and these new examples
+Check the `marvelleous` PR of **@salasidis** [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8) and these new examples
 
 1. [Async_AdvancedWebServer_MemoryIssues_Send_CString for Ethernet](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString)
 2. [Async_AdvancedWebServer_MemoryIssues_SendArduinoString for Ethernet](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString)
@@ -1785,7 +1786,7 @@ You can access the Async Advanced WebServers at the displayed server IP, e.g. `1
 Following is the debug terminal and screen shot when running example [Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) on Portenta_H7 Ethernet to demonstrate the new and powerful `HEAP-saving` feature
 
 
-##### Using SDRAM
+##### Using SDRAM => not using HEAP (14,314 bytes)
 
 ```
 Start Async_AdvancedWebServer_MemoryIssues_Send_CString using SDRAM on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
@@ -1816,7 +1817,7 @@ Out String Length=31224
 Out String Length=31235
 ```
 
-##### Not using SDRAM  ===> small heap (51823)
+##### Not using SDRAM  ===> small heap (51,823 bytes)
 
 ```
 Start Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
@@ -1840,7 +1841,7 @@ Out String Length=31291
 While using Arduino String, the HEAP usage is very large
 
 
-#### Async_AdvancedWebServer_MemoryIssues_SendArduinoString  ===> very large heap (111387)
+#### Async_AdvancedWebServer_MemoryIssues_SendArduinoString  ===> very large heap (111,387 bytes)
 
 ```
 Start Async_AdvancedWebServer_MemoryIssues_SendArduinoString on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
@@ -1877,7 +1878,7 @@ HEAP DATA - Post Send  Cur heap: 79054  Res Size: 452016  Max heap: 111437
 Out String Length=31280
 . ......
 ```
-```
+
 
 You can access the Async Advanced WebServers at the displayed server IP, e.g. `192.168.2.123`
 
