@@ -12,24 +12,10 @@
 ---
 ---
 
-
-*****
-Added a destructive C string interface to send
-
-if called with 
-request->send(200, textPlainStr, ArduinoStr);  // no difference
-request->send(200, textPlainStr, cStr);        // no differfence
-request->send(200, textPlainStr, cStr, false); // this will have to be a cString with enough space to fit the header, it will be memmoved as required, header added, and sent, without creating any large arduino Strings that consume heap
-
-in my application max heap size went from 375k to 66k (which is the lowest possible wit the variables and otehr data I am using)
-
-Seems to work, let me know what you think
-
-
-
 ## Table of contents
 
 * [Table of contents](#table-of-contents)
+* [Important Note from v1.4.0](#Important-Note-from-140)
 * [Why do we need this Portenta_H7_AsyncWebServer library](#why-do-we-need-this-Portenta_H7_AsyncWebServer-library)
   * [Features](#features)
   * [Why Async is better](#why-async-is-better)
@@ -105,6 +91,8 @@ Seems to work, let me know what you think
     * [ 8. **MQTT_ThingStream**](examples/Ethernet/MQTT_ThingStream)
     * [ 9. WebClient](examples/Ethernet/WebClient)
     * [10. WebClientRepeating](examples/Ethernet/WebClientRepeating)
+    * [11. Async_AdvancedWebServer_MemoryIssues_SendArduinoString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString) **New**
+    * [12. Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
   * [2. For Murata WiFi](#2-for-Murata-WiFi)
     * [ 1. Async_AdvancedWebServer](examples/WiFi/Async_AdvancedWebServer)
     * [ 2. Async_HelloServer](examples/WiFi/Async_HelloServer)
@@ -116,6 +104,7 @@ Seems to work, let me know what you think
     * [ 8. **MQTT_ThingStream**](examples/WiFi/MQTT_ThingStream)
     * [ 9. WebClient](examples/WiFi/WebClient)
     * [10. WebClientRepeating](examples/WiFi/WebClientRepeating)
+    * [11. Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/WiFi/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
 * [Example Async_AdvancedWebServer](#Example-Async_AdvancedWebServer)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
   * [1. MQTT_ThingStream on PORTENTA_H7_M7 using Ethernet](#1-MQTT_ThingStream-on-PORTENTA_H7_M7-using-Ethernet)
@@ -134,6 +123,66 @@ Seems to work, let me know what you think
 * [Contributing](#contributing)
 * [License](#license)
 * [Copyright](#copyright)
+
+---
+---
+
+### Important Note from v1.4.0
+
+The new `v1.4.0` has added a new and powerful feature to permit using `CString` in optional `SDRAM` to save heap to send `very large data`.
+
+Check `marvelleous` PR of **@salasidis** [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8) and these new examples
+
+1. [Async_AdvancedWebServer_MemoryIssues_Send_CString for Ethernet](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString)
+2. [Async_AdvancedWebServer_MemoryIssues_SendArduinoString for Ethernet](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString)
+3. [Async_AdvancedWebServer_MemoryIssues_Send_CString for WiFi](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_AdvancedWebServer_MemoryIssues_Send_CString)
+
+If using Arduino String, to send a buffer around 40 KBytes, the used `Max Heap` is around **111,500 bytes (~3 times)**
+
+If using CString in SDRAM, with the same 40 KByte, the used `Max Heap` is around **14,314 bytes**
+
+If using CString in regular memory, with the same 40 KByte, the used `Max Heap` is around **51,823 bytes (~1 times)**
+
+This is very critical in use-cases where sending `very large data` is necessary, without `heap-allocation-error`.
+
+
+1. The traditional function used to send `Arduino String` is
+
+https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/f146e092bc8ebf4c5d2cd522bfc64ee4698007e5/src/Portenta_H7_AsyncWebServer.h#L342
+
+such as
+
+```cpp
+request->send(200, textPlainStr, ArduinoStr);
+```
+The required HEAP is about **3 times of the String size**
+
+2. To use `CString` but don't destroy it after sending. Use function
+
+https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/f146e092bc8ebf4c5d2cd522bfc64ee4698007e5/src/Portenta_H7_AsyncWebServer.h#L343
+
+such as 
+
+```cpp
+request->send(200, textPlainStr, cStr);
+```
+
+The required HEAP is also about **3 times of the CString size**
+
+
+3. To use `CString` but destroy it after sending. Use function
+
+https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/f146e092bc8ebf4c5d2cd522bfc64ee4698007e5/src/Portenta_H7_AsyncWebServer.h#L343
+
+such as 
+
+```cpp
+request->send(200, textPlainStr, cStr, false);
+```
+
+The required HEAP is also about **1 times of the CString size without using SDRAM, or none if using SDRAM**.
+
+
 
 ---
 ---
@@ -1480,6 +1529,8 @@ build_flags =
  8. [**MQTT_ThingStream**](examples/Ethernet/MQTT_ThingStream)
  9. [WebClient](examples/Ethernet/WebClient)
 10. [WebClientRepeating](examples/Ethernet/WebClientRepeating)
+11. [Async_AdvancedWebServer_MemoryIssues_SendArduinoString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString) **New**
+12. [Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
 
 #### 2. For Murata WiFi
 
@@ -1493,6 +1544,7 @@ build_flags =
  8. [**MQTT_ThingStream**](examples/WiFi/MQTT_ThingStream)
  9. [WebClient](examples/WiFi/WebClient)
 10. [WebClientRepeating](examples/WiFi/WebClientRepeating)
+11. [Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/WiFi/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
 
 
 ---
@@ -1521,7 +1573,7 @@ Following is debug terminal output when running example [MQTT_ThingStream](examp
 ```
 Start MQTT_ThingStream on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.3.0
+Portenta_H7_AsyncWebServer v1.4.0
 Using mac index = 17
 Connected! IP address: 192.168.2.87
 ***************************************
@@ -1546,7 +1598,7 @@ Following is debug terminal output when running example [WebClient](examples/Eth
 ```
 Start WebClientRepeating on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.3.0
+Portenta_H7_AsyncWebServer v1.4.0
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 
@@ -1614,7 +1666,7 @@ Following is debug terminal output when running example [MQTTClient_Auth](exampl
 ```
 Start MQTTClient_Auth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.3.0
+Portenta_H7_AsyncWebServer v1.4.0
 Using mac index = 9
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1635,7 +1687,7 @@ Following is debug terminal output when running example [MQTTClient_Basic](examp
 ```
 Start MQTTClient_Basic on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.3.0
+Portenta_H7_AsyncWebServer v1.4.0
 Using mac index = 8
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1654,7 +1706,7 @@ Following is debug terminal output when running example [Async_HTTPBasicAuth](ex
 ```
 Start Async_HTTPBasicAuth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.3.0
+Portenta_H7_AsyncWebServer v1.4.0
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 Async_HttpBasicAuth started @ IP : 192.168.2.87
@@ -1684,7 +1736,7 @@ Following are debug terminal output and screen shots when running example [Async
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.3.0
+Portenta_H7_AsyncWebServer v1.4.0
 Using mac index = 4
 Connected! IP address: 192.168.2.87
 HTTP EthernetWebServer is @ IP : 192.168.2.87
@@ -1711,7 +1763,7 @@ Following is the debug terminal and screen shot when running example [Async_Adva
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Portenta_H7 WiFi
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.3.0
+Portenta_H7_AsyncWebServer v1.4.0
 Connecting to SSID: HueNet1
 SSID: HueNet1
 Local IP Address: 192.168.2.94
@@ -1726,6 +1778,112 @@ You can access the Async Advanced WebServers at the displayed server IP, e.g. `1
     <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer_WiFi.png">
 </p>
 
+---
+
+#### 8. Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 using Ethernet
+
+Following is the debug terminal and screen shot when running example [Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) on Portenta_H7 Ethernet to demonstrate the new and powerful `HEAP-saving` feature
+
+
+##### Using SDRAM
+
+```
+Start Async_AdvancedWebServer_MemoryIssues_Send_CString using SDRAM on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.4.0
+Using mac index = 2
+Connected! IP address: 192.168.2.123
+HTTP EthernetWebServer is @ IP : 192.168.2.123
+
+HEAP DATA - Pre Create Arduino String  Cur heap: 8458  Res Size: 451648  Max heap: 8472
+.
+HEAP DATA - Pre Send  Cur heap: 9634  Res Size: 451648  Max heap: 10196
+
+HEAP DATA - Post Send  Cur heap: 9734  Res Size: 451648  Max heap: 12847
+......... .......... .......... .......... .......... .......... .......... ..........
+Out String Length=31200
+.......... .......... .......... .......... .......... .......... .......... ..........
+Out String Length=31219
+.......... .......... .......... .......... .......... .......... .......... ..........
+Out String Length=31255
+.......... .......... .......... .......... .......... .......... .......... ..........
+Out String Length=31198
+.......... .......... .......... .......... .......... .......... .......... ........
+HEAP DATA - Post Send  Cur heap: 11201  Res Size: 451648  Max heap: 14314
+..
+Out String Length=31224
+.......... .......... .......... .......... .......... .......... .......... ..........
+Out String Length=31235
+```
+
+##### Not using SDRAM  ===> small heap (51823)
+
+```
+Start Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.4.0
+Using mac index = 8
+Connected! IP address: 192.168.2.123
+HTTP EthernetWebServer is @ IP : 192.168.2.123
+
+HEAP DATA - Pre Create Arduino String  Cur heap: 47434  Res Size: 451760  Max heap: 47448
+.
+HEAP DATA - Pre Send  Cur heap: 48610  Res Size: 451760  Max heap: 49172
+
+HEAP DATA - Post Send  Cur heap: 48710  Res Size: 451760  Max heap: 51823
+......... .......... .......... .......... .......... .......... .......... ..........
+Out String Length=31200
+.......... .......... .......... .......... .......... .......... .......... ..........
+Out String Length=31291
+```
+
+While using Arduino String, the HEAP usage is very large
+
+
+#### Async_AdvancedWebServer_MemoryIssues_SendArduinoString  ===> very large heap (111387)
+
+```
+Start Async_AdvancedWebServer_MemoryIssues_SendArduinoString on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.4.0
+Using mac index = 0
+Connected! IP address: 192.168.2.123
+HTTP EthernetWebServer is @ IP : 192.168.2.123
+
+HEAP DATA - Pre Create Arduino String  Cur heap: 7434  Res Size: 452016  Max heap: 7448
+.
+HEAP DATA - Pre Send  Cur heap: 48611  Res Size: 452016  Max heap: 48611
+
+HEAP DATA - Post Send  Cur heap: 79009  Res Size: 452016  Max heap: 111347
+.
+HEAP DATA - Post Send  Cur heap: 79029  Res Size: 452016  Max heap: 111387
+...
+HEAP DATA - Post Send  Cur heap: 79037  Res Size: 452016  Max heap: 111403
+....
+HEAP DATA - Post Send  Cur heap: 79041  Res Size: 452016  Max heap: 111411
+. ..
+Out String Length=31247
+.......
+HEAP DATA - Post Send  Cur heap: 79047  Res Size: 452016  Max heap: 111423
+. ....
+Out String Length=31233
+...... ......
+Out String Length=31243
+.... .......
+Out String Length=31251
+... .......
+HEAP DATA - Post Send  Cur heap: 79054  Res Size: 452016  Max heap: 111437
+..
+Out String Length=31280
+. ......
+```
+```
+
+You can access the Async Advanced WebServers at the displayed server IP, e.g. `192.168.2.123`
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer_CString.png">
+</p>
 
 ---
 ---
@@ -1767,7 +1925,9 @@ Submit issues to: [Portenta_H7_AsyncWebServer issues](https://github.com/khoih-p
  1. Add support to Portenta_H7 using `Vision-shield Ethernet`
  2. Add Table of Contents
  3. Fix issue with slow browsers or network. Check [Target stops responding after variable time when using Firefox on Windows 10 #3](https://github.com/khoih-prog/AsyncWebServer_RP2040W/issues/3)
-
+ 4. Support using `CString` in optional `SDRAM` to save heap to send `very large data`. Check [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8)
+ 
+ 
 ---
 ---
 
@@ -1776,12 +1936,14 @@ Submit issues to: [Portenta_H7_AsyncWebServer issues](https://github.com/khoih-p
 1. Based on and modified from [Hristo Gochkov's ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer). Many thanks to [Hristo Gochkov](https://github.com/me-no-dev) for great [ESPAsyncWebServer Library](https://github.com/me-no-dev/ESPAsyncWebServer)
 2. Thanks to [rusty-bit](https://github.com/rusty-bit) to initiate the Discussion in [**AsyncWebserver for Portenta H7** #6](https://github.com/khoih-prog/AsyncWebServer_STM32/discussions/6) leading to these [Portenta_H7_AsyncTCP](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) and [Portenta_H7_AsyncWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer) libraries
 3. Thanks to [Jeremy Ellis](https://github.com/hpssjellis) to test and report the compile error and crash issue with mbed_portenta core v2.6.1, leading to v1.2.0
+4. Thanks to [salasidis](https://github.com/salasidis) aka [rs77can](https://forum.arduino.cc/u/rs77can) to discuss and make the mavellous PR [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8), leading to `v1.4.0` to support using `CString` in optional `SDRAM` to save heap to send `very large data`
 
 <table>
   <tr>
     <td align="center"><a href="https://github.com/me-no-dev"><img src="https://github.com/me-no-dev.png" width="100px;" alt="me-no-dev"/><br /><sub><b>⭐️⭐️ Hristo Gochkov</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/rusty-bit"><img src="https://github.com/rusty-bit.png" width="100px;" alt="rusty-bit"/><br /><sub><b>rusty-bit</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/hpssjellis"><img src="https://github.com/hpssjellis.png" width="100px;" alt="hpssjellis"/><br /><sub><b>Jeremy Ellis</b></sub></a><br /></td> 
+    <td align="center"><a href="https://github.com/hpssjellis"><img src="https://github.com/hpssjellis.png" width="100px;" alt="hpssjellis"/><br /><sub><b>Jeremy Ellis</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/salasidis"><img src="https://github.com/salasidis.png" width="100px;" alt="salasidis"/><br /><sub><b>salasidis</b></sub></a><br /></td> 
   </tr> 
 </table>
 

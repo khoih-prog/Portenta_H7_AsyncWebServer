@@ -43,7 +43,7 @@
 #endif
 
 #define _PORTENTA_H7_ATCP_LOGLEVEL_     1
-#define _PORTENTA_H7_AWS_LOGLEVEL_      1
+#define _PORTENTA_H7_AWS_LOGLEVEL_      0
 
 #define USE_ETHERNET_PORTENTA_H7        true
 
@@ -241,6 +241,9 @@ void setup()
   Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
   Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
+
+  Serial.print("TCP_MSS = "); Serial.print(TCP_MSS); Serial.print(", TCP_SND_BUF = "); Serial.println(TCP_SND_BUF);
+  
 
 #if USING_CSTRING_IN_SDRAM
   SDRAM.begin();
