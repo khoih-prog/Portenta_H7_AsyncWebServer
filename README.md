@@ -1944,7 +1944,7 @@ Submit issues to: [Portenta_H7_AsyncWebServer issues](https://github.com/khoih-p
     <td align="center"><a href="https://github.com/me-no-dev"><img src="https://github.com/me-no-dev.png" width="100px;" alt="me-no-dev"/><br /><sub><b>⭐️⭐️ Hristo Gochkov</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/rusty-bit"><img src="https://github.com/rusty-bit.png" width="100px;" alt="rusty-bit"/><br /><sub><b>rusty-bit</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/hpssjellis"><img src="https://github.com/hpssjellis.png" width="100px;" alt="hpssjellis"/><br /><sub><b>Jeremy Ellis</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/salasidis"><img src="https://github.com/salasidis.png" width="100px;" alt="salasidis"/><br /><sub><b>salasidis</b></sub></a><br /></td> 
+    <td align="center"><a href="https://github.com/salasidis"><img src="https://github.com/salasidis.png" width="100px;" alt="salasidis"/><br /><sub><b>⭐️ salasidis</b></sub></a><br /></td> 
   </tr> 
 </table>
 
