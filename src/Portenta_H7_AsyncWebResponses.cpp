@@ -259,6 +259,7 @@ AsyncBasicResponse::AsyncBasicResponse(int code, const String& contentType, cons
   _content = String("");
   _contentCstr = (char *)content;    // RSMOD
   _contentType = contentType;
+  _partialHeader = String();
 
   int iLen;
 
@@ -284,6 +285,7 @@ AsyncBasicResponse::AsyncBasicResponse(int code, const String& contentType, cons
   _content = content;
   _contentCstr = nullptr;        // RSMOD
   _contentType = contentType;
+  _partialHeader = String();
 
   if (_content.length())
   {
@@ -319,8 +321,10 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
   {
     AWS_LOGDEBUG("Step 2");
 
+	
     if (_contentCstr)
     {
+		/*
       memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
       memcpy(_contentCstr, out.c_str(), outLen);
       outLen += _contentLength;
@@ -328,13 +332,15 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
       AWS_LOGDEBUG1("_contentCstr =", _contentCstr);
 
       _writtenLength += request->client()->write(_contentCstr, outLen);
+	  */
+	  _content = String(_contentCstr);		// short _contentCstr - so just send as Arduino String - not much of a penalty - fall into below
     }
-    else
-    {
+    //else
+    //{
       out += _content;
       outLen += _contentLength;
       _writtenLength += request->client()->write(out.c_str(), outLen);
-    }
+    //}
 
     _state = RESPONSE_WAIT_ACK;
   }
@@ -346,17 +352,18 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
 
     if (_contentCstr)
     {
-      int deltaLen = out.length() - partial.length();
+      //int deltaLen = out.length() - partial.length();
+	  
+	  _partialHeader = out.substring(space);
 
-      memmove(&_contentCstr[deltaLen], _contentCstr,  deltaLen);
-      memcpy(_contentCstr, out.substring(space).c_str(), deltaLen);
+      //memmove(&_contentCstr[deltaLen], _contentCstr,  deltaLen);
+      //memcpy(_contentCstr, out.substring(space).c_str(), deltaLen);
     }
     else
     {
       _content = out.substring(space) + _content;
+	  _contentLength += outLen - space;
     }
-
-    _contentLength += outLen - space;
 
     AWS_LOGDEBUG1("partial =", partial);
 
@@ -400,15 +407,15 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
 
     if (_contentCstr)
     {
-      memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
-      memcpy(_contentCstr, out.c_str(), outLen);
+	  _partialHeader = out;
+      //memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
+      //memcpy(_contentCstr, out.c_str(), outLen);
     }
     else
     {
       _content = out + _content;
+	  _contentLength += outLen;
     }
-
-    _contentLength += outLen;
     _state = RESPONSE_CONTENT;
   }
 
@@ -431,6 +438,31 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
     String out;
     size_t available = _contentLength - _sentLength;
     size_t space = request->client()->space();
+	
+	if (_partialHeader.length() > 0) {
+		if (_partialHeader.length() > space) {
+			// Header longer than space - send a piece of it, and make the _partialHeader = to what remains
+			String _subHeader;
+			String tmpString;
+			
+			_subHeader = _partialHeader.substring(0, space);
+			tmpString = _partialHeader.substring(space);
+			_partialHeader = tmpString;
+			
+			_writtenLength += request->client()->write(_subHeader.c_str(), space);
+			
+			return(_partialHeader.length());
+		} else {
+			// _partialHeader is <= space length - therefore send the whole thing, and make the remaining length = to the _contrentLength
+			_writtenLength += request->client()->write(_partialHeader.c_str(), _partialHeader.length());
+			
+			_partialHeader = String();
+			
+			return(_contentLength);
+		}
+	}
+	
+	// if we are here - there is no _partialHJeader to send
 
     AWS_LOGDEBUG3("AsyncAbstractResponse::_ack : available =", available, ", space =", space );
 

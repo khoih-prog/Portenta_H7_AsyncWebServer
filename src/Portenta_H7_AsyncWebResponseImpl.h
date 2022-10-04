@@ -44,6 +44,7 @@ class AsyncBasicResponse: public AsyncWebServerResponse
   private:
     String _content;
     char *_contentCstr;      // RSMOD
+	String _partialHeader;
 
   public:
     AsyncBasicResponse(int code, const String& contentType = String(), const String& content = String());
