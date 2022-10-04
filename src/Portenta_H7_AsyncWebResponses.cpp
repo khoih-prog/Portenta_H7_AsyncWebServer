@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.3.0
+  Version: 1.4.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -19,6 +19,7 @@
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
   1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
+  1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
  *****************************************************************************************************************************/
 
 #if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
@@ -429,7 +430,7 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
 {
   PORTENTA_H7_AWS_UNUSED(time);
 
-  AWS_LOGDEBUG1("AsyncAbstractResponse::_ack : Pre_ack, _contentLength =", _contentLength);
+  AWS_LOGDEBUG1("AsyncBasicResponse::_ack : Pre_ack, _contentLength =", _contentLength);
 
   _ackedLength += len;
 
@@ -464,13 +465,13 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
 	
 	// if we are here - there is no _partialHJeader to send
 
-    AWS_LOGDEBUG3("AsyncAbstractResponse::_ack : available =", available, ", space =", space );
+    AWS_LOGDEBUG3("AsyncBasicResponse::_ack : available =", available, ", space =", space );
 
     //we can fit in this packet
     if (space > available)
     {
       // Serial.println("In space>available");
-      AWS_LOGDEBUG1("AsyncAbstractResponse::_ack : Pre_ack, _contentLength =", _contentLength);
+      AWS_LOGDEBUG1("AsyncBasicResponse::_ack : Pre_ack, _contentLength =", _contentLength);
 
       if (_contentCstr)
       {
@@ -484,6 +485,7 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
         _writtenLength += request->client()->write(_content.c_str(), available);
         _content = String();
       }
+      
       _state = RESPONSE_WAIT_ACK;
 
       return available;
@@ -521,7 +523,7 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
     }
   }
 
-  AWS_LOGDEBUG3("AsyncAbstractResponse::_ack : Post_ack, _contentLength =", _contentLength, ", _contentCstr =", _contentCstr);
+  AWS_LOGDEBUG3("AsyncBasicResponse::_ack : Post_ack, _contentLength =", _contentLength, ", _contentCstr =", _contentCstr);
 
   return 0;
 }

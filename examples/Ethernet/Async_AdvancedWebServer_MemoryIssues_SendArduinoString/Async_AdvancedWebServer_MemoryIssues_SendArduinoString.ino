@@ -1,5 +1,5 @@
 /****************************************************************************************************************************
-  Async_AdvancedWebServer_MemoryIssues_Send_CString.ino - Dead simple AsyncWebServer for STM32 LAN8720 or built-in LAN8742A Ethernet
+  Async_AdvancedWebServer_MemoryIssues_SendArduinoString.ino - - Dead simple AsyncWebServer for Portenta_H7
 
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
 
@@ -52,6 +52,9 @@
 #warning Using Portenta_Ethernet lib for Portenta_H7.
 
 #include <Portenta_H7_AsyncWebServer.h>
+
+// In bytes
+#define STRING_SIZE                    40000
 
 // Enter a MAC address and IP address for your controller below.
 #define NUMBER_OF_MAC      20
@@ -146,26 +149,49 @@ void handleNotFound(AsyncWebServerRequest *request)
   digitalWrite(LED_BUILTIN, LED_OFF);
 }
 
-void PrintHeapData(String hIn){
-  mbed_stats_heap_t heap_stats;
-  
-  Serial.print("HEAP DATA - ");
-  Serial.print(hIn);
+void PrintHeapData(String hIn)
+{
+  static mbed_stats_heap_t heap_stats;
+  static uint32_t maxHeapSize = 0;
 
   mbed_stats_heap_get(&heap_stats);
-  Serial.print("  Cur heap: ");
-  Serial.print(heap_stats.current_size);
-  Serial.print("  Res Size: ");
-  Serial.print(heap_stats.reserved_size);
-  Serial.print("  Max heap: ");
-  Serial.println(heap_stats.max_size);
+
+  // Print and update only when different
+  if (maxHeapSize != heap_stats.max_size)
+  {
+    maxHeapSize = heap_stats.max_size;
+  
+    Serial.print("\nHEAP DATA - ");
+    Serial.print(hIn);
+    
+    Serial.print("  Cur heap: ");
+    Serial.print(heap_stats.current_size);
+    Serial.print("  Res Size: ");
+    Serial.print(heap_stats.reserved_size);
+    Serial.print("  Max heap: ");
+    Serial.println(heap_stats.max_size);
+  }
+}
+
+void PrintStringSize(String & out)
+{ 
+  static uint32_t count = 0;
+
+  // Print only when cStr length too large and corrupting memory or every (20 * 5) s
+  if ( (out.length() >= STRING_SIZE) || (++count > 20) )
+  {
+    Serial.print("\nOut String Length=");
+    Serial.println(out.length());
+
+    count = 0;
+  }
 }
 
 void drawGraph(AsyncWebServerRequest *request)
 {
   String out;
 
-  out.reserve(40000);
+  out.reserve(STRING_SIZE);
   char temp[70];
 
   out += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"1810\" height=\"150\">\n";
@@ -180,18 +206,17 @@ void drawGraph(AsyncWebServerRequest *request)
     out += temp;
     y = y2;
   }
+  
   out += "</g>\n</svg>\n";
 
   PrintHeapData("Pre Send");
 
-  Serial.print("Out String Length=");
-  Serial.println(out.length());
+  PrintStringSize(out);
 
   request->send(200, "image/svg+xml", out);
 
   PrintHeapData("Post Send");
 }
-
 
 void setup()
 {
@@ -264,7 +289,6 @@ void setup()
   Serial.print(F("HTTP EthernetWebServer is @ IP : "));
   Serial.println(Ethernet.localIP());
 
-  
   PrintHeapData("Pre Create Arduino String");
 
 }

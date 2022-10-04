@@ -1,6 +1,6 @@
 /****************************************************************************************************************************
-  Async_AdvancedWebServer_MemoryIssues_Send_CString.ino - Dead simple AsyncWebServer for STM32 LAN8720 or built-in LAN8742A Ethernet
-
+  Async_AdvancedWebServer_MemoryIssues_Send_CString.ino - Dead simple AsyncWebServer for Portenta_H7
+  
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
 
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with with Vision-Shield Ethernet
@@ -43,7 +43,7 @@
 #endif
 
 #define _PORTENTA_H7_ATCP_LOGLEVEL_     1
-#define _PORTENTA_H7_AWS_LOGLEVEL_      1
+#define _PORTENTA_H7_AWS_LOGLEVEL_      0
 
 #define USE_ETHERNET_PORTENTA_H7        true
 
@@ -53,7 +53,17 @@
 
 #include <Portenta_H7_AsyncWebServer.h>
 
-#include "SDRAM.h"
+char *cStr;
+
+// In bytes
+#define CSTRING_SIZE                    40000
+
+// Select either cString is stored in SDRAM or not
+#define USING_CSTRING_IN_SDRAM          true
+
+#if USING_CSTRING_IN_SDRAM
+  #include "SDRAM.h"
+#endif
 
 // Enter a MAC address and IP address for your controller below.
 #define NUMBER_OF_MAC      20
@@ -90,7 +100,6 @@ int reqCount = 0;                // number of requests received
 
 #define LED_OFF             HIGH
 #define LED_ON              LOW
-
 
 #define BUFFER_SIZE         768 // a little larger in case required for header shift (destructive send)
 char temp[BUFFER_SIZE];
@@ -148,24 +157,35 @@ void handleNotFound(AsyncWebServerRequest *request)
   digitalWrite(LED_BUILTIN, LED_OFF);
 }
 
-void PrintHeapData(String hIn){
-  mbed_stats_heap_t heap_stats;
-  
-  Serial.print("HEAP DATA - ");
-  Serial.print(hIn);
+void PrintHeapData(String hIn)
+{
+  static mbed_stats_heap_t heap_stats;
+  static uint32_t maxHeapSize = 0;
 
   mbed_stats_heap_get(&heap_stats);
-  Serial.print("  Cur heap: ");
-  Serial.print(heap_stats.current_size);
-  Serial.print("  Res Size: ");
-  Serial.print(heap_stats.reserved_size);
-  Serial.print("  Max heap: ");
-  Serial.println(heap_stats.max_size);
+
+  // Print and update only when different
+  if (maxHeapSize != heap_stats.max_size)
+  {
+    maxHeapSize = heap_stats.max_size;
+  
+    Serial.print("\nHEAP DATA - ");
+    Serial.print(hIn);
+    
+    Serial.print("  Cur heap: ");
+    Serial.print(heap_stats.current_size);
+    Serial.print("  Res Size: ");
+    Serial.print(heap_stats.reserved_size);
+    Serial.print("  Max heap: ");
+    Serial.println(heap_stats.max_size);
+  }
 }
 
-
-char *cStr;
-
+void PrintStringSize(const char* cStr)
+{ 
+  Serial.print("\nOut String Length=");
+  Serial.println(strlen(cStr));
+}
 
 void drawGraph(AsyncWebServerRequest *request) 
 {
@@ -190,14 +210,16 @@ void drawGraph(AsyncWebServerRequest *request)
 
   PrintHeapData("Pre Send");
 
-  Serial.print("Out String Length=");
-  Serial.println(strlen(cStr));
+  // Print only when cStr length too large and corrupting memory
+  if ( (strlen(cStr) >= CSTRING_SIZE))
+  {
+    PrintStringSize(cStr);
+  }
 
   request->send(200, "image/svg+xml", cStr, false);
 
   PrintHeapData("Post Send");
 }
-
 
 void setup()
 {
@@ -209,17 +231,32 @@ void setup()
 
   delay(200);
 
-  Serial.print("\nStart Async_AdvancedWebServer_MemoryIssues_Send_CString on "); Serial.print(BOARD_NAME);
+#if USING_CSTRING_IN_SDRAM
+  Serial.print("\nStart Async_AdvancedWebServer_MemoryIssues_Send_CString using SDRAM on ");
+#else
+  Serial.print("\nStart Async_AdvancedWebServer_MemoryIssues_Send_CString on ");
+#endif
+  
+  Serial.print(BOARD_NAME);
   Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
   Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
 
+  Serial.print("TCP_MSS = "); Serial.print(TCP_MSS); Serial.print(", TCP_SND_BUF = "); Serial.println(TCP_SND_BUF);
+  
+
+#if USING_CSTRING_IN_SDRAM
   SDRAM.begin();
 
-  cStr = (char *)SDRAM.malloc(100000);    // make a little larger than required
+  cStr = (char *) SDRAM.malloc(CSTRING_SIZE);     // make a little larger than required
+#else
+  cStr = (char *) malloc(CSTRING_SIZE);           // make a little larger than required
+#endif
 
-  if (cStr == NULL) {
+  if (cStr == NULL) 
+  {
     Serial.println("Unable top Allocate RAM");
+    
     for(;;);
   }
 
@@ -279,7 +316,6 @@ void setup()
   Serial.print(F("HTTP EthernetWebServer is @ IP : "));
   Serial.println(Ethernet.localIP());
 
-    
   PrintHeapData("Pre Create Arduino String");
 
 }
@@ -292,7 +328,8 @@ void heartBeatPrint()
 
   if (num == 80)
   {
-    Serial.println();
+    //Serial.println();
+    PrintStringSize(cStr);
     num = 1;
   }
   else if (num++ % 10 == 0)

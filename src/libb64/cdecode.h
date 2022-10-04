@@ -12,7 +12,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  
-  Version: 1.3.0
+  Version: 1.4.0
   
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -22,6 +22,7 @@
   1.2.0   K Hoang      07/12/2021 Fix crashing issue
   1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
   1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
+  1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
  *****************************************************************************************************************************/
 
 #pragma once

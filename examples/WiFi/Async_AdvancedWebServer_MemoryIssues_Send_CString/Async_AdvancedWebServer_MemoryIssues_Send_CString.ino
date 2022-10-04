@@ -1,5 +1,5 @@
 /****************************************************************************************************************************
-  Async_AdvancedWebServer.ino - Dead simple AsyncWebServer for Portenta_H7
+  Async_AdvancedWebServer_MemoryIssues_Send_CString.ino - Dead simple AsyncWebServer for Portenta_H7
 
   For Portenta_H7 (STM32H7) with Portenta_H7 WiFi
 
@@ -42,7 +42,8 @@
   #error For Portenta_H7 only
 #endif
 
-#define _PORTENTA_H7_AWS_LOGLEVEL_     1
+#define _PORTENTA_H7_ATCP_LOGLEVEL_     1
+#define _PORTENTA_H7_AWS_LOGLEVEL_      1
 
 #define USE_WIFI_PORTENTA_H7        true
 
@@ -56,6 +57,18 @@ char pass[] = "12345678";         // your network password (use for WPA, or use 
 
 int status = WL_IDLE_STATUS;
 
+char *cStr;
+
+// In bytes
+#define CSTRING_SIZE                    40000
+
+// Select either cString is stored in SDRAM or not
+#define USING_CSTRING_IN_SDRAM          true
+
+#if USING_CSTRING_IN_SDRAM
+  #include "SDRAM.h"
+#endif
+
 AsyncWebServer    server(80);
 
 int reqCount = 0;                // number of requests received
@@ -63,8 +76,7 @@ int reqCount = 0;                // number of requests received
 #define LED_OFF             HIGH
 #define LED_ON              LOW
 
-
-#define BUFFER_SIZE         512
+#define BUFFER_SIZE         768 // a little larger in case required for header shift (destructive send)
 char temp[BUFFER_SIZE];
 
 void handleRoot(AsyncWebServerRequest *request)
@@ -79,7 +91,7 @@ void handleRoot(AsyncWebServerRequest *request)
   snprintf(temp, BUFFER_SIZE - 1,
            "<html>\
 <head>\
-<meta http-equiv='refresh' content='5'/>\
+<meta http-equiv='refresh' content='60'/>\
 <title>AsyncWebServer-%s</title>\
 <style>\
 body { background-color: #cccccc; font-family: Arial, Helvetica, Sans-Serif; Color: #000088; }\
@@ -120,28 +132,68 @@ void handleNotFound(AsyncWebServerRequest *request)
   digitalWrite(LED_BUILTIN, LED_OFF);
 }
 
-void drawGraph(AsyncWebServerRequest *request)
+void PrintHeapData(String hIn)
 {
-  String out;
+  static mbed_stats_heap_t heap_stats;
+  static uint32_t maxHeapSize = 0;
 
-  out.reserve(4000);
-  char temp[70];
+  mbed_stats_heap_get(&heap_stats);
 
-  out += "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"310\" height=\"150\">\n";
-  out += "<rect width=\"310\" height=\"150\" fill=\"rgb(250, 230, 210)\" stroke-width=\"2\" stroke=\"rgb(0, 0, 0)\" />\n";
-  out += "<g stroke=\"blue\">\n";
+  // Print and update only when different
+  if (maxHeapSize != heap_stats.max_size)
+  {
+    maxHeapSize = heap_stats.max_size;
+  
+    Serial.print("\nHEAP DATA - ");
+    Serial.print(hIn);
+    
+    Serial.print("  Cur heap: ");
+    Serial.print(heap_stats.current_size);
+    Serial.print("  Res Size: ");
+    Serial.print(heap_stats.reserved_size);
+    Serial.print("  Max heap: ");
+    Serial.println(heap_stats.max_size);
+  }
+}
+
+void PrintStringSize(const char* cStr)
+{ 
+  Serial.print("\nOut String Length=");
+  Serial.println(strlen(cStr));
+}
+
+void drawGraph(AsyncWebServerRequest *request) 
+{
+  char temp[80];
+
+  cStr[0] = '\0';
+
+  strcat(cStr, "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"1810\" height=\"150\">\n");
+  strcat(cStr, "<rect width=\"1810\" height=\"150\" fill=\"rgb(250, 230, 210)\" stroke-width=\"2\" stroke=\"rgb(0, 0, 0)\" />\n");
+  strcat(cStr, "<g stroke=\"blue\">\n");
   int y = rand() % 130;
 
-  for (int x = 10; x < 300; x += 10)
+  for (int x = 10; x < 5000; x += 10)
   {
     int y2 = rand() % 130;
     sprintf(temp, "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke-width=\"2\" />\n", x, 140 - y, x + 10, 140 - y2);
-    out += temp;
+    strcat(cStr, temp);
     y = y2;
   }
-  out += "</g>\n</svg>\n";
+  
+  strcat(cStr, "</g>\n</svg>\n");
 
-  request->send(200, "image/svg+xml", out);
+  PrintHeapData("Pre Send");
+
+  // Print only when cStr length too large and corrupting memory
+  if ( (strlen(cStr) >= CSTRING_SIZE))
+  {
+    PrintStringSize(cStr);
+  }
+
+  request->send(200, "image/svg+xml", cStr, false);
+
+  PrintHeapData("Post Send");
 }
 
 void printWifiStatus()
@@ -172,10 +224,31 @@ void setup()
 
   delay(200);
 
-  Serial.print("\nStart Async_AdvancedWebServer on "); Serial.print(BOARD_NAME);
+#if USING_CSTRING_IN_SDRAM
+  Serial.print("\nStart Async_AdvancedWebServer_MemoryIssues_Send_CString using SDRAM on ");
+#else
+  Serial.print("\nStart Async_AdvancedWebServer_MemoryIssues_Send_CString on ");
+#endif
+  
+  Serial.print(BOARD_NAME);
   Serial.print(" with "); Serial.println(SHIELD_TYPE);
   Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
   Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
+
+#if USING_CSTRING_IN_SDRAM
+  SDRAM.begin();
+
+  cStr = (char *) SDRAM.malloc(CSTRING_SIZE);     // make a little larger than required
+#else
+  cStr = (char *) malloc(CSTRING_SIZE);           // make a little larger than required
+#endif
+
+  if (cStr == NULL) 
+  {
+    Serial.println("Unable top Allocate RAM");
+    
+    for(;;);
+  }
 
   ///////////////////////////////////
 
@@ -206,8 +279,7 @@ void setup()
   printWifiStatus();
 
   ///////////////////////////////////
-
-
+ 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
   {
     handleRoot(request);
@@ -226,9 +298,12 @@ void setup()
   server.onNotFound(handleNotFound);
 
   server.begin();
-  
+
   Serial.print(F("HTTP EthernetWebServer is @ IP : "));
   Serial.println(WiFi.localIP());
+
+  PrintHeapData("Pre Create Arduino String");
+
 }
 
 void heartBeatPrint()
@@ -239,7 +314,8 @@ void heartBeatPrint()
 
   if (num == 80)
   {
-    Serial.println();
+    //Serial.println();
+    PrintStringSize(cStr);
     num = 1;
   }
   else if (num++ % 10 == 0)
