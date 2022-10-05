@@ -1,9 +1,9 @@
 /****************************************************************************************************************************
   Async_AdvancedWebServer_MemoryIssues_Send_CString.ino - Dead simple AsyncWebServer for Portenta_H7
 
-  For Portenta_H7 (STM32H7) with Portenta_H7 WiFi
-
-  Portenta_H7_AsyncWebServer is a library for the Portenta_H7
+  For Portenta_H7 (STM32H7) with Vision-Shield Ethernet or Murata WiFi
+  
+  Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with Vision-Shield Ethernet or Murata WiFi
 
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer

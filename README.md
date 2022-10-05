@@ -130,9 +130,13 @@
 
 ### Important Note from v1.4.0
 
-The new `v1.4.0` has added a new and powerful feature to permit using `CString` in optional `SDRAM` to save heap to send `very large data`.
+The new `v1.4.0+` has added a new and powerful feature to permit using `CString` in optional `SDRAM` to save heap to send `very large data`.
 
-Check the `marvelleous` PR of **@salasidis** [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8) and these new examples
+Check the `marvelleous` PRs of **@salasidis** 
+-[request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8)
+-[All memmove() removed - string no longer destroyed #11](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/11)
+
+and these new examples
 
 1. [Async_AdvancedWebServer_MemoryIssues_Send_CString for Ethernet](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString)
 2. [Async_AdvancedWebServer_MemoryIssues_SendArduinoString for Ethernet](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString)
@@ -1574,7 +1578,7 @@ Following is debug terminal output when running example [MQTT_ThingStream](examp
 ```
 Start MQTT_ThingStream on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.0
+Portenta_H7_AsyncWebServer v1.4.1
 Using mac index = 17
 Connected! IP address: 192.168.2.87
 ***************************************
@@ -1599,7 +1603,7 @@ Following is debug terminal output when running example [WebClient](examples/Eth
 ```
 Start WebClientRepeating on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.0
+Portenta_H7_AsyncWebServer v1.4.1
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 
@@ -1667,7 +1671,7 @@ Following is debug terminal output when running example [MQTTClient_Auth](exampl
 ```
 Start MQTTClient_Auth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.0
+Portenta_H7_AsyncWebServer v1.4.1
 Using mac index = 9
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1688,7 +1692,7 @@ Following is debug terminal output when running example [MQTTClient_Basic](examp
 ```
 Start MQTTClient_Basic on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.0
+Portenta_H7_AsyncWebServer v1.4.1
 Using mac index = 8
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1707,7 +1711,7 @@ Following is debug terminal output when running example [Async_HTTPBasicAuth](ex
 ```
 Start Async_HTTPBasicAuth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.0
+Portenta_H7_AsyncWebServer v1.4.1
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 Async_HttpBasicAuth started @ IP : 192.168.2.87
@@ -1737,7 +1741,7 @@ Following are debug terminal output and screen shots when running example [Async
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.0
+Portenta_H7_AsyncWebServer v1.4.1
 Using mac index = 4
 Connected! IP address: 192.168.2.87
 HTTP EthernetWebServer is @ IP : 192.168.2.87
@@ -1764,7 +1768,7 @@ Following is the debug terminal and screen shot when running example [Async_Adva
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Portenta_H7 WiFi
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.0
+Portenta_H7_AsyncWebServer v1.4.1
 Connecting to SSID: HueNet1
 SSID: HueNet1
 Local IP Address: 192.168.2.94
@@ -1791,7 +1795,7 @@ Following is the debug terminal and screen shot when running example [Async_Adva
 ```
 Start Async_AdvancedWebServer_MemoryIssues_Send_CString using SDRAM on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.0
+Portenta_H7_AsyncWebServer v1.4.1
 Using mac index = 2
 Connected! IP address: 192.168.2.123
 HTTP EthernetWebServer is @ IP : 192.168.2.123
@@ -1817,22 +1821,22 @@ Out String Length=31224
 Out String Length=31235
 ```
 
-##### Not using SDRAM  ===> small heap (51,823 bytes)
+##### Not using SDRAM  ===> small heap (51,833 bytes)
 
 ```
 Start Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.0
-Using mac index = 8
-Connected! IP address: 192.168.2.123
-HTTP EthernetWebServer is @ IP : 192.168.2.123
+Portenta_H7_AsyncWebServer v1.4.1
+Using mac index = 7
+Connected! IP address: 192.168.2.38
+HTTP EthernetWebServer is @ IP : 192.168.2.38
 
 HEAP DATA - Pre Create Arduino String  Cur heap: 47434  Res Size: 451760  Max heap: 47448
 .
-HEAP DATA - Pre Send  Cur heap: 48610  Res Size: 451760  Max heap: 49172
+HEAP DATA - Pre Send  Cur heap: 48607  Res Size: 451760  Max heap: 49811
 
-HEAP DATA - Post Send  Cur heap: 48710  Res Size: 451760  Max heap: 51823
-......... .......... .......... .......... .......... .......... .......... ..........
+HEAP DATA - Post Send  Cur heap: 48720  Res Size: 451760  Max heap: 51833
+......... .......... .......... .......... .......... ....
 Out String Length=31200
 .......... .......... .......... .......... .......... .......... .......... ..........
 Out String Length=31291
@@ -1846,7 +1850,7 @@ While using Arduino String, the HEAP usage is very large
 ```
 Start Async_AdvancedWebServer_MemoryIssues_SendArduinoString on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.0
+Portenta_H7_AsyncWebServer v1.4.1
 Using mac index = 0
 Connected! IP address: 192.168.2.123
 HTTP EthernetWebServer is @ IP : 192.168.2.123
@@ -1937,7 +1941,9 @@ Submit issues to: [Portenta_H7_AsyncWebServer issues](https://github.com/khoih-p
 1. Based on and modified from [Hristo Gochkov's ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer). Many thanks to [Hristo Gochkov](https://github.com/me-no-dev) for great [ESPAsyncWebServer Library](https://github.com/me-no-dev/ESPAsyncWebServer)
 2. Thanks to [rusty-bit](https://github.com/rusty-bit) to initiate the Discussion in [**AsyncWebserver for Portenta H7** #6](https://github.com/khoih-prog/AsyncWebServer_STM32/discussions/6) leading to these [Portenta_H7_AsyncTCP](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) and [Portenta_H7_AsyncWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer) libraries
 3. Thanks to [Jeremy Ellis](https://github.com/hpssjellis) to test and report the compile error and crash issue with mbed_portenta core v2.6.1, leading to v1.2.0
-4. Thanks to [salasidis](https://github.com/salasidis) aka [rs77can](https://forum.arduino.cc/u/rs77can) to discuss and make the mavellous PR [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8), leading to `v1.4.0` to support using `CString` in optional `SDRAM` to save heap to send `very large data`
+4. Thanks to [salasidis](https://github.com/salasidis) aka [rs77can](https://forum.arduino.cc/u/rs77can) to discuss and make the following marvellous PRs
+- [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8), leading to `v1.4.0` to support using `CString` in optional `SDRAM` to save heap to send `very large data`
+- [All memmove() removed - string no longer destroyed #11](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/11), leading to `v1.4.1` to remove `memmove()` and not to destroy String anymore
 
 <table>
   <tr>

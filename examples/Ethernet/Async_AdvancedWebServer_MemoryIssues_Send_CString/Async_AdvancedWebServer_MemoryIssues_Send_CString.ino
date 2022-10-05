@@ -1,9 +1,9 @@
 /****************************************************************************************************************************
   Async_AdvancedWebServer_MemoryIssues_Send_CString.ino - Dead simple AsyncWebServer for Portenta_H7
   
-  For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
-
-  Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with with Vision-Shield Ethernet
+  For Portenta_H7 (STM32H7) with Vision-Shield Ethernet or Murata WiFi
+  
+  Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with Vision-Shield Ethernet or Murata WiFi
 
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
@@ -43,7 +43,7 @@
 #endif
 
 #define _PORTENTA_H7_ATCP_LOGLEVEL_     1
-#define _PORTENTA_H7_AWS_LOGLEVEL_      0
+#define _PORTENTA_H7_AWS_LOGLEVEL_      1
 
 #define USE_ETHERNET_PORTENTA_H7        true
 
@@ -59,7 +59,7 @@ char *cStr;
 #define CSTRING_SIZE                    40000
 
 // Select either cString is stored in SDRAM or not
-#define USING_CSTRING_IN_SDRAM          true
+#define USING_CSTRING_IN_SDRAM          false   //true
 
 #if USING_CSTRING_IN_SDRAM
   #include "SDRAM.h"
@@ -242,9 +242,8 @@ void setup()
   Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
   Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
 
-  Serial.print("TCP_MSS = "); Serial.print(TCP_MSS); Serial.print(", TCP_SND_BUF = "); Serial.println(TCP_SND_BUF);
+  AWS_LOGDEBUG3("TCP_MSS =", TCP_MSS, ", TCP_SND_BUF =", TCP_SND_BUF);
   
-
 #if USING_CSTRING_IN_SDRAM
   SDRAM.begin();
 

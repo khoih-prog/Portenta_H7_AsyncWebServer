@@ -1,6 +1,6 @@
 {
   "name": "Portenta_H7_AsyncWebServer",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "keywords": "http, async, websocket, webserver, async-webserver, async-tcp, async-udp, async-websocket, async-http, ssl, tls, mbed, mbed-portenta, portenta-h7, portentah7, portenta-h7-m7, portenta-h7-m4, portentah7-m7, portentah7-m4, stm32h7",
   "description": "Asynchronous WebServer Library for STM32H7-based Portenta_H7 using mbed_portenta core. This library, which is relied on Portenta_H7_AsyncTCP, is part of a series of advanced Async libraries, such as AsyncTCP, AsyncUDP, AsyncWebSockets, AsyncHTTPRequest, AsyncHTTPSRequest, etc. Now supporting using CString in optional SDRAM to save heap to send very large data",
   "authors": 

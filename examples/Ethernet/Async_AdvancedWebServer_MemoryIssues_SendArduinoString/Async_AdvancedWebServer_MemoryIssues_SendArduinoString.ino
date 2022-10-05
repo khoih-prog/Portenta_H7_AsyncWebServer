@@ -1,9 +1,9 @@
 /****************************************************************************************************************************
   Async_AdvancedWebServer_MemoryIssues_SendArduinoString.ino - - Dead simple AsyncWebServer for Portenta_H7
 
-  For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
-
-  Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with with Vision-Shield Ethernet
+  For Portenta_H7 (STM32H7) with Vision-Shield Ethernet or Murata WiFi
+  
+  Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with Vision-Shield Ethernet or Murata WiFi
 
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
@@ -233,6 +233,8 @@ void setup()
   Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
   Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
 
+  AWS_LOGDEBUG3("TCP_MSS =", TCP_MSS, ", TCP_SND_BUF =", TCP_SND_BUF);
+
   ///////////////////////////////////
 
   // start the ethernet connection and the server
@@ -290,7 +292,6 @@ void setup()
   Serial.println(Ethernet.localIP());
 
   PrintHeapData("Pre Create Arduino String");
-
 }
 
 void heartBeatPrint()
