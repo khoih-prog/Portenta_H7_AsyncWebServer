@@ -153,7 +153,11 @@ This is very critical in use-cases where sending `very large data` is necessary,
 
 1. The traditional function used to send `Arduino String` is
 
-https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/f146e092bc8ebf4c5d2cd522bfc64ee4698007e5/src/Portenta_H7_AsyncWebServer.h#L342
+https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/42006c1183a97089e38151b35cc8cc520873f9f1/src/Portenta_H7_AsyncWebServer.h#L344
+
+```cpp
+void send(int code, const String& contentType = String(), const String& content = String());
+```
 
 such as
 
@@ -164,7 +168,11 @@ The required HEAP is about **3 times of the String size**
 
 2. To use `CString` but don't destroy it after sending. Use function
 
-https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/f146e092bc8ebf4c5d2cd522bfc64ee4698007e5/src/Portenta_H7_AsyncWebServer.h#L343
+https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/42006c1183a97089e38151b35cc8cc520873f9f1/src/Portenta_H7_AsyncWebServer.h#L345
+
+```cpp
+void send(int code, const String& contentType, const char *content, bool nonDetructiveSend = true);    // RSMOD
+```
 
 such as 
 
@@ -172,12 +180,16 @@ such as
 request->send(200, textPlainStr, cStr);
 ```
 
-The required HEAP is also about **3 times of the CString size**
+The required HEAP is also about **3 times of the CString size** because of many `unnecessary copies` of the CString in HEAP. Avoid this `unefficient` way.
 
 
-3. To use `CString` but destroy it after sending. Use function
+3. To use `CString` without destroying it after sending. Use function
 
-https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/f146e092bc8ebf4c5d2cd522bfc64ee4698007e5/src/Portenta_H7_AsyncWebServer.h#L343
+https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/42006c1183a97089e38151b35cc8cc520873f9f1/src/Portenta_H7_AsyncWebServer.h#L345
+
+```cpp
+void send(int code, const String& contentType, const char *content, bool nonDetructiveSend = true);    // RSMOD
+```
 
 such as 
 
@@ -185,8 +197,7 @@ such as
 request->send(200, textPlainStr, cStr, false);
 ```
 
-The required HEAP is also about **1 times of the CString size without using SDRAM, or none if using SDRAM**.
-
+The required HEAP is also about **1 times of the CString size without using SDRAM, or none if using SDRAM**. This way is the best and most efficient way to use by avoiding of many `unnecessary copies` of the CString in HEAP
 
 
 ---
