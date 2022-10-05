@@ -1,16 +1,16 @@
 /****************************************************************************************************************************
   Portenta_H7_AsyncWebResponses.cpp
-  
+
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
-  
+
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with with Vision-Shield Ethernet
-  
+
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
- 
+
   Version: 1.4.0
-  
+
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K Hoang      06/10/2021 Initial coding for Portenta_H7 (STM32H7) with Vision-Shield Ethernet
@@ -248,7 +248,6 @@ size_t AsyncWebServerResponse::_ack(AsyncWebServerRequest *request, size_t len, 
   return 0;
 }
 
-
 //RSMOD///////////////////////////////////////////////
 
 /*
@@ -308,7 +307,7 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
   size_t outLen = out.length();
   size_t space = request->client()->space();
 
-  AWS_LOGDEBUG3("AsyncAbstractResponse::_respond : Pre_respond, _contentLength =", _contentLength, ", out =", out );
+  AWS_LOGDEBUG3("AsyncBasicResponse::_respond : Pre_respond, _contentLength =", _contentLength, ", out =", out );
   AWS_LOGDEBUG3("outLen =", outLen, ", _contentCstr =", _contentCstr);
 
   if (!_contentLength && space >= outLen)
@@ -322,26 +321,14 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
   {
     AWS_LOGDEBUG("Step 2");
 
-	
     if (_contentCstr)
     {
-		/*
-      memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
-      memcpy(_contentCstr, out.c_str(), outLen);
-      outLen += _contentLength;
-
-      AWS_LOGDEBUG1("_contentCstr =", _contentCstr);
-
-      _writtenLength += request->client()->write(_contentCstr, outLen);
-	  */
-	  _content = String(_contentCstr);		// short _contentCstr - so just send as Arduino String - not much of a penalty - fall into below
+      _content = String(_contentCstr);    // short _contentCstr - so just send as Arduino String - not much of a penalty - fall into below
     }
-    //else
-    //{
-      out += _content;
-      outLen += _contentLength;
-      _writtenLength += request->client()->write(out.c_str(), outLen);
-    //}
+
+    out += _content;
+    outLen += _contentLength;
+    _writtenLength += request->client()->write(out.c_str(), outLen);
 
     _state = RESPONSE_WAIT_ACK;
   }
@@ -353,22 +340,18 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
 
     if (_contentCstr)
     {
-      //int deltaLen = out.length() - partial.length();
-	  
-	  _partialHeader = out.substring(space);
-
-      //memmove(&_contentCstr[deltaLen], _contentCstr,  deltaLen);
-      //memcpy(_contentCstr, out.substring(space).c_str(), deltaLen);
+      _partialHeader = out.substring(space);
     }
     else
     {
       _content = out.substring(space) + _content;
-	  _contentLength += outLen - space;
+      _contentLength += outLen - space;
     }
 
     AWS_LOGDEBUG1("partial =", partial);
 
     _writtenLength += request->client()->write(partial.c_str(), partial.length());
+
     _state = RESPONSE_CONTENT;
   }
   else if (space > outLen && space < (outLen + _contentLength))
@@ -384,12 +367,21 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
     {
       char *s = (char *)malloc(shift + 1);
 
-      strncpy(s, _contentCstr, shift);
-      s[shift] = '\0';
-      out += String(s);
-      _contentCstr += shift;
+      if (s != nullptr)
+      {
+        strncpy(s, _contentCstr, shift);
+        s[shift] = '\0';
+        out += String(s);
+        _contentCstr += shift;
 
-      free(s);
+        free(s);
+      }
+      else
+      {
+        AWS_LOGERROR("AsyncBasicResponse::_respond: Out of heap");
+
+        return;
+      }
     }
     else
     {
@@ -408,19 +400,18 @@ void AsyncBasicResponse::_respond(AsyncWebServerRequest *request)
 
     if (_contentCstr)
     {
-	  _partialHeader = out;
-      //memmove(&_contentCstr[outLen], _contentCstr, _contentLength);
-      //memcpy(_contentCstr, out.c_str(), outLen);
+      _partialHeader = out;
     }
     else
     {
       _content = out + _content;
-	  _contentLength += outLen;
+      _contentLength += outLen;
     }
+    
     _state = RESPONSE_CONTENT;
   }
 
-  AWS_LOGDEBUG3("AsyncAbstractResponse::_respond : Post_respond, _contentLength =", _contentLength, ", out =", out );
+  AWS_LOGDEBUG3("AsyncBasicResponse::_respond : Post_respond, _contentLength =", _contentLength, ", out =", out );
   AWS_LOGDEBUG3("outLen =", outLen, ", _contentCstr =", _contentCstr);
 }
 
@@ -439,38 +430,41 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
     String out;
     size_t available = _contentLength - _sentLength;
     size_t space = request->client()->space();
-	
-	if (_partialHeader.length() > 0) {
-		if (_partialHeader.length() > space) {
-			// Header longer than space - send a piece of it, and make the _partialHeader = to what remains
-			String _subHeader;
-			String tmpString;
-			
-			_subHeader = _partialHeader.substring(0, space);
-			tmpString = _partialHeader.substring(space);
-			_partialHeader = tmpString;
-			
-			_writtenLength += request->client()->write(_subHeader.c_str(), space);
-			
-			return(_partialHeader.length());
-		} else {
-			// _partialHeader is <= space length - therefore send the whole thing, and make the remaining length = to the _contrentLength
-			_writtenLength += request->client()->write(_partialHeader.c_str(), _partialHeader.length());
-			
-			_partialHeader = String();
-			
-			return(_contentLength);
-		}
-	}
-	
-	// if we are here - there is no _partialHJeader to send
+
+    if (_partialHeader.length() > 0)
+    {
+      if (_partialHeader.length() > space)
+      {
+        // Header longer than space - send a piece of it, and make the _partialHeader = to what remains
+        String _subHeader;
+        String tmpString;
+
+        _subHeader = _partialHeader.substring(0, space);
+        tmpString = _partialHeader.substring(space);
+        _partialHeader = tmpString;
+
+        _writtenLength += request->client()->write(_subHeader.c_str(), space);
+
+        return (_partialHeader.length());
+      }
+      else
+      {
+        // _partialHeader is <= space length - therefore send the whole thing, and make the remaining length = to the _contrentLength
+        _writtenLength += request->client()->write(_partialHeader.c_str(), _partialHeader.length());
+
+        _partialHeader = String();
+
+        return (_contentLength);
+      }
+    }
+
+    // if we are here - there is no _partialHJeader to send
 
     AWS_LOGDEBUG3("AsyncBasicResponse::_ack : available =", available, ", space =", space );
 
     //we can fit in this packet
     if (space > available)
     {
-      // Serial.println("In space>available");
       AWS_LOGDEBUG1("AsyncBasicResponse::_ack : Pre_ack, _contentLength =", _contentLength);
 
       if (_contentCstr)
@@ -485,7 +479,7 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
         _writtenLength += request->client()->write(_content.c_str(), available);
         _content = String();
       }
-      
+
       _state = RESPONSE_WAIT_ACK;
 
       return available;
@@ -495,11 +489,22 @@ size_t AsyncBasicResponse::_ack(AsyncWebServerRequest *request, size_t len, uint
     if (_contentCstr)
     {
       char *s = (char *)malloc(space + 1);
-      strncpy(s, _contentCstr, space);
-      s[space] = '\0';
-      out = String(s);
-      _contentCstr += space;
-      free(s);
+
+      if (s != nullptr)
+      {
+        strncpy(s, _contentCstr, space);
+        s[space] = '\0';
+        out = String(s);
+        _contentCstr += space;
+        
+        free(s);
+      }
+      else
+      {
+        AWS_LOGERROR("AsyncBasicResponse::_ack: Out of heap");
+
+        return 0;
+      }
     }
     else
     {
@@ -1008,4 +1013,3 @@ size_t AsyncResponseStream::write(uint8_t data)
 }
 
 /////////////////////////////////////////////////
-
