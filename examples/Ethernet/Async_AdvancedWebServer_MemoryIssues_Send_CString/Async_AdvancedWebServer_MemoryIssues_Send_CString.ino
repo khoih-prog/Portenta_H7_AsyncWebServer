@@ -59,7 +59,7 @@ char *cStr;
 #define CSTRING_SIZE                    40000
 
 // Select either cString is stored in SDRAM or not
-#define USING_CSTRING_IN_SDRAM          false   //true
+#define USING_CSTRING_IN_SDRAM          true
 
 #if USING_CSTRING_IN_SDRAM
   #include "SDRAM.h"
