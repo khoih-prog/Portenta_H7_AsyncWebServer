@@ -180,7 +180,7 @@ such as
 request->send(200, textPlainStr, cStr);
 ```
 
-The required HEAP is also about **3 times of the CString size** because of many `unnecessary copies` of the CString in HEAP. Avoid this `unefficient` way.
+The required HEAP is also about **3 times of the CString size** because of many `unnecessary copies` of the CString in HEAP.  Avoid this `unefficient` way.
 
 
 3. To use `CString` without destroying it after sending. Use function
