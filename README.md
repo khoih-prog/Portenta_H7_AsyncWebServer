@@ -1979,7 +1979,7 @@ AsyncWebServer is @ IP : 192.168.2.113
 ```
 
 
-You can access the Portenta_H7_AsyncWebServer at the displayed server IP, e.g. `192.168.2.77`
+You can access the Portenta_H7_AsyncWebServer at the displayed server IP
 
 <p align="center">
     <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/raw/main/pics/AsyncWebServer_SendChunked_WiFi.png">
@@ -2068,7 +2068,7 @@ AsyncWebServer is @ IP : 192.168.2.89
 ```
 
 
-You can access the Portenta_H7_AsyncWebServer at the displayed server IP, e.g. `192.168.2.77`
+You can access the Portenta_H7_AsyncWebServer at the displayed server IP
 
 <p align="center">
     <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/raw/main/pics/AsyncWebServer_SendChunked_Ethernet.png">
