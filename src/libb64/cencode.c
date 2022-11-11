@@ -5,25 +5,12 @@
   For details, see http://sourceforge.net/projects/libb64
 
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
-  
+
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with with Vision-Shield Ethernet
-  
+
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
- 
-  Version: 1.4.1
-
-  Version Modified By   Date      Comments
-  ------- -----------  ---------- -----------
-  1.0.0   K Hoang      06/10/2021 Initial coding for Portenta_H7 (STM32H7) with Vision-Shield Ethernet
-  1.1.0   K Hoang      08/10/2021 Add support to Portenta_H7 (STM32H7) using Murata WiFi
-  1.1.1   K Hoang      12/10/2021 Update `platform.ini` and `library.json`
-  1.2.0   K Hoang      07/12/2021 Fix crashing issue
-  1.2.1   K Hoang      12/01/2022 Fix authenticate issue caused by libb64
-  1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
-  1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
-  1.4.1   K Hoang      04/10/2022 Don't need memmove(), String no longer destroyed
  *****************************************************************************************************************************/
 
 #include "cencode.h"
@@ -73,8 +60,8 @@ int base64_encode_block(const char* plaintext_in, int length_in, char* code_out,
         result = (fragment & 0x0fc) >> 2;
         *codechar++ = base64_encode_value(result);
         result = (fragment & 0x003) << 4;
-        
-        // fall through
+
+      // fall through
 
       case step_B:
         if (plainchar == plaintextend)
@@ -88,9 +75,9 @@ int base64_encode_block(const char* plaintext_in, int length_in, char* code_out,
         result |= (fragment & 0x0f0) >> 4;
         *codechar++ = base64_encode_value(result);
         result = (fragment & 0x00f) << 2;
-        
-        // fall through
-        
+
+      // fall through
+
       case step_C:
         if (plainchar == plaintextend)
         {
@@ -112,7 +99,7 @@ int base64_encode_block(const char* plaintext_in, int length_in, char* code_out,
           *codechar++ = '\n';
           state_in->stepcount = 0;
         }
-        
+
         // fall through
       }
   }
@@ -132,10 +119,12 @@ int base64_encode_blockend(char* code_out, base64_encodestate* state_in)
       *codechar++ = '=';
       *codechar++ = '=';
       break;
+
     case step_C:
       *codechar++ = base64_encode_value(state_in->result);
       *codechar++ = '=';
       break;
+
     case step_A:
       break;
   }

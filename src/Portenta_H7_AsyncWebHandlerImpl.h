@@ -1,15 +1,15 @@
 /****************************************************************************************************************************
   Portenta_H7_AsyncWebHandlerImpl.h
-  
+
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet or Murata WiFi
-  
+
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with Vision-Shield Ethernet or Murata WiFi
-  
+
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
- 
-  Version: 1.4.1
+
+  Version: 1.4.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -21,6 +21,7 @@
   1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
   1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
   1.4.1   K Hoang      04/10/2022 Don't need memmove(), String no longer destroyed
+  1.4.2   K Hoang      10/11/2022 Add examples to demo how to use beginChunkedResponse() to send in chunks
  *****************************************************************************************************************************/
 
 #pragma once
@@ -31,7 +32,7 @@
 #include <string>
 
 #ifdef ASYNCWEBSERVER_REGEX
-#include <regex>
+  #include <regex>
 #endif
 
 #include "stddef.h"
@@ -71,7 +72,7 @@ class AsyncStaticWebHandler: public AsyncWebHandler
     AsyncStaticWebHandler& setTemplateProcessor(AwsTemplateProcessor newCallback)
     {
       _callback = newCallback;
-      
+
       return *this;
     }
 };
@@ -90,7 +91,8 @@ class AsyncCallbackWebHandler: public AsyncWebHandler
     bool _isRegex;
 
   public:
-    AsyncCallbackWebHandler() : _uri(), _method(HTTP_ANY), _onRequest(NULL), _onUpload(NULL), _onBody(NULL), _isRegex(false) {}
+    AsyncCallbackWebHandler() : _uri(), _method(HTTP_ANY), _onRequest(NULL), _onUpload(NULL), _onBody(NULL),
+      _isRegex(false) {}
 
     /////////////////////////////////////////////////
 
@@ -108,7 +110,7 @@ class AsyncCallbackWebHandler: public AsyncWebHandler
     }
 
     /////////////////////////////////////////////////
-    
+
     void onRequest(ArRequestHandlerFunction fn)
     {
       _onRequest = fn;
@@ -139,6 +141,7 @@ class AsyncCallbackWebHandler: public AsyncWebHandler
         return false;
 
 #ifdef ASYNCWEBSERVER_REGEX
+
       if (_isRegex)
       {
         std::regex pattern(_uri.c_str());
@@ -188,7 +191,8 @@ class AsyncCallbackWebHandler: public AsyncWebHandler
 
     /////////////////////////////////////////////////
 
-    virtual void handleBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) override final
+    virtual void handleBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index,
+                            size_t total) override final
     {
       if (_onBody)
         _onBody(request, data, len, index, total);

@@ -1,17 +1,17 @@
 /****************************************************************************************************************************
   Async_PostServer.ino
-  
+
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet or Murata WiFi
-  
+
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with Vision-Shield Ethernet or Murata WiFi
-  
+
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  *****************************************************************************************************************************/
 
 #if !( defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4) )
-  #error For Portenta_H7 only
+	#error For Portenta_H7 only
 #endif
 
 #define _PORTENTA_H7_AWS_LOGLEVEL_     1
@@ -54,172 +54,180 @@ body { background-color: #cccccc; font-family: Arial, Helvetica, Sans-Serif; Col
 
 void handleRoot(AsyncWebServerRequest *request)
 {
-  request->send(200, "text/html", postForms);
+	request->send(200, "text/html", postForms);
 }
 
 void handlePlain(AsyncWebServerRequest *request)
 {
-  if (request->method() != HTTP_POST)
-  {
-    request->send(405, "text/plain", "Method Not Allowed");
-  } 
-  else
-  {
-    request->send(200, "text/plain", "POST body was:\n" + request->arg("plain"));
-  }
+	if (request->method() != HTTP_POST)
+	{
+		request->send(405, "text/plain", "Method Not Allowed");
+	}
+	else
+	{
+		request->send(200, "text/plain", "POST body was:\n" + request->arg("plain"));
+	}
 }
 
 void handleForm(AsyncWebServerRequest *request)
 {
-  if (request->method() != HTTP_POST)
-  {
-    request->send(405, "text/plain", "Method Not Allowed");
-  }
-  else
-  {
-    String message = "POST form was:\n";
-    for (uint8_t i = 0; i < request->args(); i++)
-    {
-      message += " " + request->argName(i) + ": " + request->arg(i) + "\n";
-    }
-    request->send(200, "text/plain", message);
-  }
+	if (request->method() != HTTP_POST)
+	{
+		request->send(405, "text/plain", "Method Not Allowed");
+	}
+	else
+	{
+		String message = "POST form was:\n";
+
+		for (uint8_t i = 0; i < request->args(); i++)
+		{
+			message += " " + request->argName(i) + ": " + request->arg(i) + "\n";
+		}
+
+		request->send(200, "text/plain", message);
+	}
 }
 
 void handleNotFound(AsyncWebServerRequest *request)
 {
-  String message = "File Not Found\n\n";
-  message += "URI: ";
-  message += request->url();
-  message += "\nMethod: ";
-  message += (request->method() == HTTP_GET) ? "GET" : "POST";
-  message += "\nArguments: ";
-  message += request->args();
-  message += "\n";
-  for (uint8_t i = 0; i < request->args(); i++)
-  {
-    message += " " + request->argName(i) + ": " + request->arg(i) + "\n";
-  }
-  request->send(404, "text/plain", message);
+	String message = "File Not Found\n\n";
+	message += "URI: ";
+	message += request->url();
+	message += "\nMethod: ";
+	message += (request->method() == HTTP_GET) ? "GET" : "POST";
+	message += "\nArguments: ";
+	message += request->args();
+	message += "\n";
+
+	for (uint8_t i = 0; i < request->args(); i++)
+	{
+		message += " " + request->argName(i) + ": " + request->arg(i) + "\n";
+	}
+
+	request->send(404, "text/plain", message);
 }
 
 void printWifiStatus()
 {
-  // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+	// print the SSID of the network you're attached to:
+	Serial.print("SSID: ");
+	Serial.println(WiFi.SSID());
 
-  // print your board's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print("Local IP Address: ");
-  Serial.println(ip);
+	// print your board's IP address:
+	IPAddress ip = WiFi.localIP();
+	Serial.print("Local IP Address: ");
+	Serial.println(ip);
 
-  // print the received signal strength:
-  long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.print(rssi);
-  Serial.println(" dBm");
+	// print the received signal strength:
+	long rssi = WiFi.RSSI();
+	Serial.print("signal strength (RSSI):");
+	Serial.print(rssi);
+	Serial.println(" dBm");
 }
 
 void setup()
 {
-  Serial.begin(115200);
-  while (!Serial && millis() < 5000);
+	Serial.begin(115200);
 
-  delay(200);
+	while (!Serial && millis() < 5000);
 
-  Serial.print("\nStart Async_PostServer on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
-  Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
-  Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
+	delay(200);
 
-  ///////////////////////////////////
+	Serial.print("\nStart Async_PostServer on ");
+	Serial.print(BOARD_NAME);
+	Serial.print(" with ");
+	Serial.println(SHIELD_TYPE);
+	Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
+	Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
 
-  // check for the WiFi module:
-  if (WiFi.status() == WL_NO_MODULE)
-  {
-    Serial.println("Communication with WiFi module failed!");
-    // don't continue
-    while (true);
-  }
+	///////////////////////////////////
 
-  Serial.print(F("Connecting to SSID: "));
-  Serial.println(ssid);
+	// check for the WiFi module:
+	if (WiFi.status() == WL_NO_MODULE)
+	{
+		Serial.println("Communication with WiFi module failed!");
 
-  status = WiFi.begin(ssid, pass);
+		// don't continue
+		while (true);
+	}
 
-  delay(1000);
-   
-  // attempt to connect to WiFi network
-  while ( status != WL_CONNECTED)
-  {
-    delay(500);
-        
-    // Connect to WPA/WPA2 network
-    status = WiFi.status();
-  }
+	Serial.print(F("Connecting to SSID: "));
+	Serial.println(ssid);
 
-  printWifiStatus();
+	status = WiFi.begin(ssid, pass);
 
-  ///////////////////////////////////
+	delay(1000);
 
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
-  {
-    handleRoot(request);
-  });
+	// attempt to connect to WiFi network
+	while ( status != WL_CONNECTED)
+	{
+		delay(500);
 
-  //server.on("/postplain/", handlePlain);
-  server.on("/postplain/", HTTP_POST, [](AsyncWebServerRequest * request)
-  {
-    handlePlain(request);
-  });
+		// Connect to WPA/WPA2 network
+		status = WiFi.status();
+	}
 
-  //server.on("/postform/", handleForm);
-  server.on("/postform/", HTTP_POST, [](AsyncWebServerRequest * request)
-  {
-    handleForm(request);
-  });
+	printWifiStatus();
 
-  server.onNotFound(handleNotFound);
+	///////////////////////////////////
 
-  server.begin();
+	server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
+	{
+		handleRoot(request);
+	});
 
-  Serial.print(F("HTTP Async_PostServer started @ IP : "));
-  Serial.println(WiFi.localIP());
+	//server.on("/postplain/", handlePlain);
+	server.on("/postplain/", HTTP_POST, [](AsyncWebServerRequest * request)
+	{
+		handlePlain(request);
+	});
+
+	//server.on("/postform/", handleForm);
+	server.on("/postform/", HTTP_POST, [](AsyncWebServerRequest * request)
+	{
+		handleForm(request);
+	});
+
+	server.onNotFound(handleNotFound);
+
+	server.begin();
+
+	Serial.print(F("HTTP Async_PostServer started @ IP : "));
+	Serial.println(WiFi.localIP());
 }
 
 void heartBeatPrint()
 {
-  static int num = 1;
+	static int num = 1;
 
-  Serial.print(F("."));
+	Serial.print(F("."));
 
-  if (num == 80)
-  {
-    Serial.println();
-    num = 1;
-  }
-  else if (num++ % 10 == 0)
-  {
-    Serial.print(F(" "));
-  }
+	if (num == 80)
+	{
+		Serial.println();
+		num = 1;
+	}
+	else if (num++ % 10 == 0)
+	{
+		Serial.print(F(" "));
+	}
 }
 
 void check_status()
 {
-  static unsigned long checkstatus_timeout = 0;
+	static unsigned long checkstatus_timeout = 0;
 
 #define STATUS_CHECK_INTERVAL     10000L
 
-  // Send status report every STATUS_REPORT_INTERVAL (60) seconds: we don't need to send updates frequently if there is no status change.
-  if ((millis() > checkstatus_timeout) || (checkstatus_timeout == 0))
-  {
-    heartBeatPrint();
-    checkstatus_timeout = millis() + STATUS_CHECK_INTERVAL;
-  }
+	// Send status report every STATUS_REPORT_INTERVAL (60) seconds: we don't need to send updates frequently if there is no status change.
+	if ((millis() > checkstatus_timeout) || (checkstatus_timeout == 0))
+	{
+		heartBeatPrint();
+		checkstatus_timeout = millis() + STATUS_CHECK_INTERVAL;
+	}
 }
 
 void loop()
 {
-  check_status();
+	check_status();
 }

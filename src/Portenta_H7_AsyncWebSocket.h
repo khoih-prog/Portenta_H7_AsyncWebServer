@@ -1,15 +1,15 @@
 /****************************************************************************************************************************
   Portenta_H7_AsyncWebSocket.h
-  
+
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet
-  
+
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with with Vision-Shield Ethernet
-  
+
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
- 
-  Version: 1.4.1
+
+  Version: 1.4.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -21,10 +21,11 @@
   1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
   1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
   1.4.1   K Hoang      04/10/2022 Don't need memmove(), String no longer destroyed
+  1.4.2   K Hoang      10/11/2022 Add examples to demo how to use beginChunkedResponse() to send in chunks
  *****************************************************************************************************************************/
 
 #pragma once
- 
+
 #ifndef PORTENTA_H7_ASYNCWEBSOCKET_H_
 #define PORTENTA_H7_ASYNCWEBSOCKET_H_
 
@@ -118,7 +119,7 @@ typedef enum
 
 /////////////////////////////////////////////////
 
-class AsyncWebSocketMessageBuffer 
+class AsyncWebSocketMessageBuffer
 {
   private:
     uint8_t * _data;
@@ -135,67 +136,67 @@ class AsyncWebSocketMessageBuffer
     ~AsyncWebSocketMessageBuffer();
 
     /////////////////////////////////////////////////
-    
-    void operator ++(int i) 
+
+    void operator ++(int i)
     {
       PORTENTA_H7_AWS_UNUSED(i);
       _count++;
     }
 
     /////////////////////////////////////////////////
-    
-    void operator --(int i) 
+
+    void operator --(int i)
     {
       PORTENTA_H7_AWS_UNUSED(i);
-      
-      if (_count > 0) 
+
+      if (_count > 0)
       {
         _count--;
       } ;
     }
 
     /////////////////////////////////////////////////
-    
+
     bool reserve(size_t size);
 
     /////////////////////////////////////////////////
-    
-    void lock() 
+
+    void lock()
     {
       _lock = true;
     }
 
     /////////////////////////////////////////////////
-    
-    void unlock() 
+
+    void unlock()
     {
       _lock = false;
     }
 
     /////////////////////////////////////////////////
-    
-    uint8_t * get() 
+
+    uint8_t * get()
     {
       return _data;
     }
 
     /////////////////////////////////////////////////
-    
-    size_t length() 
+
+    size_t length()
     {
       return _len;
     }
 
     /////////////////////////////////////////////////
-    
-    uint32_t count() 
+
+    uint32_t count()
     {
       return _count;
     }
 
     /////////////////////////////////////////////////
-    
-    bool canDelete() 
+
+    bool canDelete()
     {
       return (!_count && !_lock);
     }
@@ -208,35 +209,35 @@ class AsyncWebSocketMessageBuffer
 
 /////////////////////////////////////////////////
 
-class AsyncWebSocketMessage 
+class AsyncWebSocketMessage
 {
   protected:
     uint8_t _opcode;
     bool _mask;
     AwsMessageStatus _status;
-    
+
   public:
     AsyncWebSocketMessage(): _opcode(WS_TEXT), _mask(false), _status(WS_MSG_ERROR) {}
     virtual ~AsyncWebSocketMessage() {}
     virtual void ack(size_t len __attribute__((unused)), uint32_t time __attribute__((unused))) {}
 
     /////////////////////////////////////////////////
-    
-    virtual size_t send(AsyncClient *client __attribute__((unused))) 
+
+    virtual size_t send(AsyncClient *client __attribute__((unused)))
     {
       return 0;
     }
 
     /////////////////////////////////////////////////
-    
-    virtual bool finished() 
+
+    virtual bool finished()
     {
       return _status != WS_MSG_SENDING;
     }
 
     /////////////////////////////////////////////////
-    
-    virtual bool betweenFrames() const 
+
+    virtual bool betweenFrames() const
     {
       return false;
     }
@@ -244,7 +245,7 @@ class AsyncWebSocketMessage
 
 /////////////////////////////////////////////////
 
-class AsyncWebSocketBasicMessage: public AsyncWebSocketMessage 
+class AsyncWebSocketBasicMessage: public AsyncWebSocketMessage
 {
   private:
     size_t _len;
@@ -252,30 +253,30 @@ class AsyncWebSocketBasicMessage: public AsyncWebSocketMessage
     size_t _ack;
     size_t _acked;
     uint8_t * _data;
-    
+
   public:
     AsyncWebSocketBasicMessage(const char * data, size_t len, uint8_t opcode = WS_TEXT, bool mask = false);
     AsyncWebSocketBasicMessage(uint8_t opcode = WS_TEXT, bool mask = false);
     virtual ~AsyncWebSocketBasicMessage() override;
 
     /////////////////////////////////////////////////
-    
-    virtual bool betweenFrames() const override 
+
+    virtual bool betweenFrames() const override
     {
       return _acked == _ack;
     }
 
     /////////////////////////////////////////////////
-    
+
     virtual void ack(size_t len, uint32_t time) override;
     virtual size_t send(AsyncClient *client) override;
-    
+
     virtual bool reserve(size_t size);
 };
 
 /////////////////////////////////////////////////
 
-class AsyncWebSocketMultiMessage: public AsyncWebSocketMessage 
+class AsyncWebSocketMultiMessage: public AsyncWebSocketMessage
 {
   private:
     uint8_t * _data;
@@ -284,27 +285,27 @@ class AsyncWebSocketMultiMessage: public AsyncWebSocketMessage
     size_t _ack;
     size_t _acked;
     AsyncWebSocketMessageBuffer * _WSbuffer;
-    
+
   public:
     AsyncWebSocketMultiMessage(AsyncWebSocketMessageBuffer * buffer, uint8_t opcode = WS_TEXT, bool mask = false);
     virtual ~AsyncWebSocketMultiMessage() override;
 
     /////////////////////////////////////////////////
-    
-    virtual bool betweenFrames() const override 
+
+    virtual bool betweenFrames() const override
     {
       return _acked == _ack;
     }
 
     /////////////////////////////////////////////////
-    
+
     virtual void ack(size_t len, uint32_t time) override ;
     virtual size_t send(AsyncClient *client) override ;
 };
 
 /////////////////////////////////////////////////
 
-class AsyncWebSocketClient 
+class AsyncWebSocketClient
 {
   private:
     AsyncClient *_client;
@@ -334,33 +335,33 @@ class AsyncWebSocketClient
     /////////////////////////////////////////////////
 
     //client id increments for the given server
-    uint32_t id() 
+    uint32_t id()
     {
       return _clientId;
     }
 
     /////////////////////////////////////////////////
-    
-    AwsClientStatus status() 
+
+    AwsClientStatus status()
     {
       return _status;
     }
-    
-    AsyncClient* client() 
+
+    AsyncClient* client()
     {
       return _client;
     }
 
     /////////////////////////////////////////////////
-    
-    AsyncWebSocket *server() 
+
+    AsyncWebSocket *server()
     {
       return _server;
     }
 
     /////////////////////////////////////////////////
-    
-    AwsFrameInfo const &pinfo() const 
+
+    AwsFrameInfo const &pinfo() const
     {
       return _pinfo;
     }
@@ -377,14 +378,14 @@ class AsyncWebSocketClient
     /////////////////////////////////////////////////
 
     //set auto-ping period in seconds. disabled if zero (default)
-    void keepAlivePeriod(uint16_t seconds) 
+    void keepAlivePeriod(uint16_t seconds)
     {
       _keepAlivePeriod = seconds * 1000;
     }
 
     /////////////////////////////////////////////////
-    
-    uint16_t keepAlivePeriod() 
+
+    uint16_t keepAlivePeriod()
     {
       return (uint16_t)(_keepAlivePeriod / 1000);
     }
@@ -392,13 +393,13 @@ class AsyncWebSocketClient
     /////////////////////////////////////////////////
 
     //data packets
-    void message(AsyncWebSocketMessage *message) 
+    void message(AsyncWebSocketMessage *message)
     {
       _queueMessage(message);
     }
 
     /////////////////////////////////////////////////
-    
+
     bool queueIsFull();
 
     size_t printf(const char *format, ...)  __attribute__ ((format (printf, 2, 3)));
@@ -419,7 +420,7 @@ class AsyncWebSocketClient
 
     /////////////////////////////////////////////////
 
-    bool canSend() 
+    bool canSend()
     {
       return _messageQueue.length() < WS_MAX_QUEUED_MESSAGES;
     }
@@ -437,16 +438,17 @@ class AsyncWebSocketClient
 
 /////////////////////////////////////////////////
 
-typedef std::function<void(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len)> AwsEventHandler;
+typedef std::function<void(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len)>
+AwsEventHandler;
 
 /////////////////////////////////////////////////
 
 //WebServer Handler implementation that plays the role of a socket server
-class AsyncWebSocket: public AsyncWebHandler 
+class AsyncWebSocket: public AsyncWebHandler
 {
   public:
     typedef LinkedList<AsyncWebSocketClient *> AsyncWebSocketClientLinkedList;
-    
+
   private:
     String _url;
     AsyncWebSocketClientLinkedList _clients;
@@ -460,28 +462,28 @@ class AsyncWebSocket: public AsyncWebHandler
     ~AsyncWebSocket();
 
     /////////////////////////////////////////////////
-    
-    const char * url() const 
+
+    const char * url() const
     {
       return _url.c_str();
     }
 
     /////////////////////////////////////////////////
-    
-    void enable(bool e) 
+
+    void enable(bool e)
     {
       _enabled = e;
     }
 
     /////////////////////////////////////////////////
-    
-    bool enabled() const 
+
+    bool enabled() const
     {
       return _enabled;
     }
 
     /////////////////////////////////////////////////
-    
+
     bool availableForWriteAll();
     bool availableForWrite(uint32_t id);
 
@@ -489,8 +491,8 @@ class AsyncWebSocket: public AsyncWebHandler
     AsyncWebSocketClient * client(uint32_t id);
 
     /////////////////////////////////////////////////
-    
-    bool hasClient(uint32_t id) 
+
+    bool hasClient(uint32_t id)
     {
       return client(id) != NULL;
     }
@@ -539,7 +541,7 @@ class AsyncWebSocket: public AsyncWebHandler
     /////////////////////////////////////////////////
 
     //event listener
-    void onEvent(AwsEventHandler handler) 
+    void onEvent(AwsEventHandler handler)
     {
       _eventHandler = handler;
     }
@@ -547,13 +549,13 @@ class AsyncWebSocket: public AsyncWebHandler
     /////////////////////////////////////////////////
 
     //system callbacks (do not call)
-    uint32_t _getNextId() 
+    uint32_t _getNextId()
     {
       return _cNextId++;
     }
 
     /////////////////////////////////////////////////
-    
+
     void _addClient(AsyncWebSocketClient * client);
     void _handleDisconnect(AsyncWebSocketClient * client);
     void _handleEvent(AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len);
@@ -572,20 +574,20 @@ class AsyncWebSocket: public AsyncWebHandler
 /////////////////////////////////////////////////
 
 //WebServer response to authenticate the socket and detach the tcp client from the web server request
-class AsyncWebSocketResponse: public AsyncWebServerResponse 
+class AsyncWebSocketResponse: public AsyncWebServerResponse
 {
   private:
     String _content;
     AsyncWebSocket *_server;
-    
+
   public:
     AsyncWebSocketResponse(const String& key, AsyncWebSocket *server);
     void _respond(AsyncWebServerRequest *request);
     size_t _ack(AsyncWebServerRequest *request, size_t len, uint32_t time);
 
     /////////////////////////////////////////////////
-    
-    bool _sourceValid() const 
+
+    bool _sourceValid() const
     {
       return true;
     }

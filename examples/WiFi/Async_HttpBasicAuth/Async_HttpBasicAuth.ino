@@ -1,17 +1,17 @@
 /****************************************************************************************************************************
   Async_HttpBasicAuth.ino
-  
+
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet or Murata WiFi
-  
+
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with Vision-Shield Ethernet or Murata WiFi
-  
+
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
  *****************************************************************************************************************************/
 
 #if !( defined(ARDUINO_PORTENTA_H7_M7) || defined(ARDUINO_PORTENTA_H7_M4) )
-  #error For Portenta_H7 only
+	#error For Portenta_H7 only
 #endif
 
 #define USE_WIFI_PORTENTA_H7        true
@@ -33,121 +33,125 @@ const char* www_password = "portenta";
 
 void printWifiStatus()
 {
-  // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+	// print the SSID of the network you're attached to:
+	Serial.print("SSID: ");
+	Serial.println(WiFi.SSID());
 
-  // print your board's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print("Local IP Address: ");
-  Serial.println(ip);
+	// print your board's IP address:
+	IPAddress ip = WiFi.localIP();
+	Serial.print("Local IP Address: ");
+	Serial.println(ip);
 
-  // print the received signal strength:
-  long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.print(rssi);
-  Serial.println(" dBm");
+	// print the received signal strength:
+	long rssi = WiFi.RSSI();
+	Serial.print("signal strength (RSSI):");
+	Serial.print(rssi);
+	Serial.println(" dBm");
 }
 
 void setup()
 {
-  Serial.begin(115200);
-  while (!Serial && millis() < 5000);
+	Serial.begin(115200);
 
-  delay(200);
+	while (!Serial && millis() < 5000);
 
-  Serial.print("\nStart Async_HTTPBasicAuth on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
-  Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
-  Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
+	delay(200);
 
-  ///////////////////////////////////
-  
-  // check for the WiFi module:
-  if (WiFi.status() == WL_NO_MODULE)
-  {
-    Serial.println("Communication with WiFi module failed!");
-    // don't continue
-    while (true);
-  }
+	Serial.print("\nStart Async_HTTPBasicAuth on ");
+	Serial.print(BOARD_NAME);
+	Serial.print(" with ");
+	Serial.println(SHIELD_TYPE);
+	Serial.println(PORTENTA_H7_ASYNC_TCP_VERSION);
+	Serial.println(PORTENTA_H7_ASYNC_WEBSERVER_VERSION);
 
-  Serial.print(F("Connecting to SSID: "));
-  Serial.println(ssid);
+	///////////////////////////////////
 
-  status = WiFi.begin(ssid, pass);
+	// check for the WiFi module:
+	if (WiFi.status() == WL_NO_MODULE)
+	{
+		Serial.println("Communication with WiFi module failed!");
 
-  delay(1000);
-   
-  // attempt to connect to WiFi network
-  while ( status != WL_CONNECTED)
-  {
-    delay(500);
-        
-    // Connect to WPA/WPA2 network
-    status = WiFi.status();
-  }
+		// don't continue
+		while (true);
+	}
 
-  printWifiStatus();
-  
-  ///////////////////////////////////
+	Serial.print(F("Connecting to SSID: "));
+	Serial.println(ssid);
 
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
-  {
-    if (!request->authenticate(www_username, www_password))
-    {
-      return request->requestAuthentication();
-    }
-    
-    request->send(200, "text/plain", "Login OK");
-  });
+	status = WiFi.begin(ssid, pass);
 
-  server.begin();
+	delay(1000);
 
-  Serial.print(F("Async_HttpBasicAuth started @ IP : "));
-  Serial.println(WiFi.localIP());
+	// attempt to connect to WiFi network
+	while ( status != WL_CONNECTED)
+	{
+		delay(500);
 
-  Serial.print(F("Open http://"));
-  Serial.print(WiFi.localIP());
-  Serial.println(F("/ in your browser to see it working"));
+		// Connect to WPA/WPA2 network
+		status = WiFi.status();
+	}
 
-  Serial.print(F("Login using username = "));
-  Serial.print(www_username);
-  Serial.print(F(" and password = "));
-  Serial.println(www_password);
+	printWifiStatus();
+
+	///////////////////////////////////
+
+	server.on("/", HTTP_GET, [](AsyncWebServerRequest * request)
+	{
+		if (!request->authenticate(www_username, www_password))
+		{
+			return request->requestAuthentication();
+		}
+
+		request->send(200, "text/plain", "Login OK");
+	});
+
+	server.begin();
+
+	Serial.print(F("Async_HttpBasicAuth started @ IP : "));
+	Serial.println(WiFi.localIP());
+
+	Serial.print(F("Open http://"));
+	Serial.print(WiFi.localIP());
+	Serial.println(F("/ in your browser to see it working"));
+
+	Serial.print(F("Login using username = "));
+	Serial.print(www_username);
+	Serial.print(F(" and password = "));
+	Serial.println(www_password);
 }
 
 void heartBeatPrint()
 {
-  static int num = 1;
+	static int num = 1;
 
-  Serial.print(F("."));
+	Serial.print(F("."));
 
-  if (num == 80)
-  {
-    Serial.println();
-    num = 1;
-  }
-  else if (num++ % 10 == 0)
-  {
-    Serial.print(F(" "));
-  }
+	if (num == 80)
+	{
+		Serial.println();
+		num = 1;
+	}
+	else if (num++ % 10 == 0)
+	{
+		Serial.print(F(" "));
+	}
 }
 
 void check_status()
 {
-  static unsigned long checkstatus_timeout = 0;
+	static unsigned long checkstatus_timeout = 0;
 
 #define STATUS_CHECK_INTERVAL     10000L
 
-  // Send status report every STATUS_REPORT_INTERVAL (60) seconds: we don't need to send updates frequently if there is no status change.
-  if ((millis() > checkstatus_timeout) || (checkstatus_timeout == 0))
-  {
-    heartBeatPrint();
-    checkstatus_timeout = millis() + STATUS_CHECK_INTERVAL;
-  }
+	// Send status report every STATUS_REPORT_INTERVAL (60) seconds: we don't need to send updates frequently if there is no status change.
+	if ((millis() > checkstatus_timeout) || (checkstatus_timeout == 0))
+	{
+		heartBeatPrint();
+		checkstatus_timeout = millis() + STATUS_CHECK_INTERVAL;
+	}
 }
 
 void loop()
 {
-  check_status();
+	check_status();
 }

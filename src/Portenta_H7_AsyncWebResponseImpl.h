@@ -2,14 +2,14 @@
   Portenta_H7_AsyncWebResponseImpl.h
 
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet or Murata WiFi
-  
+
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with Vision-Shield Ethernet or Murata WiFi
 
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
 
-  Version: 1.4.1
+  Version: 1.4.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -21,6 +21,7 @@
   1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
   1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
   1.4.1   K Hoang      04/10/2022 Don't need memmove(), String no longer destroyed
+  1.4.2   K Hoang      10/11/2022 Add examples to demo how to use beginChunkedResponse() to send in chunks
  *****************************************************************************************************************************/
 
 #pragma once
@@ -97,7 +98,7 @@ class AsyncAbstractResponse: public AsyncWebServerResponse
 /////////////////////////////////////////////////
 
 #ifndef TEMPLATE_PLACEHOLDER
-#define TEMPLATE_PLACEHOLDER '%'
+  #define TEMPLATE_PLACEHOLDER '%'
 #endif
 
 #define TEMPLATE_PARAM_NAME_LENGTH 32
@@ -129,7 +130,8 @@ class AsyncCallbackResponse: public AsyncAbstractResponse
     size_t _filledLength;
 
   public:
-    AsyncCallbackResponse(const String& contentType, size_t len, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
+    AsyncCallbackResponse(const String& contentType, size_t len, AwsResponseFiller callback,
+                          AwsTemplateProcessor templateCallback = nullptr);
 
     bool _sourceValid() const
     {
@@ -148,7 +150,8 @@ class AsyncChunkedResponse: public AsyncAbstractResponse
     size_t _filledLength;
 
   public:
-    AsyncChunkedResponse(const String& contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
+    AsyncChunkedResponse(const String& contentType, AwsResponseFiller callback,
+                         AwsTemplateProcessor templateCallback = nullptr);
 
     bool _sourceValid() const
     {

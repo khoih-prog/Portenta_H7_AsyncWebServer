@@ -1,15 +1,15 @@
 /****************************************************************************************************************************
   Portenta_H7_AsyncWebRequest.cpp
-  
+
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet or Murata WiFi
-  
+
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with Vision-Shield Ethernet or Murata WiFi
-  
+
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
- 
-  Version: 1.4.1
+
+  Version: 1.4.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -21,6 +21,7 @@
   1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
   1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
   1.4.1   K Hoang      04/10/2022 Don't need memmove(), String no longer destroyed
+  1.4.2   K Hoang      10/11/2022 Add examples to demo how to use beginChunkedResponse() to send in chunks
  *****************************************************************************************************************************/
 
 #if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
@@ -256,7 +257,8 @@ void AsyncWebServerRequest::_onData(void *buf, size_t len)
         if (_handler)
           _handler->handleRequest(this);
 
-        else send(501);
+        else
+          send(501);
       }
     }
 
@@ -862,7 +864,8 @@ void AsyncWebServerRequest::_parseMultipartPostByte(uint8_t data, bool last)
   {
     if (data == '-' && (_contentLength - _parsedLength - 4) != 0)
     {
-      AWS_LOGDEBUG1("ERROR: The parser got to the end of the POST but is expecting more bytes =", (_contentLength - _parsedLength - 4));
+      AWS_LOGDEBUG1("ERROR: The parser got to the end of the POST but is expecting more bytes =",
+                    (_contentLength - _parsedLength - 4));
       AWS_LOGDEBUG("Drop an issue so we can have more info on the matter!");
 
       _contentLength = _parsedLength + 4;//lets close the request gracefully
@@ -1112,28 +1115,32 @@ AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(int code, const St
 
 /////////////////////////////////////////////////
 
-AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(int code, const String& contentType, const String& content)
+AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(int code, const String& contentType,
+                                                              const String& content)
 {
   return new AsyncBasicResponse(code, contentType, content);
 }
 
 /////////////////////////////////////////////////
 
-AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(Stream &stream, const String& contentType, size_t len, AwsTemplateProcessor callback)
+AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(Stream &stream, const String& contentType, size_t len,
+                                                              AwsTemplateProcessor callback)
 {
   return new AsyncStreamResponse(stream, contentType, len, callback);
 }
 
 /////////////////////////////////////////////////
 
-AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(const String& contentType, size_t len, AwsResponseFiller callback, AwsTemplateProcessor templateCallback)
+AsyncWebServerResponse * AsyncWebServerRequest::beginResponse(const String& contentType, size_t len,
+                                                              AwsResponseFiller callback, AwsTemplateProcessor templateCallback)
 {
   return new AsyncCallbackResponse(contentType, len, callback, templateCallback);
 }
 
 /////////////////////////////////////////////////
 
-AsyncWebServerResponse * AsyncWebServerRequest::beginChunkedResponse(const String& contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback)
+AsyncWebServerResponse * AsyncWebServerRequest::beginChunkedResponse(const String& contentType,
+                                                                     AwsResponseFiller callback, AwsTemplateProcessor templateCallback)
 {
   if (_version)
     return new AsyncChunkedResponse(contentType, callback, templateCallback);
@@ -1178,14 +1185,16 @@ void AsyncWebServerRequest::send(Stream &stream, const String& contentType, size
 
 /////////////////////////////////////////////////
 
-void AsyncWebServerRequest::send(const String& contentType, size_t len, AwsResponseFiller callback, AwsTemplateProcessor templateCallback)
+void AsyncWebServerRequest::send(const String& contentType, size_t len, AwsResponseFiller callback,
+                                 AwsTemplateProcessor templateCallback)
 {
   send(beginResponse(contentType, len, callback, templateCallback));
 }
 
 /////////////////////////////////////////////////
 
-void AsyncWebServerRequest::sendChunked(const String& contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback)
+void AsyncWebServerRequest::sendChunked(const String& contentType, AwsResponseFiller callback,
+                                        AwsTemplateProcessor templateCallback)
 {
   send(beginChunkedResponse(contentType, callback, templateCallback));
 }
@@ -1201,7 +1210,8 @@ void AsyncWebServerRequest::redirect(const String& url)
 
 /////////////////////////////////////////////////
 
-bool AsyncWebServerRequest::authenticate(const char * username, const char * password, const char * realm, bool passwordIsHash)
+bool AsyncWebServerRequest::authenticate(const char * username, const char * password, const char * realm,
+                                         bool passwordIsHash)
 {
   AWS_LOGDEBUG1("AsyncWebServerRequest::authenticate: auth-len =", _authorization.length());
 
@@ -1211,7 +1221,8 @@ bool AsyncWebServerRequest::authenticate(const char * username, const char * pas
     {
       AWS_LOGDEBUG("AsyncWebServerRequest::authenticate: _isDigest");
 
-      return checkDigestAuthentication(_authorization.c_str(), methodToString(), username, password, realm, passwordIsHash, NULL, NULL, NULL);
+      return checkDigestAuthentication(_authorization.c_str(), methodToString(), username, password, realm, passwordIsHash,
+                                       NULL, NULL, NULL);
     }
     else if (!passwordIsHash)
     {
@@ -1257,7 +1268,8 @@ bool AsyncWebServerRequest::authenticate(const char * hash)
     String realm = hStr.substring(0, separator);
     hStr = hStr.substring(separator + 1);
 
-    return checkDigestAuthentication(_authorization.c_str(), methodToString(), username.c_str(), hStr.c_str(), realm.c_str(), true, NULL, NULL, NULL);
+    return checkDigestAuthentication(_authorization.c_str(), methodToString(), username.c_str(), hStr.c_str(),
+                                     realm.c_str(), true, NULL, NULL, NULL);
   }
 
   return (_authorization.equals(hash));
@@ -1438,14 +1450,19 @@ const char *AsyncWebServerRequest::requestedConnTypeToString() const
   {
     case RCT_NOT_USED:
       return "RCT_NOT_USED";
+
     case RCT_DEFAULT:
       return "RCT_DEFAULT";
+
     case RCT_HTTP:
       return "RCT_HTTP";
+
     case RCT_WS:
       return "RCT_WS";
+
     case RCT_EVENT:
       return "RCT_EVENT";
+
     default:
       return "ERROR";
   }
@@ -1453,7 +1470,8 @@ const char *AsyncWebServerRequest::requestedConnTypeToString() const
 
 /////////////////////////////////////////////////
 
-bool AsyncWebServerRequest::isExpectedRequestedConnType(RequestedConnectionType erct1, RequestedConnectionType erct2, RequestedConnectionType erct3)
+bool AsyncWebServerRequest::isExpectedRequestedConnType(RequestedConnectionType erct1, RequestedConnectionType erct2,
+                                                        RequestedConnectionType erct3)
 {
   bool res = false;
 

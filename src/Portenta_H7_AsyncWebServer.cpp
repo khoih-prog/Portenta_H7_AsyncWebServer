@@ -1,15 +1,15 @@
 /****************************************************************************************************************************
   Portenta_H7_AsyncWebServer.cpp - Dead simple AsyncWebServer for STM32 LAN8720 or built-in LAN8742A Ethernet
-  
+
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet or Murata WiFi
-  
+
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with Vision-Shield Ethernet or Murata WiFi
-  
+
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
- 
-  Version: 1.4.1
+
+  Version: 1.4.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -21,6 +21,7 @@
   1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
   1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
   1.4.1   K Hoang      04/10/2022 Don't need memmove(), String no longer destroyed
+  1.4.2   K Hoang      10/11/2022 Add examples to demo how to use beginChunkedResponse() to send in chunks
  *****************************************************************************************************************************/
 
 #if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
@@ -58,7 +59,7 @@ AsyncWebServer::AsyncWebServer(uint16_t port)
     //c->setRxTimeout(3);
     c->setRxTimeout(0);
     //////
-    
+
     AsyncWebServerRequest *r = new AsyncWebServerRequest((AsyncWebServer*)s, c);
 
     if (r == NULL)
@@ -155,7 +156,7 @@ void AsyncWebServer::beginSecure(const char *cert, const char *key, const char *
 /////////////////////////////////////////////////
 
 void AsyncWebServer::_handleDisconnect(AsyncWebServerRequest *request)
-{ 
+{
   delete request;
 }
 
@@ -182,20 +183,21 @@ void AsyncWebServer::_attachHandler(AsyncWebServerRequest *request)
     if (h->filter(request) && h->canHandle(request))
     {
       request->setHandler(h);
-      
+
       return;
     }
   }
 
   request->addInterestingHeader("ANY");
-  
+
   request->setHandler(NULL);
 }
 
 /////////////////////////////////////////////////
 
-AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest,
-    ArUploadHandlerFunction onUpload, ArBodyHandlerFunction onBody)
+AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodComposite method,
+                                            ArRequestHandlerFunction onRequest,
+                                            ArUploadHandlerFunction onUpload, ArBodyHandlerFunction onBody)
 {
   AsyncCallbackWebHandler* handler = new AsyncCallbackWebHandler();
 
@@ -211,7 +213,8 @@ AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodCom
 
 /////////////////////////////////////////////////
 
-AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload)
+AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodComposite method,
+                                            ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload)
 {
   AsyncCallbackWebHandler* handler = new AsyncCallbackWebHandler();
   handler->setUri(uri);
@@ -225,7 +228,8 @@ AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodCom
 
 /////////////////////////////////////////////////
 
-AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest)
+AsyncCallbackWebHandler& AsyncWebServer::on(const char* uri, WebRequestMethodComposite method,
+                                            ArRequestHandlerFunction onRequest)
 {
   AsyncCallbackWebHandler* handler = new AsyncCallbackWebHandler();
   handler->setUri(uri);

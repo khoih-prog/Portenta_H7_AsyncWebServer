@@ -1,15 +1,15 @@
 /****************************************************************************************************************************
   Portenta_H7_AsyncWebServer.h
-  
+
   For Portenta_H7 (STM32H7) with Vision-Shield Ethernet or Murata WiFi
-  
+
   Portenta_H7_AsyncWebServer is a library for the Portenta_H7 with Vision-Shield Ethernet or Murata WiFi
-  
+
   Based on and modified from ESPAsyncWebServer (https://github.com/me-no-dev/ESPAsyncWebServer)
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
- 
-  Version: 1.4.1
+
+  Version: 1.4.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -21,8 +21,9 @@
   1.3.0   K Hoang      26/09/2022 Fix issue with slow browsers or network
   1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
   1.4.1   K Hoang      04/10/2022 Don't need memmove(), String no longer destroyed
+  1.4.2   K Hoang      10/11/2022 Add examples to demo how to use beginChunkedResponse() to send in chunks
  *****************************************************************************************************************************/
- 
+
 #ifndef _PORTENTA_H7_ASYNC_WEBSERVER_H_
 #define _PORTENTA_H7_ASYNC_WEBSERVER_H_
 
@@ -31,17 +32,17 @@
 
 #else
 
-#error For Portenta_H7 only
+  #error For Portenta_H7 only
 
 #endif
 
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION           "Portenta_H7_AsyncWebServer v1.4.1"
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION           "Portenta_H7_AsyncWebServer v1.4.2"
 
 #define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_MAJOR     1
 #define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_MINOR     4
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_PATCH     1
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_PATCH     2
 
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_INT       1004001
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_INT       1004002
 
 #ifndef PORTENTA_H7_AWS_UNUSED
   #define PORTENTA_H7_AWS_UNUSED(x)       (void)(x)
@@ -78,17 +79,17 @@ class AsyncCallbackWebHandler;
 class AsyncResponseStream;
 
 #ifndef WEBSERVER_H
-  typedef enum
-  {
-    HTTP_GET     = 0b00000001,
-    HTTP_POST    = 0b00000010,
-    HTTP_DELETE  = 0b00000100,
-    HTTP_PUT     = 0b00001000,
-    HTTP_PATCH   = 0b00010000,
-    HTTP_HEAD    = 0b00100000,
-    HTTP_OPTIONS = 0b01000000,
-    HTTP_ANY     = 0b01111111,
-  } WebRequestMethod;
+typedef enum
+{
+  HTTP_GET     = 0b00000001,
+  HTTP_POST    = 0b00000010,
+  HTTP_DELETE  = 0b00000100,
+  HTTP_PUT     = 0b00001000,
+  HTTP_PATCH   = 0b00010000,
+  HTTP_HEAD    = 0b00100000,
+  HTTP_OPTIONS = 0b01000000,
+  HTTP_ANY     = 0b01111111,
+} WebRequestMethod;
 #endif
 
 //if this value is returned when asked for data, packet will not be sent and you will be asked for data again
@@ -112,7 +113,8 @@ class AsyncWebParameter
 
   public:
 
-    AsyncWebParameter(const String& name, const String& value, bool form = false, bool file = false, size_t size = 0): _name(name), _value(value), _size(size), _isForm(form), _isFile(file)  {}
+    AsyncWebParameter(const String& name, const String& value, bool form = false, bool file = false,
+                      size_t size = 0): _name(name), _value(value), _size(size), _isForm(form), _isFile(file)  {}
 
     const String& name() const
     {
@@ -321,7 +323,8 @@ class AsyncWebServerRequest
       return _reqconntype;
     }
 
-    bool isExpectedRequestedConnType(RequestedConnectionType erct1, RequestedConnectionType erct2 = RCT_NOT_USED, RequestedConnectionType erct3 = RCT_NOT_USED);
+    bool isExpectedRequestedConnType(RequestedConnectionType erct1, RequestedConnectionType erct2 = RCT_NOT_USED,
+                                     RequestedConnectionType erct3 = RCT_NOT_USED);
     void onDisconnect (ArDisconnectHandler fn);
 
     //hash is the string representation of:
@@ -345,15 +348,20 @@ class AsyncWebServerRequest
     void send(int code, const String& contentType, const char *content, bool nonDetructiveSend = true);    // RSMOD
 
     void send(Stream &stream, const String& contentType, size_t len, AwsTemplateProcessor callback = nullptr);
-    void send(const String& contentType, size_t len, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
-    void sendChunked(const String& contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
+    void send(const String& contentType, size_t len, AwsResponseFiller callback,
+              AwsTemplateProcessor templateCallback = nullptr);
+    void sendChunked(const String& contentType, AwsResponseFiller callback,
+                     AwsTemplateProcessor templateCallback = nullptr);
 
     AsyncWebServerResponse *beginResponse(int code, const String& contentType = String(), const String& content = String());
     AsyncWebServerResponse *beginResponse(int code, const String& contentType, const char * content = nullptr); // RSMOD
 
-    AsyncWebServerResponse *beginResponse(Stream &stream, const String& contentType, size_t len, AwsTemplateProcessor callback = nullptr);
-    AsyncWebServerResponse *beginResponse(const String& contentType, size_t len, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
-    AsyncWebServerResponse *beginChunkedResponse(const String& contentType, AwsResponseFiller callback, AwsTemplateProcessor templateCallback = nullptr);
+    AsyncWebServerResponse *beginResponse(Stream &stream, const String& contentType, size_t len,
+                                          AwsTemplateProcessor callback = nullptr);
+    AsyncWebServerResponse *beginResponse(const String& contentType, size_t len, AwsResponseFiller callback,
+                                          AwsTemplateProcessor templateCallback = nullptr);
+    AsyncWebServerResponse *beginChunkedResponse(const String& contentType, AwsResponseFiller callback,
+                                                 AwsTemplateProcessor templateCallback = nullptr);
     AsyncResponseStream *beginResponseStream(const String& contentType, size_t bufferSize = 1460);
 
     size_t headers() const;                     // get header count
@@ -363,7 +371,7 @@ class AsyncWebServerRequest
     AsyncWebHeader* getHeader(size_t num) const;
 
     size_t params() const;                      // get arguments count
-    bool hasParam(const String& name, bool post = false , bool file = false) const;
+    bool hasParam(const String& name, bool post = false, bool file = false) const;
 
     AsyncWebParameter* getParam(const String& name, bool post = false, bool file = false) const;
     AsyncWebParameter* getParam(size_t num) const;
@@ -494,8 +502,11 @@ class AsyncWebHandler
     }
 
     virtual void handleRequest(AsyncWebServerRequest *request __attribute__((unused))) {}
-    virtual void handleUpload(AsyncWebServerRequest *request  __attribute__((unused)), const String& filename __attribute__((unused)), size_t index __attribute__((unused)), uint8_t *data __attribute__((unused)), size_t len __attribute__((unused)), bool final  __attribute__((unused))) {}
-    virtual void handleBody(AsyncWebServerRequest *request __attribute__((unused)), uint8_t *data __attribute__((unused)), size_t len __attribute__((unused)), size_t index __attribute__((unused)), size_t total __attribute__((unused))) {}
+    virtual void handleUpload(AsyncWebServerRequest *request  __attribute__((unused)),
+                              const String& filename __attribute__((unused)), size_t index __attribute__((unused)),
+                              uint8_t *data __attribute__((unused)), size_t len __attribute__((unused)), bool final  __attribute__((unused))) {}
+    virtual void handleBody(AsyncWebServerRequest *request __attribute__((unused)), uint8_t *data __attribute__((unused)),
+                            size_t len __attribute__((unused)), size_t index __attribute__((unused)), size_t total __attribute__((unused))) {}
 
     virtual bool isRequestHandlerTrivial()
     {
@@ -549,8 +560,10 @@ class AsyncWebServerResponse
  * */
 
 typedef std::function<void(AsyncWebServerRequest *request)> ArRequestHandlerFunction;
-typedef std::function<void(AsyncWebServerRequest *request, /*const String& filename,*/ size_t index, uint8_t *data, size_t len, bool final)> ArUploadHandlerFunction;
-typedef std::function<void(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)> ArBodyHandlerFunction;
+typedef std::function<void(AsyncWebServerRequest *request, /*const String& filename,*/ size_t index, uint8_t *data, size_t len, bool final)>
+ArUploadHandlerFunction;
+typedef std::function<void(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)>
+ArBodyHandlerFunction;
 
 class AsyncWebServer
 {
@@ -581,11 +594,14 @@ class AsyncWebServer
 
     AsyncCallbackWebHandler& on(const char* uri, ArRequestHandlerFunction onRequest);
     AsyncCallbackWebHandler& on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest);
-    AsyncCallbackWebHandler& on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload);
-    AsyncCallbackWebHandler& on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest, ArUploadHandlerFunction onUpload, ArBodyHandlerFunction onBody);
+    AsyncCallbackWebHandler& on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest,
+                                ArUploadHandlerFunction onUpload);
+    AsyncCallbackWebHandler& on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest,
+                                ArUploadHandlerFunction onUpload, ArBodyHandlerFunction onBody);
 
     void onNotFound(ArRequestHandlerFunction fn);  //called when handler is not assigned
-    void onRequestBody(ArBodyHandlerFunction fn); //handle posts with plain body content (JSON often transmitted this way as a request)
+    void onRequestBody(ArBodyHandlerFunction
+                       fn); //handle posts with plain body content (JSON often transmitted this way as a request)
 
     void reset(); //remove all writers and handlers, with onNotFound/onFileUpload/onRequestBody
 
