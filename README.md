@@ -7,6 +7,9 @@
 
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
+<a href="https://profile-counter.glitch.me/khoih-prog/count.svg" title="Total khoih-prog Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog/count.svg" style="height: 30px;width: 200px;"></a>
+<a href="https://profile-counter.glitch.me/khoih-prog-Portenta_H7_AsyncWebServer/count.svg" title="Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog-Portenta_H7_AsyncWebServer/count.svg" style="height: 30px;width: 200px;"></a>
+
 
 
 ---
@@ -93,6 +96,8 @@
     * [10. WebClientRepeating](examples/Ethernet/WebClientRepeating)
     * [11. Async_AdvancedWebServer_MemoryIssues_SendArduinoString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString) **New**
     * [12. Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
+    * [13. Async_AdvancedWebServer_SendChunked](examples/Ethernet/Async_AdvancedWebServer_SendChunked) **New**
+    * [14. AsyncWebServer_SendChunked](examples/Ethernet/AsyncWebServer_SendChunked) **New**
   * [2. For Murata WiFi](#2-for-Murata-WiFi)
     * [ 1. Async_AdvancedWebServer](examples/WiFi/Async_AdvancedWebServer)
     * [ 2. Async_HelloServer](examples/WiFi/Async_HelloServer)
@@ -105,16 +110,20 @@
     * [ 9. WebClient](examples/WiFi/WebClient)
     * [10. WebClientRepeating](examples/WiFi/WebClientRepeating)
     * [11. Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/WiFi/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
+    * [12. Async_AdvancedWebServer_SendChunked](examples/WiFi/Async_AdvancedWebServer_SendChunked) **New**
+    * [13. AsyncWebServer_SendChunked](examples/WiFi/AsyncWebServer_SendChunked) **New**
 * [Example Async_AdvancedWebServer](#Example-Async_AdvancedWebServer)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
-  * [1. MQTT_ThingStream on PORTENTA_H7_M7 using Ethernet](#1-MQTT_ThingStream-on-PORTENTA_H7_M7-using-Ethernet)
-  * [2. WebClientRepeating on PORTENTA_H7_M7 using Ethernet](#2-WebClientRepeating-on-PORTENTA_H7_M7-using-Ethernet)
-  * [3. MQTTClient_Auth on PORTENTA_H7_M7 using Ethernet](#3-MQTTClient_Auth-on-PORTENTA_H7_M7-using-Ethernet)
-  * [4. MQTTClient_Basic on PORTENTA_H7_M7 using Ethernet](#4-MQTTClient_Basic-on-PORTENTA_H7_M7-using-Ethernet)
-  * [5. Async_HTTPBasicAuth on PORTENTA_H7_M7 using Ethernet](#5-Async_HTTPBasicAuth-on-PORTENTA_H7_M7-using-Ethernet)
-  * [6. Async_AdvancedWebServer on PORTENTA_H7_M7 using Ethernet](#6-Async_AdvancedWebServer-on-PORTENTA_H7_M7-using-Ethernet)
-  * [7. Async_AdvancedWebServer on PORTENTA_H7_M7 using WiFi](#7-Async_AdvancedWebServer-on-PORTENTA_H7_M7-using-WiFi)
-  * [8. Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 using Ethernet](#8-Async_AdvancedWebServer_MemoryIssues_Send_CString-on-PORTENTA_H7_M7-using-Ethernet)
+  * [ 1. MQTT_ThingStream on PORTENTA_H7_M7 using Ethernet](#1-MQTT_ThingStream-on-PORTENTA_H7_M7-using-Ethernet)
+  * [ 2. WebClientRepeating on PORTENTA_H7_M7 using Ethernet](#2-WebClientRepeating-on-PORTENTA_H7_M7-using-Ethernet)
+  * [ 3. MQTTClient_Auth on PORTENTA_H7_M7 using Ethernet](#3-MQTTClient_Auth-on-PORTENTA_H7_M7-using-Ethernet)
+  * [ 4. MQTTClient_Basic on PORTENTA_H7_M7 using Ethernet](#4-MQTTClient_Basic-on-PORTENTA_H7_M7-using-Ethernet)
+  * [ 5. Async_HTTPBasicAuth on PORTENTA_H7_M7 using Ethernet](#5-Async_HTTPBasicAuth-on-PORTENTA_H7_M7-using-Ethernet)
+  * [ 6. Async_AdvancedWebServer on PORTENTA_H7_M7 using Ethernet](#6-Async_AdvancedWebServer-on-PORTENTA_H7_M7-using-Ethernet)
+  * [ 7. Async_AdvancedWebServer on PORTENTA_H7_M7 using WiFi](#7-Async_AdvancedWebServer-on-PORTENTA_H7_M7-using-WiFi)
+  * [ 8. Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 using Ethernet](#8-Async_AdvancedWebServer_MemoryIssues_Send_CString-on-PORTENTA_H7_M7-using-Ethernet)
+  * [ 9. Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 using WiFi](#9-Async_AdvancedWebServer_SendChunked-on-PORTENTA_H7_M7-using-WiFi)
+  * [10. Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 using Ethernet](#10-Async_AdvancedWebServer_SendChunked-on-PORTENTA_H7_M7-using-Ethernet)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -237,7 +246,7 @@ to apply the better and faster **asynchronous** feature of the **powerful** [ESP
 1. **Portenta_H7 boards** such as Portenta_H7 Rev2 ABX00042, etc., using [**ArduinoCore-mbed mbed_portenta** core](https://github.com/arduino/ArduinoCore-mbed) using `Vision-shield Ethernet` or `Murata WiFi`
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Portenta_Vision.jpg">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/raw/main/pics/Portenta_Vision.jpg">
 </p>
 
 
@@ -247,7 +256,7 @@ to apply the better and faster **asynchronous** feature of the **powerful** [ESP
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
- 2. [`ArduinoCore-mbed mbed_portenta core 3.3.0+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino **Portenta_H7** boards, such as **Portenta_H7 Rev2 ABX00042, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest).
+ 2. [`ArduinoCore-mbed mbed_portenta core 3.4.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino **Portenta_H7** boards, such as **Portenta_H7 Rev2 ABX00042, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest).
  3. [`Portenta_H7_AsyncTCP library v1.4.0+`](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) for Portenta_H7 using `Vision-shield Ethernet` or `Murata WiFi`. [![GitHub release](https://img.shields.io/github/release/khoih-prog/Portenta_H7_AsyncTCP.svg)](https://github.com/khoih-prog/Portenta_H7_AsyncTCP/releases/latest)
 
 ---
@@ -279,12 +288,12 @@ The best and easiest way is to use `Arduino Library Manager`. Search for `Porten
 
 #### 1. For Portenta_H7 boards using Arduino IDE in Linux
 
-  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/3.3.0/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/3.3.0/portenta_post_install.sh). 
+  **To be able to upload firmware to Portenta_H7 using Arduino IDE in Linux (Ubuntu, etc.)**, you have to copy the file [portenta_post_install.sh](Packages_Patches/arduino/hardware/mbed_portenta/3.4.1/portenta_post_install.sh) into mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/3.4.1/portenta_post_install.sh). 
   
   Then run the following command using `sudo`
   
 ```
-$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/3.3.0
+$ cd ~/.arduino15/packages/arduino/hardware/mbed_portenta/3.4.1
 $ chmod 755 portenta_post_install.sh
 $ sudo ./portenta_post_install.sh
 ```
@@ -297,9 +306,9 @@ This will create the file `/etc/udev/rules.d/49-portenta_h7.rules` as follows:
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="035b", GROUP="plugdev", MODE="0666"
 ```
 
-Supposing the ArduinoCore-mbed core version is 3.3.0. Now only one file must be copied into the directory:
+Supposing the ArduinoCore-mbed core version is 3.4.1. Now only one file must be copied into the directory:
 
-- `~/.arduino15/packages/arduino/hardware/mbed_portenta/3.3.0/portenta_post_install.sh`
+- `~/.arduino15/packages/arduino/hardware/mbed_portenta/3.4.1/portenta_post_install.sh`
 
 Whenever a new version is installed, remember to copy this files into the new version directory. For example, new version is x.yy.zz
 
@@ -311,7 +320,7 @@ This file must be copied into the directory:
 #### 2. To fix compile error relating to dns_gethostbyname and LwIP stack
 
 
-#### Notes: Only for cores v2.5.2-. This fix is not necessary for core v3.3.0+
+#### Notes: Only for cores v2.5.2-. This fix is not necessary for core v3.4.1+
 
 **To be able to compile, run on Portenta_H7 boards**, you have to copy the whole [mbed_portenta Packages_Patches](Packages_Patches/arduino/hardware/mbed_portenta/2.5.2) directory into Arduino mbed_portenta directory (~/.arduino15/packages/arduino/hardware/mbed_portenta/2.5.2). 
 
@@ -425,14 +434,14 @@ request->multipart();     // bool:    True if the request has content type "mult
 int headers = request->headers();
 int i;
 
-for(i=0;i<headers;i++)
+for (i=0;i<headers;i++)
 {
   AsyncWebHeader* h = request->getHeader(i);
   Serial.printf("HEADER[%s]: %s\n", h->name().c_str(), h->value().c_str());
 }
 
 //get specific header by name
-if(request->hasHeader("MyHeader"))
+if (request->hasHeader("MyHeader"))
 {
   AsyncWebHeader* h = request->getHeader("MyHeader");
   Serial.printf("MyHeader: %s\n", h->value().c_str());
@@ -442,13 +451,13 @@ if(request->hasHeader("MyHeader"))
 int headers = request->headers();
 int i;
 
-for(i=0;i<headers;i++)
+for (i=0;i<headers;i++)
 {
   Serial.printf("HEADER[%s]: %s\n", request->headerName(i).c_str(), request->header(i).c_str());
 }
 
 //get specific header by name (Compatibility)
-if(request->hasHeader("MyHeader"))
+if (request->hasHeader("MyHeader"))
 {
   Serial.printf("MyHeader: %s\n", request->header("MyHeader").c_str());
 }
@@ -460,16 +469,16 @@ if(request->hasHeader("MyHeader"))
 //List all parameters
 int params = request->params();
 
-for(int i=0;i<params;i++)
+for (int i=0;i<params;i++)
 {
   AsyncWebParameter* p = request->getParam(i);
   
-  if(p->isFile())
+  if (p->isFile())
   { 
     //p->isPost() is also true
     Serial.printf("FILE[%s]: %s, size: %u\n", p->name().c_str(), p->value().c_str(), p->size());
   } 
-  else if(p->isPost())
+  else if (p->isPost())
   {
     Serial.printf("POST[%s]: %s\n", p->name().c_str(), p->value().c_str());
   } 
@@ -480,27 +489,27 @@ for(int i=0;i<params;i++)
 }
 
 //Check if GET parameter exists
-if(request->hasParam("download"))
+if (request->hasParam("download"))
   AsyncWebParameter* p = request->getParam("download");
 
 //Check if POST (but not File) parameter exists
-if(request->hasParam("download", true))
+if (request->hasParam("download", true))
   AsyncWebParameter* p = request->getParam("download", true);
 
 //Check if FILE was uploaded
-if(request->hasParam("download", true, true))
+if (request->hasParam("download", true, true))
   AsyncWebParameter* p = request->getParam("download", true, true);
 
 //List all parameters (Compatibility)
 int args = request->args();
 
-for(int i=0;i<args;i++)
+for (int i=0;i<args;i++)
 {
   Serial.printf("ARG[%s]: %s\n", request->argName(i).c_str(), request->arg(i).c_str());
 }
 
 //Check if parameter exists (Compatibility)
-if(request->hasArg("download"))
+if (request->hasArg("download"))
   String arg = request->arg("download");
 ```
 
@@ -583,7 +592,7 @@ request->send(response);
 ```cpp
 String processor(const String& var)
 {
-  if(var == "HELLO_FROM_TEMPLATE")
+  if (var == "HELLO_FROM_TEMPLATE")
     return F("Hello world!");
     
   return String();
@@ -600,7 +609,7 @@ request->send(Serial, "text/plain", 12, processor);
 ```cpp
 String processor(const String& var)
 {
-  if(var == "HELLO_FROM_TEMPLATE")
+  if (var == "HELLO_FROM_TEMPLATE")
     return F("Hello world!");
   return String();
 }
@@ -651,7 +660,7 @@ request->send(response);
 ```cpp
 String processor(const String& var)
 {
-  if(var == "HELLO_FROM_TEMPLATE")
+  if (var == "HELLO_FROM_TEMPLATE")
     return F("Hello world!");
     
   return String();
@@ -676,7 +685,7 @@ request->send("text/plain", 128, [](uint8_t *buffer, size_t maxLen, size_t index
 ```cpp
 String processor(const String& var)
 {
-  if(var == "HELLO_FROM_TEMPLATE")
+  if (var == "HELLO_FROM_TEMPLATE")
     return F("Hello world!");
   return String();
 }
@@ -723,7 +732,7 @@ Used when content length is unknown. Works best if the client supports HTTP/1.1
 ```cpp
 String processor(const String& var)
 {
-  if(var == "HELLO_FROM_TEMPLATE")
+  if (var == "HELLO_FROM_TEMPLATE")
     return F("Hello world!");
     
   return String();
@@ -770,7 +779,7 @@ response->print("<h3>Headers</h3>");
 response->print("<ul>");
 int headers = request->headers();
 
-for(int i=0;i<headers;i++)
+for (int i=0;i<headers;i++)
 {
   AsyncWebHeader* h = request->getHeader(i);
   response->printf("<li>%s: %s</li>", h->name().c_str(), h->value().c_str());
@@ -783,15 +792,15 @@ response->print("<ul>");
 
 int params = request->params();
 
-for(int i=0;i<params;i++)
+for (int i=0;i<params;i++)
 {
   AsyncWebParameter* p = request->getParam(i);
   
-  if(p->isFile())
+  if (p->isFile())
   {
     response->printf("<li>FILE[%s]: %s, size: %u</li>", p->name().c_str(), p->value().c_str(), p->size());
   } 
-  else if(p->isPost())
+  else if (p->isPost())
   {
     response->printf("<li>POST[%s]: %s</li>", p->name().c_str(), p->value().c_str());
   } 
@@ -869,12 +878,12 @@ class OneParamRewrite : public AsyncWebRewrite
 
       _paramIndex = _from.indexOf('{');
 
-      if( _paramIndex >=0 && _from.endsWith("}")) 
+      if ( _paramIndex >=0 && _from.endsWith("}")) 
       {
         _urlPrefix = _from.substring(0, _paramIndex);
         int index = _params.indexOf('{');
         
-        if(index >= 0) 
+        if (index >= 0) 
         {
           _params = _params.substring(0, index);
         }
@@ -889,9 +898,9 @@ class OneParamRewrite : public AsyncWebRewrite
 
   bool match(AsyncWebServerRequest *request) override 
   {
-    if(request->url().startsWith(_urlPrefix)) 
+    if (request->url().startsWith(_urlPrefix)) 
     {
-      if(_paramIndex >= 0) 
+      if (_paramIndex >= 0) 
       {
         _params = _paramsBackup + request->url().substring(_paramIndex);
       } 
@@ -957,46 +966,46 @@ without starting another listening service or using different port
 
 void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len)
 {
-  if(type == WS_EVT_CONNECT)
+  if (type == WS_EVT_CONNECT)
   {
     //client connected
     Serial.printf("ws[%s][%u] connect\n", server->url(), client->id());
     client->printf("Hello Client %u :)", client->id());
     client->ping();
   } 
-  else if(type == WS_EVT_DISCONNECT)
+  else if (type == WS_EVT_DISCONNECT)
   {
     //client disconnected
     Serial.printf("ws[%s][%u] disconnect: %u\n", server->url(), client->id());
   } 
-  else if(type == WS_EVT_ERROR)
+  else if (type == WS_EVT_ERROR)
   {
     //error was received from the other end
     Serial.printf("ws[%s][%u] error(%u): %s\n", server->url(), client->id(), *((uint16_t*)arg), (char*)data);
   } 
-  else if(type == WS_EVT_PONG)
+  else if (type == WS_EVT_PONG)
   {
     //pong message was received (in response to a ping request maybe)
     Serial.printf("ws[%s][%u] pong[%u]: %s\n", server->url(), client->id(), len, (len)?(char*)data:"");
   } 
-  else if(type == WS_EVT_DATA)
+  else if (type == WS_EVT_DATA)
   {
     //data packet
     AwsFrameInfo * info = (AwsFrameInfo*)arg;
     
-    if(info->final && info->index == 0 && info->len == len)
+    if (info->final && info->index == 0 && info->len == len)
     {
       //the whole message is in a single frame and we got all of it's data
       Serial.printf("ws[%s][%u] %s-message[%llu]: ", server->url(), client->id(), (info->opcode == WS_TEXT)?"text":"binary", info->len);
       
-      if(info->opcode == WS_TEXT)
+      if (info->opcode == WS_TEXT)
       {
         data[len] = 0;
         Serial.printf("%s\n", (char*)data);
       } 
       else 
       {
-        for(size_t i=0; i < info->len; i++)
+        for (size_t i=0; i < info->len; i++)
         {
           Serial.printf("%02x ", data[i]);
         }
@@ -1004,7 +1013,7 @@ void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventTyp
         Serial.printf("\n");
       }
       
-      if(info->opcode == WS_TEXT)
+      if (info->opcode == WS_TEXT)
         client->text("I got your text message");
       else
         client->binary("I got your binary message");
@@ -1012,9 +1021,9 @@ void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventTyp
     else 
     {
       //message is comprised of multiple frames or the frame is split into multiple packets
-      if(info->index == 0)
+      if (info->index == 0)
       {
-        if(info->num == 0)
+        if (info->num == 0)
           Serial.printf("ws[%s][%u] %s-message start\n", server->url(), client->id(), (info->message_opcode == WS_TEXT)?"text":"binary");
           
         Serial.printf("ws[%s][%u] frame[%u] start[%llu]\n", server->url(), client->id(), info->num, info->len);
@@ -1022,28 +1031,28 @@ void onEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventTyp
 
       Serial.printf("ws[%s][%u] frame[%u] %s[%llu - %llu]: ", server->url(), client->id(), info->num, (info->message_opcode == WS_TEXT)?"text":"binary", info->index, info->index + len);
       
-      if(info->message_opcode == WS_TEXT)
+      if (info->message_opcode == WS_TEXT)
       {
         data[len] = 0;
         Serial.printf("%s\n", (char*)data);
       } 
       else 
       {
-        for(size_t i=0; i < len; i++){
+        for (size_t i=0; i < len; i++){
           Serial.printf("%02x ", data[i]);
         }
         Serial.printf("\n");
       }
 
-      if((info->index + len) == info->len)
+      if ((info->index + len) == info->len)
       {
         Serial.printf("ws[%s][%u] frame[%u] end[%llu]\n", server->url(), client->id(), info->num, info->len);
         
-        if(info->final)
+        if (info->final)
         {
           Serial.printf("ws[%s][%u] %s-message end\n", server->url(), client->id(), (info->message_opcode == WS_TEXT)?"text":"binary");
           
-          if(info->message_opcode == WS_TEXT)
+          if (info->message_opcode == WS_TEXT)
             client->text("I got your text message");
           else
             client->binary("I got your binary message");
@@ -1129,7 +1138,8 @@ void sendDataWs(AsyncWebSocketClient * client)
 Browsers sometimes do not correctly close the websocket connection, even when the close() function is called in javascript.  This will eventually exhaust the web server's resources and will cause the server to crash.  Periodically calling the cleanClients() function from the main loop() function limits the number of clients by closing the oldest client when the maximum number of clients has been exceeded.  This can called be every cycle, however, if you wish to use less power, then calling as infrequently as once per second is sufficient.
 
 ```cpp
-void loop(){
+void loop()
+{
   ws.cleanupClients();
 }
 ```
@@ -1152,7 +1162,7 @@ void setup()
   // setup ......
   events.onConnect([](AsyncEventSourceClient *client)
   {
-    if(client->lastId())
+    if (client->lastId())
     {
       Serial.printf("Client reconnected! Last message ID that it got is: %u\n", client->lastId());
     }
@@ -1170,7 +1180,9 @@ void setup()
 
 void loop()
 {
-  if(eventTriggered){ // your logic here
+  if (eventTriggered)
+  { 
+    // your logic here
     //send event "myevent"
     events.send("my event content","myevent",millis());
   }
@@ -1217,7 +1229,8 @@ To remove handler:
 
 ```arduino
 // save callback for particular URL path
-auto handler = server.on("/some/path", [](AsyncWebServerRequest *request){
+auto handler = server.on("/some/path", [](AsyncWebServerRequest *request)
+{
   //do something useful
 });
 
@@ -1227,7 +1240,8 @@ server.removeHandler(&handler);
 // same with rewrites
 server.removeRewrite(&someRewrite);
 
-server.onNotFound([](AsyncWebServerRequest *request){
+server.onNotFound([](AsyncWebServerRequest *request)
+{
   request->send(404);
 });
 
@@ -1276,6 +1290,7 @@ byte mac[][NUMBER_OF_MAC] =
   { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x13 },
   { 0xDE, 0xAD, 0xBE, 0xEF, 0x32, 0x14 },
 };
+
 // Select the IP address according to your local network
 IPAddress ip(192, 168, 2, 232);
 
@@ -1483,9 +1498,12 @@ This is one option:
 ```cpp
 webServer.onNotFound([](AsyncWebServerRequest *request) 
 {
-  if (request->method() == HTTP_OPTIONS) {
+  if (request->method() == HTTP_OPTIONS) 
+  {
     request->send(200);
-  } else {
+  } 
+  else 
+  {
     request->send(404);
   }
 });
@@ -1497,10 +1515,10 @@ With path variable you can create a custom regex rule for a specific parameter i
 For example we want a `sensorId` parameter in a route rule to match only a integer.
 
 ```cpp
-  server.on("^\\/sensor\\/([0-9]+)$", HTTP_GET, [] (AsyncWebServerRequest *request) 
-  {
-      String sensorId = request->pathArg(0);
-  });
+server.on("^\\/sensor\\/([0-9]+)$", HTTP_GET, [] (AsyncWebServerRequest *request) 
+{
+    String sensorId = request->pathArg(0);
+});
 ```
 *NOTE*: All regex patterns starts with `^` and ends with `$`
 
@@ -1514,11 +1532,13 @@ For Arduino IDE create/update `platform.local.txt`:
 `Linux`: ~/.arduino15/packages/`{espxxxx}`/hardware/`{espxxxx}`/`{version}`/platform.local.txt
 
 Add/Update the following line:
+
 ```
   compiler.cpp.extra_flags=-DDASYNCWEBSERVER_REGEX
 ```
 
 For platformio modify `platformio.ini`:
+
 ```ini
 [env:myboard]
 build_flags = 
@@ -1547,6 +1567,9 @@ build_flags =
 10. [WebClientRepeating](examples/Ethernet/WebClientRepeating)
 11. [Async_AdvancedWebServer_MemoryIssues_SendArduinoString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString) **New**
 12. [Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
+13. [Async_AdvancedWebServer_SendChunked](examples/Ethernet/Async_AdvancedWebServer_SendChunked) **New**
+14. [AsyncWebServer_SendChunked](examples/Ethernet/AsyncWebServer_SendChunked) **New**
+
 
 #### 2. For Murata WiFi
 
@@ -1561,19 +1584,20 @@ build_flags =
  9. [WebClient](examples/WiFi/WebClient)
 10. [WebClientRepeating](examples/WiFi/WebClientRepeating)
 11. [Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/WiFi/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
-
+12. [Async_AdvancedWebServer_SendChunked](examples/WiFi/Async_AdvancedWebServer_SendChunked) **New**
+13. [AsyncWebServer_SendChunked](examples/WiFi/AsyncWebServer_SendChunked) **New**
 
 ---
 ---
 
 ### Example [Async_AdvancedWebServer](examples/Ethernet/Async_AdvancedWebServer)
 
-https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/f934df6aecbf814047affe39d3d0e3f23fc1fccf/examples/WiFi/Async_AdvancedWebServer/Async_AdvancedWebServer.ino#L41-L268
+https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/c9d68052df24e2cb959acaf89ae0ce830d67aca3/examples/WiFi/Async_AdvancedWebServer/Async_AdvancedWebServer.ino#L41-L273
 
 You can access the Async Advanced WebServer @ the server IP
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer.png">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/raw/main/pics/Async_AdvancedWebServer.png">
 </p>
 
 ---
@@ -1589,7 +1613,7 @@ Following is debug terminal output when running example [MQTT_ThingStream](examp
 ```
 Start MQTT_ThingStream on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.1
+Portenta_H7_AsyncWebServer v1.4.2
 Using mac index = 17
 Connected! IP address: 192.168.2.87
 ***************************************
@@ -1614,7 +1638,7 @@ Following is debug terminal output when running example [WebClient](examples/Eth
 ```
 Start WebClientRepeating on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.1
+Portenta_H7_AsyncWebServer v1.4.2
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 
@@ -1682,7 +1706,7 @@ Following is debug terminal output when running example [MQTTClient_Auth](exampl
 ```
 Start MQTTClient_Auth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.1
+Portenta_H7_AsyncWebServer v1.4.2
 Using mac index = 9
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1703,7 +1727,7 @@ Following is debug terminal output when running example [MQTTClient_Basic](examp
 ```
 Start MQTTClient_Basic on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.1
+Portenta_H7_AsyncWebServer v1.4.2
 Using mac index = 8
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1722,7 +1746,7 @@ Following is debug terminal output when running example [Async_HTTPBasicAuth](ex
 ```
 Start Async_HTTPBasicAuth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.1
+Portenta_H7_AsyncWebServer v1.4.2
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 Async_HttpBasicAuth started @ IP : 192.168.2.87
@@ -1752,7 +1776,7 @@ Following are debug terminal output and screen shots when running example [Async
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.1
+Portenta_H7_AsyncWebServer v1.4.2
 Using mac index = 4
 Connected! IP address: 192.168.2.87
 HTTP EthernetWebServer is @ IP : 192.168.2.87
@@ -1761,13 +1785,13 @@ HTTP EthernetWebServer is @ IP : 192.168.2.87
 You can access the Async Advanced WebServers at the displayed server IP, e.g. `192.168.2.87`
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer.png">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/raw/main/pics/Async_AdvancedWebServer.png">
 </p>
 
 #### Using Firefox Browser
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer_Firefox.png">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/raw/main/pics/Async_AdvancedWebServer_Firefox.png">
 </p>
 
 ---
@@ -1779,7 +1803,7 @@ Following is the debug terminal and screen shot when running example [Async_Adva
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Portenta_H7 WiFi
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.1
+Portenta_H7_AsyncWebServer v1.4.2
 Connecting to SSID: HueNet1
 SSID: HueNet1
 Local IP Address: 192.168.2.94
@@ -1791,7 +1815,7 @@ HTTP EthernetWebServer is @ IP : 192.168.2.94
 You can access the Async Advanced WebServers at the displayed server IP, e.g. `192.168.2.94`
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer_WiFi.png">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/raw/main/pics/Async_AdvancedWebServer_WiFi.png">
 </p>
 
 ---
@@ -1806,7 +1830,7 @@ Following is the debug terminal and screen shot when running example [Async_Adva
 ```
 Start Async_AdvancedWebServer_MemoryIssues_Send_CString using SDRAM on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.1
+Portenta_H7_AsyncWebServer v1.4.2
 Using mac index = 2
 Connected! IP address: 192.168.2.123
 HTTP EthernetWebServer is @ IP : 192.168.2.123
@@ -1837,7 +1861,7 @@ Out String Length=31235
 ```
 Start Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.1
+Portenta_H7_AsyncWebServer v1.4.2
 Using mac index = 7
 Connected! IP address: 192.168.2.38
 HTTP EthernetWebServer is @ IP : 192.168.2.38
@@ -1858,10 +1882,12 @@ While using Arduino String, the HEAP usage is very large
 
 #### Async_AdvancedWebServer_MemoryIssues_SendArduinoString  ===> very large heap (111,387 bytes)
 
+
+
 ```
 Start Async_AdvancedWebServer_MemoryIssues_SendArduinoString on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.1
+Portenta_H7_AsyncWebServer v1.4.2
 Using mac index = 0
 Connected! IP address: 192.168.2.123
 HTTP EthernetWebServer is @ IP : 192.168.2.123
@@ -1898,9 +1924,158 @@ Out String Length=31280
 You can access the Async Advanced WebServers at the displayed server IP, e.g. `192.168.2.123`
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/main/pics/Async_AdvancedWebServer_CString.png">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/raw/main/pics/Async_AdvancedWebServer_CString.png">
 </p>
 
+
+---
+
+#### 9. Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 using WiFi
+
+Following is debug terminal output when running example [Async_AdvancedWebServer_SendChunked](examples/Async_AdvancedWebServer_SendChunked) on PORTENTA_H7_M7 using WiFi, to demo how to use `beginChunkedResponse()` to send large `html` in chunks
+
+
+```
+Start Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 with Portenta_H7 WiFi
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.4.2
+Connecting to SSID: HueNet1
+SSID: HueNet1
+Local IP Address: 192.168.2.113
+signal strength (RSSI):-31 dBm
+AsyncWebServer is @ IP : 192.168.2.113
+.[AWS] Total length to send in chunks = 31259
+[AWS] Bytes sent in chunk = 948
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+.[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+.[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+.[AWS] Bytes sent in chunk = 519
+[AWS] Bytes sent in chunk = 0
+```
+
+
+You can access the Portenta_H7_AsyncWebServer at the displayed server IP, e.g. `192.168.2.77`
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/raw/main/pics/AsyncWebServer_SendChunked_WiFi.png">
+</p>
+  
+  
+---
+ 
+  
+#### 10. Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
+
+Following is debug terminal output when running example [Async_AdvancedWebServer_SendChunked](examples/Async_AdvancedWebServer_SendChunked) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library , to demo how to use `beginChunkedResponse()` to send large `html` in chunks
+
+
+```
+Start Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
+Portenta_H7_AsyncTCP v1.4.0
+Portenta_H7_AsyncWebServer v1.4.2
+Using mac index = 3
+Connected! IP address: 192.168.2.89
+AsyncWebServer is @ IP : 192.168.2.89
+.[AWS] Total length to send in chunks = 31259
+[AWS] Bytes sent in chunk = 948
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 519
+[AWS] Bytes sent in chunk = 0
+.[AWS] Total length to send in chunks = 31279
+[AWS] Bytes sent in chunk = 948
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 1064
+[AWS] Bytes sent in chunk = 539
+[AWS] Bytes sent in chunk = 0
+```
+
+
+You can access the Portenta_H7_AsyncWebServer at the displayed server IP, e.g. `192.168.2.77`
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/raw/main/pics/AsyncWebServer_SendChunked_Ethernet.png">
+</p>
+    
+  
+  
 ---
 ---
 
@@ -1942,7 +2117,8 @@ Submit issues to: [Portenta_H7_AsyncWebServer issues](https://github.com/khoih-p
  2. Add Table of Contents
  3. Fix issue with slow browsers or network. Check [Target stops responding after variable time when using Firefox on Windows 10 #3](https://github.com/khoih-prog/AsyncWebServer_RP2040W/issues/3)
  4. Support using `CString` in optional `SDRAM` to save heap to send `very large data`. Check [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8)
- 
+ 5. Add examples [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Async_AdvancedWebServer_SendChunked) and [AsyncWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/AsyncWebServer_SendChunked) to demo how to use `beginChunkedResponse()` to send large `html` in chunks
+ 6. Use `allman astyle` and add `utils`
  
 ---
 ---
