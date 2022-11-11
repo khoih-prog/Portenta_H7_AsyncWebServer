@@ -38,8 +38,8 @@
 - [AsyncWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/AsyncWebServer_SendChunked)
 - [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_AdvancedWebServer_SendChunked)
 - [AsyncWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/AsyncWebServer_SendChunked)
-
  to demo how to use `beginChunkedResponse()` to send large `html` in chunks
+ 
 2. Use `allman astyle` and add `utils`
 3. Update `Packages_Patches`
 
