@@ -14,7 +14,8 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
-  * [Releases v1.4.2](#Releases-v142)
+  * [Release v1.5.0](#Release-v150)
+  * [Release v1.4.2](#Release-v142)
   * [Releases v1.4.1](#Releases-v141)
   * [Releases v1.4.0](#Releases-v140)
   * [Releases v1.3.0](#Releases-v130)
@@ -28,6 +29,11 @@
 ---
 
 ## Changelog
+
+#### Release v1.5.0
+
+1. Fix `_catchAllHandler` not working bug. Check [catchAll handler not working #12](https://github.com/khoih-prog/AsyncWebServer_RP2040W/issues/12)
+2. Improve `README.md` so that links can be used in other sites, such as `PIO`
 
 ### Releases v1.4.2
 

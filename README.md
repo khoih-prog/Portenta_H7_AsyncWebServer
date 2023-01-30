@@ -81,34 +81,34 @@
   * [Path variable](#path-variable)
 * [Examples](#examples)
   * [1. For Vision-shield Ethernet](#1-for-Vision-shield-Ethernet)
-    * [ 1. Async_AdvancedWebServer](examples/Ethernet/Async_AdvancedWebServer)
-    * [ 2. Async_HelloServer](examples/Ethernet/Async_HelloServer)
-    * [ 3. Async_HelloServer2](examples/Ethernet/Async_HelloServer2)
-    * [ 4. Async_HttpBasicAuth](examples/Ethernet/Async_HttpBasicAuth)
-    * [ 5. Async_PostServer](examples/Ethernet/Async_PostServer)
-    * [ 6. **MQTTClient_Auth**](examples/Ethernet/MQTTClient_Auth)
-    * [ 7. **MQTTClient_Basic**](examples/Ethernet/MQTTClient_Basic)
-    * [ 8. **MQTT_ThingStream**](examples/Ethernet/MQTT_ThingStream)
-    * [ 9. WebClient](examples/Ethernet/WebClient)
-    * [10. WebClientRepeating](examples/Ethernet/WebClientRepeating)
-    * [11. Async_AdvancedWebServer_MemoryIssues_SendArduinoString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString) **New**
-    * [12. Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
-    * [13. Async_AdvancedWebServer_SendChunked](examples/Ethernet/Async_AdvancedWebServer_SendChunked) **New**
-    * [14. AsyncWebServer_SendChunked](examples/Ethernet/AsyncWebServer_SendChunked) **New**
+    * [ 1. Async_AdvancedWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer)
+    * [ 2. Async_HelloServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_HelloServer)
+    * [ 3. Async_HelloServer2](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_HelloServer2)
+    * [ 4. Async_HttpBasicAuth](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_HttpBasicAuth)
+    * [ 5. Async_PostServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_PostServer)
+    * [ 6. **MQTTClient_Auth**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/MQTTClient_Auth)
+    * [ 7. **MQTTClient_Basic**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/MQTTClient_Basic)
+    * [ 8. **MQTT_ThingStream**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/MQTT_ThingStream)
+    * [ 9. WebClient](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/WebClient)
+    * [10. WebClientRepeating](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/WebClientRepeating)
+    * [11. Async_AdvancedWebServer_MemoryIssues_SendArduinoString](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString) **New**
+    * [12. Async_AdvancedWebServer_MemoryIssues_Send_CString](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
+    * [13. Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_SendChunked) **New**
+    * [14. AsyncWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/AsyncWebServer_SendChunked) **New**
   * [2. For Murata WiFi](#2-for-Murata-WiFi)
-    * [ 1. Async_AdvancedWebServer](examples/WiFi/Async_AdvancedWebServer)
-    * [ 2. Async_HelloServer](examples/WiFi/Async_HelloServer)
-    * [ 3. Async_HelloServer2](examples/WiFi/Async_HelloServer2)
-    * [ 4. Async_HttpBasicAuth](examples/WiFi/Async_HttpBasicAuth)
-    * [ 5. Async_PostServer](examples/WiFi/Async_PostServer)
-    * [ 6. **MQTTClient_Auth**](examples/WiFi/MQTTClient_Auth)
-    * [ 7. **MQTTClient_Basic**](examples/WiFi/MQTTClient_Basic)
-    * [ 8. **MQTT_ThingStream**](examples/WiFi/MQTT_ThingStream)
-    * [ 9. WebClient](examples/WiFi/WebClient)
-    * [10. WebClientRepeating](examples/WiFi/WebClientRepeating)
-    * [11. Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/WiFi/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
-    * [12. Async_AdvancedWebServer_SendChunked](examples/WiFi/Async_AdvancedWebServer_SendChunked) **New**
-    * [13. AsyncWebServer_SendChunked](examples/WiFi/AsyncWebServer_SendChunked) **New**
+    * [ 1. Async_AdvancedWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_AdvancedWebServer)
+    * [ 2. Async_HelloServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_HelloServer)
+    * [ 3. Async_HelloServer2](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_HelloServer2)
+    * [ 4. Async_HttpBasicAuth](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_HttpBasicAuth)
+    * [ 5. Async_PostServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_PostServer)
+    * [ 6. **MQTTClient_Auth**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/MQTTClient_Auth)
+    * [ 7. **MQTTClient_Basic**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/MQTTClient_Basic)
+    * [ 8. **MQTT_ThingStream**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/MQTT_ThingStream)
+    * [ 9. WebClient](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/WebClient)
+    * [10. WebClientRepeating](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/WebClientRepeating)
+    * [11. Async_AdvancedWebServer_MemoryIssues_Send_CString](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
+    * [12. Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_AdvancedWebServer_SendChunked) **New**
+    * [13. AsyncWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/AsyncWebServer_SendChunked) **New**
 * [Example Async_AdvancedWebServer](#Example-Async_AdvancedWebServer)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
   * [ 1. MQTT_ThingStream on PORTENTA_H7_M7 using Ethernet](#1-MQTT_ThingStream-on-PORTENTA_H7_M7-using-Ethernet)
@@ -253,7 +253,7 @@ to apply the better and faster **asynchronous** feature of the **powerful** [ESP
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
- 2. [`ArduinoCore-mbed mbed_portenta core 3.4.1+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino **Portenta_H7** boards, such as **Portenta_H7 Rev2 ABX00042, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest).
+ 2. [`ArduinoCore-mbed mbed_portenta core 3.5.4+`](https://github.com/arduino/ArduinoCore-mbed) for Arduino **Portenta_H7** boards, such as **Portenta_H7 Rev2 ABX00042, etc.**. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-mbed.svg)](https://github.com/arduino/ArduinoCore-mbed/releases/latest).
  3. [`Portenta_H7_AsyncTCP library v1.4.0+`](https://github.com/khoih-prog/Portenta_H7_AsyncTCP) for Portenta_H7 using `Vision-shield Ethernet` or `Murata WiFi`. [![GitHub release](https://img.shields.io/github/release/khoih-prog/Portenta_H7_AsyncTCP.svg)](https://github.com/khoih-prog/Portenta_H7_AsyncTCP/releases/latest)
 
 ---
@@ -1552,42 +1552,42 @@ build_flags =
 
 #### 1. For Vision-shield Ethernet
 
- 1. [Async_AdvancedWebServer](examples/Ethernet/Async_AdvancedWebServer)
- 2. [Async_HelloServer](examples/Ethernet/Async_HelloServer) 
- 3. [Async_HelloServer2](examples/Ethernet/Async_HelloServer2)
- 4. [Async_HttpBasicAuth](examples/Ethernet/Async_HttpBasicAuth)
- 5. [Async_PostServer](examples/Ethernet/Async_PostServer)
- 6. [**MQTTClient_Auth**](examples/Ethernet/MQTTClient_Auth)
- 7. [**MQTTClient_Basic**](examples/Ethernet/MQTTClient_Basic)
- 8. [**MQTT_ThingStream**](examples/Ethernet/MQTT_ThingStream)
- 9. [WebClient](examples/Ethernet/WebClient)
-10. [WebClientRepeating](examples/Ethernet/WebClientRepeating)
-11. [Async_AdvancedWebServer_MemoryIssues_SendArduinoString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString) **New**
-12. [Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
-13. [Async_AdvancedWebServer_SendChunked](examples/Ethernet/Async_AdvancedWebServer_SendChunked) **New**
-14. [AsyncWebServer_SendChunked](examples/Ethernet/AsyncWebServer_SendChunked) **New**
+ 1. [Async_AdvancedWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer)
+ 2. [Async_HelloServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_HelloServer) 
+ 3. [Async_HelloServer2](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_HelloServer2)
+ 4. [Async_HttpBasicAuth](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_HttpBasicAuth)
+ 5. [Async_PostServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_PostServer)
+ 6. [**MQTTClient_Auth**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/MQTTClient_Auth)
+ 7. [**MQTTClient_Basic**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/MQTTClient_Basic)
+ 8. [**MQTT_ThingStream**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/MQTT_ThingStream)
+ 9. [WebClient](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/WebClient)
+10. [WebClientRepeating](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/WebClientRepeating)
+11. [Async_AdvancedWebServer_MemoryIssues_SendArduinoString](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_SendArduinoString) **New**
+12. [Async_AdvancedWebServer_MemoryIssues_Send_CString](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
+13. [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_SendChunked) **New**
+14. [AsyncWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/AsyncWebServer_SendChunked) **New**
 
 
 #### 2. For Murata WiFi
 
- 1. [Async_AdvancedWebServer](examples/WiFi/Async_AdvancedWebServer)
- 2. [Async_HelloServer](examples/WiFi/Async_HelloServer) 
- 3. [Async_HelloServer2](examples/WiFi/Async_HelloServer2)
- 4. [Async_HttpBasicAuth](examples/WiFi/Async_HttpBasicAuth)
- 5. [Async_PostServer](examples/WiFi/Async_PostServer)
- 6. [**MQTTClient_Auth**](examples/WiFi/MQTTClient_Auth)
- 7. [**MQTTClient_Basic**](examples/WiFi/MQTTClient_Basic)
- 8. [**MQTT_ThingStream**](examples/WiFi/MQTT_ThingStream)
- 9. [WebClient](examples/WiFi/WebClient)
-10. [WebClientRepeating](examples/WiFi/WebClientRepeating)
-11. [Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/WiFi/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
-12. [Async_AdvancedWebServer_SendChunked](examples/WiFi/Async_AdvancedWebServer_SendChunked) **New**
-13. [AsyncWebServer_SendChunked](examples/WiFi/AsyncWebServer_SendChunked) **New**
+ 1. [Async_AdvancedWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_AdvancedWebServer)
+ 2. [Async_HelloServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_HelloServer) 
+ 3. [Async_HelloServer2](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_HelloServer2)
+ 4. [Async_HttpBasicAuth](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_HttpBasicAuth)
+ 5. [Async_PostServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_PostServer)
+ 6. [**MQTTClient_Auth**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/MQTTClient_Auth)
+ 7. [**MQTTClient_Basic**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/MQTTClient_Basic)
+ 8. [**MQTT_ThingStream**](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/MQTT_ThingStream)
+ 9. [WebClient](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/WebClient)
+10. [WebClientRepeating](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/WebClientRepeating)
+11. [Async_AdvancedWebServer_MemoryIssues_Send_CString](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_AdvancedWebServer_MemoryIssues_Send_CString) **New**
+12. [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_AdvancedWebServer_SendChunked) **New**
+13. [AsyncWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/AsyncWebServer_SendChunked) **New**
 
 ---
 ---
 
-### Example [Async_AdvancedWebServer](examples/Ethernet/Async_AdvancedWebServer)
+### Example [Async_AdvancedWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer)
 
 https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/blob/c9d68052df24e2cb959acaf89ae0ce830d67aca3/examples/WiFi/Async_AdvancedWebServer/Async_AdvancedWebServer.ino#L41-L273
 
@@ -1604,13 +1604,13 @@ You can access the Async Advanced WebServer @ the server IP
 
 #### 1. MQTT_ThingStream on PORTENTA_H7_M7 using Ethernet
 
-Following is debug terminal output when running example [MQTT_ThingStream](examples/Ethernet/MQTT_ThingStream) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
+Following is debug terminal output when running example [MQTT_ThingStream](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/MQTT_ThingStream) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
 
 
 ```
 Start MQTT_ThingStream on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Using mac index = 17
 Connected! IP address: 192.168.2.87
 ***************************************
@@ -1630,12 +1630,12 @@ MQTT Message receive [STM32_Pub] Hello from MQTT_ThingStream on PORTENTA_H7_M7 w
 
 #### 2. WebClientRepeating on PORTENTA_H7_M7 using Ethernet
 
-Following is debug terminal output when running example [WebClient](examples/Ethernet/WebClientRepeating) on on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
+Following is debug terminal output when running example [WebClient](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/WebClientRepeating) on on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
 
 ```
 Start WebClientRepeating on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 
@@ -1698,12 +1698,12 @@ Accept-Ranges: bytes
 
 #### 3. MQTTClient_Auth on PORTENTA_H7_M7 using Ethernet
 
-Following is debug terminal output when running example [MQTTClient_Auth](examples/Ethernet/MQTTClient_Auth) on on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
+Following is debug terminal output when running example [MQTTClient_Auth](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/MQTTClient_Auth) on on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
 
 ```
 Start MQTTClient_Auth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Using mac index = 9
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1719,12 +1719,12 @@ Message arrived [MQTT_Pub] Hello from MQTTClient_Auth on PORTENTA_H7_M7 with Eth
 
 #### 4. MQTTClient_Basic on PORTENTA_H7_M7 using Ethernet
 
-Following is debug terminal output when running example [MQTTClient_Basic](examples/Ethernet/MQTTClient_Basic) on on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
+Following is debug terminal output when running example [MQTTClient_Basic](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/MQTTClient_Basic) on on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
 
 ```
 Start MQTTClient_Basic on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Using mac index = 8
 Connected! IP address: 192.168.2.87
 Attempting MQTT connection to broker.emqx.io...connected
@@ -1738,12 +1738,12 @@ Message arrived [MQTT_Pub] Hello from MQTTClient_Basic on PORTENTA_H7_M7 with Et
 
 #### 5. Async_HTTPBasicAuth on PORTENTA_H7_M7 using Ethernet
 
-Following is debug terminal output when running example [Async_HTTPBasicAuth](examples/Ethernet/Async_HTTPBasicAuth) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
+Following is debug terminal output when running example [Async_HTTPBasicAuth](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_HTTPBasicAuth) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library
 
 ```
 Start Async_HTTPBasicAuth on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Using mac index = 16
 Connected! IP address: 192.168.2.87
 Async_HttpBasicAuth started @ IP : 192.168.2.87
@@ -1767,13 +1767,13 @@ Login using username = admin and password = ethernet
 
 #### 6. Async_AdvancedWebServer on PORTENTA_H7_M7 using Ethernet
 
-Following are debug terminal output and screen shots when running example [Async_AdvancedWebServer](examples/Ethernet/Async_AdvancedWebServer) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library to demonstrate the complex AsyncWebServer feature.
+Following are debug terminal output and screen shots when running example [Async_AdvancedWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library to demonstrate the complex AsyncWebServer feature.
 
 
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Using mac index = 4
 Connected! IP address: 192.168.2.87
 HTTP EthernetWebServer is @ IP : 192.168.2.87
@@ -1795,12 +1795,12 @@ You can access the Async Advanced WebServers at the displayed server IP, e.g. `1
 
 #### 7. Async_AdvancedWebServer on PORTENTA_H7_M7 using WiFi
 
-Following is the debug terminal and screen shot when running example [Async_AdvancedWebServer](examples/WiFi/Async_AdvancedWebServer) on Portenta_H7 WiFi to demonstrate the operation of Portenta_H7_AsyncWebServer, based on this [Portenta_H7_AsyncTCP Library](https://github.com/khoih-prog/Portenta_H7_AsyncTCP).
+Following is the debug terminal and screen shot when running example [Async_AdvancedWebServer](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_AdvancedWebServer) on Portenta_H7 WiFi to demonstrate the operation of Portenta_H7_AsyncWebServer, based on this [Portenta_H7_AsyncTCP Library](https://github.com/khoih-prog/Portenta_H7_AsyncTCP).
 
 ```
 Start Async_AdvancedWebServer on PORTENTA_H7_M7 with Portenta_H7 WiFi
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Connecting to SSID: HueNet1
 SSID: HueNet1
 Local IP Address: 192.168.2.94
@@ -1819,7 +1819,7 @@ You can access the Async Advanced WebServers at the displayed server IP, e.g. `1
 
 #### 8. Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 using Ethernet
 
-Following is the debug terminal and screen shot when running example [Async_AdvancedWebServer_MemoryIssues_Send_CString](examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) on Portenta_H7 Ethernet to demonstrate the new and powerful `HEAP-saving` feature
+Following is the debug terminal and screen shot when running example [Async_AdvancedWebServer_MemoryIssues_Send_CString](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_MemoryIssues_Send_CString) on Portenta_H7 Ethernet to demonstrate the new and powerful `HEAP-saving` feature
 
 
 ##### Using SDRAM => not using HEAP (14,314 bytes)
@@ -1827,7 +1827,7 @@ Following is the debug terminal and screen shot when running example [Async_Adva
 ```
 Start Async_AdvancedWebServer_MemoryIssues_Send_CString using SDRAM on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Using mac index = 2
 Connected! IP address: 192.168.2.123
 HTTP EthernetWebServer is @ IP : 192.168.2.123
@@ -1858,7 +1858,7 @@ Out String Length=31235
 ```
 Start Async_AdvancedWebServer_MemoryIssues_Send_CString on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Using mac index = 7
 Connected! IP address: 192.168.2.38
 HTTP EthernetWebServer is @ IP : 192.168.2.38
@@ -1884,7 +1884,7 @@ While using Arduino String, the HEAP usage is very large
 ```
 Start Async_AdvancedWebServer_MemoryIssues_SendArduinoString on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Using mac index = 0
 Connected! IP address: 192.168.2.123
 HTTP EthernetWebServer is @ IP : 192.168.2.123
@@ -1929,13 +1929,13 @@ You can access the Async Advanced WebServers at the displayed server IP, e.g. `1
 
 #### 9. Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 using WiFi
 
-Following is debug terminal output when running example [Async_AdvancedWebServer_SendChunked](examples/Async_AdvancedWebServer_SendChunked) on PORTENTA_H7_M7 using WiFi, to demo how to use `beginChunkedResponse()` to send large `html` in chunks
+Following is debug terminal output when running example [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Async_AdvancedWebServer_SendChunked) on PORTENTA_H7_M7 using WiFi, to demo how to use `beginChunkedResponse()` to send large `html` in chunks
 
 
 ```
 Start Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 with Portenta_H7 WiFi
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Connecting to SSID: HueNet1
 SSID: HueNet1
 Local IP Address: 192.168.2.113
@@ -1988,13 +1988,13 @@ You can access the Portenta_H7_AsyncWebServer at the displayed server IP
   
 #### 10. Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 
-Following is debug terminal output when running example [Async_AdvancedWebServer_SendChunked](examples/Async_AdvancedWebServer_SendChunked) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library , to demo how to use `beginChunkedResponse()` to send large `html` in chunks
+Following is debug terminal output when running example [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Async_AdvancedWebServer_SendChunked) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library , to demo how to use `beginChunkedResponse()` to send large `html` in chunks
 
 
 ```
 Start Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 with Ethernet using Portenta_Ethernet Library
 Portenta_H7_AsyncTCP v1.4.0
-Portenta_H7_AsyncWebServer v1.4.2
+Portenta_H7_AsyncWebServer v1.5.0
 Using mac index = 3
 Connected! IP address: 192.168.2.89
 AsyncWebServer is @ IP : 192.168.2.89
@@ -2116,6 +2116,8 @@ Submit issues to: [Portenta_H7_AsyncWebServer issues](https://github.com/khoih-p
  4. Support using `CString` in optional `SDRAM` to save heap to send `very large data`. Check [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8)
  5. Add examples [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Async_AdvancedWebServer_SendChunked) and [AsyncWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/AsyncWebServer_SendChunked) to demo how to use `beginChunkedResponse()` to send large `html` in chunks
  6. Use `allman astyle` and add `utils`
+ 7. Fix `_catchAllHandler` not working bug.
+ 8. Improve `README.md` so that links can be used in other sites, such as `PIO`
  
 ---
 ---
@@ -2128,13 +2130,17 @@ Submit issues to: [Portenta_H7_AsyncWebServer issues](https://github.com/khoih-p
 4. Thanks to [salasidis](https://github.com/salasidis) aka [rs77can](https://forum.arduino.cc/u/rs77can) to discuss and make the following marvellous PRs
 - [request->send(200, textPlainStr, jsonChartDataCharStr); - Without using String Class - to save heap #8](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/8), leading to `v1.4.0` to support using `CString` in optional `SDRAM` to save heap to send `very large data`
 - [All memmove() removed - string no longer destroyed #11](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/pull/11), leading to `v1.4.1` to remove `memmove()` and not to destroy String anymore
+5. Thanks to [roma2580](https://github.com/roma2580) to report and help fix the bug in 
+- [catchAll handler not working #12](https://github.com/khoih-prog/AsyncWebServer_RP2040W/issues/12)
+leading to `v1.5.0` to fix `_catchAllHandler` not working bug
 
 <table>
   <tr>
     <td align="center"><a href="https://github.com/me-no-dev"><img src="https://github.com/me-no-dev.png" width="100px;" alt="me-no-dev"/><br /><sub><b>⭐️⭐️ Hristo Gochkov</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/rusty-bit"><img src="https://github.com/rusty-bit.png" width="100px;" alt="rusty-bit"/><br /><sub><b>rusty-bit</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/hpssjellis"><img src="https://github.com/hpssjellis.png" width="100px;" alt="hpssjellis"/><br /><sub><b>Jeremy Ellis</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/salasidis"><img src="https://github.com/salasidis.png" width="100px;" alt="salasidis"/><br /><sub><b>⭐️ salasidis</b></sub></a><br /></td> 
+    <td align="center"><a href="https://github.com/salasidis"><img src="https://github.com/salasidis.png" width="100px;" alt="salasidis"/><br /><sub><b>⭐️ salasidis</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/roma2580"><img src="https://github.com/roma2580.png" width="100px;" alt="roma2580"/><br /><sub><b>>⭐️ roma2580</b></sub></a><br /></td>
   </tr> 
 </table>
 

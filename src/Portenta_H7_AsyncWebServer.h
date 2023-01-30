@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
 
-  Version: 1.4.2
+  Version: 1.5.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -22,6 +22,7 @@
   1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
   1.4.1   K Hoang      04/10/2022 Don't need memmove(), String no longer destroyed
   1.4.2   K Hoang      10/11/2022 Add examples to demo how to use beginChunkedResponse() to send in chunks
+  1.5.0   K Hoang      30/01/2023 Fix _catchAllHandler not working bug
  *****************************************************************************************************************************/
 
 #ifndef _PORTENTA_H7_ASYNC_WEBSERVER_H_
@@ -36,13 +37,13 @@
 
 #endif
 
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION           "Portenta_H7_AsyncWebServer v1.4.2"
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION           "Portenta_H7_AsyncWebServer v1.5.0"
 
 #define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_MAJOR     1
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_MINOR     4
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_PATCH     2
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_MINOR     5
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_PATCH     0
 
-#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_INT       1004002
+#define PORTENTA_H7_ASYNC_WEBSERVER_VERSION_INT       1005000
 
 #ifndef PORTENTA_H7_AWS_UNUSED
   #define PORTENTA_H7_AWS_UNUSED(x)       (void)(x)

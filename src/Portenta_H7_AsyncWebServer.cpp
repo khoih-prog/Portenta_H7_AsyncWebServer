@@ -9,7 +9,7 @@
   Built by Khoi Hoang https://github.com/khoih-prog/Portenta_H7_AsyncWebServer
   Licensed under GPLv3 license
 
-  Version: 1.4.2
+  Version: 1.5.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -22,6 +22,7 @@
   1.4.0   K Hoang      02/10/2022 Option to use cString instead og String to save Heap
   1.4.1   K Hoang      04/10/2022 Don't need memmove(), String no longer destroyed
   1.4.2   K Hoang      10/11/2022 Add examples to demo how to use beginChunkedResponse() to send in chunks
+  1.5.0   K Hoang      30/01/2023 Fix _catchAllHandler not working bug
  *****************************************************************************************************************************/
 
 #if !defined(_PORTENTA_H7_AWS_LOGLEVEL_)
@@ -190,7 +191,7 @@ void AsyncWebServer::_attachHandler(AsyncWebServerRequest *request)
 
   request->addInterestingHeader("ANY");
 
-  request->setHandler(NULL);
+  request->setHandler(_catchAllHandler);
 }
 
 /////////////////////////////////////////////////
