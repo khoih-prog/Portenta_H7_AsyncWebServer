@@ -1929,7 +1929,7 @@ You can access the Async Advanced WebServers at the displayed server IP, e.g. `1
 
 #### 9. Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 using WiFi
 
-Following is debug terminal output when running example [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Async_AdvancedWebServer_SendChunked) on PORTENTA_H7_M7 using WiFi, to demo how to use `beginChunkedResponse()` to send large `html` in chunks
+Following is debug terminal output when running example [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/WiFi/Async_AdvancedWebServer_SendChunked) on PORTENTA_H7_M7 using WiFi, to demo how to use `beginChunkedResponse()` to send large `html` in chunks
 
 
 ```
@@ -1988,7 +1988,7 @@ You can access the Portenta_H7_AsyncWebServer at the displayed server IP
   
 #### 10. Async_AdvancedWebServer_SendChunked on PORTENTA_H7_M7 using Ethernet
 
-Following is debug terminal output when running example [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Async_AdvancedWebServer_SendChunked) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library , to demo how to use `beginChunkedResponse()` to send large `html` in chunks
+Following is debug terminal output when running example [Async_AdvancedWebServer_SendChunked](https://github.com/khoih-prog/Portenta_H7_AsyncWebServer/tree/main/examples/Ethernet/Async_AdvancedWebServer_SendChunked) on PORTENTA_H7_M7 using Ethernet and Portenta_Ethernet Library , to demo how to use `beginChunkedResponse()` to send large `html` in chunks
 
 
 ```
